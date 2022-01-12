@@ -36,7 +36,7 @@ class WhitelistPersistHelper private constructor(){
 
         Runtime.getRuntime().exec("su -c mkdir -pv /data/system/fuck_location_test/")
         Runtime.getRuntime().exec("su -c cp $jsonPath/whiteList.json /data/system/fuck_location_test/")
-        Runtime.getRuntime().exec("su -c chmod 604 /data/system/fuck_location_test/whiteList.json ")
+        Runtime.getRuntime().exec("su -c chmod 604 /data/system/fuck_location_test/*")
     }
 
     @ExperimentalStdlibApi

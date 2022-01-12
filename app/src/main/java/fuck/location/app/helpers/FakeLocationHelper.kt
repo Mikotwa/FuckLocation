@@ -38,7 +38,7 @@ class FakeLocationHelper {
 
         Runtime.getRuntime().exec("su -c mkdir -pv /data/system/fuck_location_test/")
         Runtime.getRuntime().exec("su -c cp $jsonPath/fakeLocation.json /data/system/fuck_location_test/")
-        Runtime.getRuntime().exec("su -c chmod 604 /data/system/fuck_location_test/fakeLocation.json ")
+        Runtime.getRuntime().exec("su -c chmod 604 /data/system/fuck_location_test/*")
     }
 
     @ExperimentalStdlibApi

@@ -3,6 +3,7 @@ package fuck.location.xposed
 import android.annotation.SuppressLint
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.*
@@ -14,6 +15,7 @@ import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import de.robv.android.xposed.callbacks.XCallback
 
 import fuck.location.app.helpers.WhitelistPersistHelper
 import fuck.location.app.helpers.FakeLocationHelper
@@ -32,7 +34,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
         XposedBridge.log("FL: in initZygote!")
     }
 
-    @SuppressLint("PrivateApi")
+    @SuppressLint("PrivateApi", "ObsoleteSdkInt")
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
         if (lpparam != null) {
             when (lpparam.packageName) {
@@ -43,8 +45,12 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
 
                     XposedBridge.log("FL: Finding method")
 
-                    val clazz =
-                        lpparam.classLoader.loadClass("com.android.server.location.provider.LocationProviderManager")
+                    // Deal with multiple Android version
+                    var clazz: Class<*> = when (Build.VERSION.SDK_INT) {
+                        Build.VERSION_CODES.S -> lpparam.classLoader.loadClass("com.android.server.location.provider.LocationProviderManager")
+                        Build.VERSION_CODES.R -> lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
+                        else -> lpparam.classLoader.loadClass("android.location.LocationManager")
+                    }
 
                     findAllMethods(clazz) {
                         name == "getLastLocation" && isPublic
