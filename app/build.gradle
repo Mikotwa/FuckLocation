@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId "fuck.location"
-        minSdk 30
+        minSdk 28
         targetSdk 31
-        versionCode 118
-        versionName "1.0.2"
+        versionCode 120
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
