@@ -1,4 +1,4 @@
-# Fucklocation
+# FuckLocation
 An simple xposed module that helps you fully control your location.
 
 一个可以帮助你完全控制位置授权的模块
