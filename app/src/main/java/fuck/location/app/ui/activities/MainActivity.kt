@@ -48,8 +48,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         when (v.id) {
             R.id.menu_detection_test -> {
                 MaterialDialog(this).show {
-                    title(text = "暂未写好")
-                    message(text = "前面的区域，以后再来探索吧")
+                    title(text = getString(R.string.dialog_not_avaliable_dialog))
+                    message(text = getString(R.string.dialog_not_avaliable_content))
                 }
             }
 
@@ -92,17 +92,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             binding.moduleStatusIcon.setImageDrawable(AppCompatResources.getDrawable(this,
                 R.drawable.baseline_check_circle_24
             ))
-            binding.moduleStatusText.text = "模块已经激活"
-            binding.serviceStatusText.text = "请前往“设置”以对模块进行进一步设定"
+            binding.moduleStatusText.text = getString(R.string.card_title_activated)
+            binding.serviceStatusText.text = getString(R.string.card_detail_activated)
 
-            binding.serveTimes.text = "已合计为您服务 0 次"
+            binding.serveTimes.text = getString(R.string.card_serve_time)
         } else {
             binding.moduleStatusCard.setCardBackgroundColor(getColor(R.color.red_500))
             binding.moduleStatusIcon.setImageDrawable(AppCompatResources.getDrawable(this,
                 R.drawable.baseline_error_24
             ))
-            binding.moduleStatusText.text = "模块未激活"
-            binding.serviceStatusText.text = "请检查你是否已经正确激活了模块"
+            binding.moduleStatusText.text = getText(R.string.card_title_not_activated)
+            binding.serviceStatusText.text = getText(R.string.card_detail_not_activated)
             binding.serveTimes.visibility = View.GONE
 
             binding.menuDetectionTest.visibility = View.GONE

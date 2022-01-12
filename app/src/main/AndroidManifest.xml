@@ -27,7 +27,7 @@
 
         <activity android:name=".app.ui.activities.ModuleActivity"
             android:parentActivityName=".app.ui.activities.MainActivity"
-            android:label="选择应用"/>
+            android:label="@string/select_apps_activity_title"/>
 
         <meta-data
             android:name="xposedmodule"
