@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import fuck.location.R
+import fuck.location.app.MyApplication
 import fuck.location.databinding.ActivityMainBinding
 
 import fuck.location.app.helpers.FakeLocationHelper
@@ -28,15 +29,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        binding.moduleStatusCard.setCardBackgroundColor(getColor(R.color.purple_500))
-        binding.moduleStatusIcon.setImageDrawable(AppCompatResources.getDrawable(this,
-            R.drawable.baseline_check_circle_24
-        ))
-        binding.moduleStatusText.text = "模块已经激活"
-        binding.serviceStatusText.text = "请前往“设置”以对模块进行进一步设定"
-
-        binding.serveTimes.text = "已合计为您服务 0 次"
+        setModuleState(binding)
 
         binding.menuDetectionTest.setOnClickListener(this)
         binding.menuLocationCredit.setOnClickListener(this)
@@ -91,5 +84,34 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             negativeButton(R.string.custom_location_dialog_notsave)
         }
+    }
+
+    private fun setModuleState(binding: ActivityMainBinding) {
+        if (isModuleActivated()) {
+            binding.moduleStatusCard.setCardBackgroundColor(getColor(R.color.purple_500))
+            binding.moduleStatusIcon.setImageDrawable(AppCompatResources.getDrawable(this,
+                R.drawable.baseline_check_circle_24
+            ))
+            binding.moduleStatusText.text = "模块已经激活"
+            binding.serviceStatusText.text = "请前往“设置”以对模块进行进一步设定"
+
+            binding.serveTimes.text = "已合计为您服务 0 次"
+        } else {
+            binding.moduleStatusCard.setCardBackgroundColor(getColor(R.color.red_500))
+            binding.moduleStatusIcon.setImageDrawable(AppCompatResources.getDrawable(this,
+                R.drawable.baseline_error_24
+            ))
+            binding.moduleStatusText.text = "模块未激活"
+            binding.serviceStatusText.text = "请检查你是否已经正确激活了模块"
+            binding.serveTimes.visibility = View.GONE
+
+            binding.menuDetectionTest.visibility = View.GONE
+            binding.menuLocationCredit.visibility = View.GONE
+            binding.menuSettings.visibility = View.GONE
+        }
+    }
+
+    fun isModuleActivated(): Boolean {
+        return false
     }
 }

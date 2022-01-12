@@ -15,7 +15,7 @@ import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import de.robv.android.xposed.callbacks.XCallback
+import fuck.location.BuildConfig
 
 import fuck.location.app.helpers.WhitelistPersistHelper
 import fuck.location.app.helpers.FakeLocationHelper
@@ -38,6 +38,20 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
         if (lpparam != null) {
             when (lpparam.packageName) {
+                BuildConfig.APPLICATION_ID -> {
+                    XposedBridge.log("FL: Try to hook the module")
+                    val clazz = lpparam.classLoader.loadClass("fuck.location.app.ui.activities.MainActivity")
+
+                    findAllMethods(clazz) {
+                        name == "isModuleActivated" && isPublic
+                    }.hookMethod {
+                        after { param ->
+                            XposedBridge.log("FL: Unlock the module")
+                            param.result = true
+                        }
+                    }
+                }
+
                 "android" -> {
                     EzXHelperInit.initHandleLoadPackage(lpparam)
                     EzXHelperInit.setLogTag("FuckLocation Xposed")
@@ -80,6 +94,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
 
                                             location.latitude = fakeLocation?.x!!
                                             location.longitude = fakeLocation?.y!!
+                                            location.time = System.currentTimeMillis()
                                             location.altitude = 0.0
 
                                             XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
