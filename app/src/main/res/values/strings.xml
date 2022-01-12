@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">FuckLocation</string>
+
+    <string name="title_fucklocation_test">测试设定</string>
+    <string name="title_fucklocation_credit">位置白名单</string>
+    <string name="title_fucklocation_settings">设置</string>
+    <string name="title_fucklocation_about">关于本模块</string>
+
+    <string name="system_app">系统应用</string>
+    <string name="custom_location_dialog">设置要返回的定位坐标</string>
+    <string name="custom_location_dialog_save">保存</string>
+    <string name="custom_location_dialog_notsave">不保存</string>
+</resources>
