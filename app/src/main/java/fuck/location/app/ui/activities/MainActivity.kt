@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.menuDetectionTest.setOnClickListener(this)
         binding.menuLocationCredit.setOnClickListener(this)
         binding.menuSettings.setOnClickListener(this)
+        binding.menuAbout.setOnClickListener(this)
 
         setContentView(binding.root)
     }
@@ -64,6 +65,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 var y: Float = 0F
 
                 setFakeLocation()
+            }
+
+            R.id.menu_about -> {
+                val intent = Intent(this, AboutActivity::class.java)
+                startActivity(intent)
             }
         }
     }

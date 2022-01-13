@@ -29,6 +29,9 @@
             android:parentActivityName=".app.ui.activities.MainActivity"
             android:label="@string/select_apps_activity_title"/>
 
+        <activity android:name=".app.ui.activities.AboutActivity"
+            android:theme="@style/Theme.FuckLocation.about"/>
+
         <meta-data
             android:name="xposedmodule"
             android:value="true" />

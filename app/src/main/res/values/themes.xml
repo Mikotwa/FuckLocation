@@ -14,6 +14,11 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.FuckLocation.about" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+    </style>
+
     <!-- Rikka Design! -->
     <style name="Default">
         <item name="android:layout_width">match_parent</item>
