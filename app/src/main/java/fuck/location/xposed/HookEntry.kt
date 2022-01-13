@@ -13,6 +13,7 @@ import fuck.location.BuildConfig
 import fuck.location.app.helpers.WhitelistPersistHelper
 import fuck.location.app.helpers.FakeLocationHelper
 import fuck.location.xposed.LocationHookerAfterR
+import java.lang.Exception
 
 @ExperimentalStdlibApi
 class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
@@ -49,12 +50,16 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
 
                     XposedBridge.log("FL: Finding method")
 
-                    // For Android 12 and 11, run this hook
-                    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S
-                        || Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
-                        LocationHookerAfterR().hookLastLocation(lpparam)
-                    } else {    // For Android 10 and earlier, run this fallback version
-                        LocationHookerPreQ().hookLastLocation(lpparam)
+                    try {
+                        // For Android 12 and 11, run this hook
+                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S
+                            || Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
+                            LocationHookerAfterR().hookLastLocation(lpparam)
+                        } else {    // For Android 10 and earlier, run this fallback version
+                            LocationHookerPreQ().hookLastLocation(lpparam)
+                        }
+                    } catch (e: Exception) {
+                        XposedBridge.log("FL: fuck with exceptions: ${e.toString()}")
                     }
                 }
             }

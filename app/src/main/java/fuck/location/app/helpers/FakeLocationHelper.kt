@@ -54,10 +54,10 @@ class FakeLocationHelper {
                 file.readText()
                 Log.d("FL: fakeLocation.json resumed.")
             } catch (e: FileNotFoundException) {
-                Log.d("FL: not possible to refresh. Fallback to []")
-                "[]"
+                Log.d("FL: not possible to refresh. Fallback to {\"x\":0.0, \"y\":0.0}")
+                "{\"x\":0.0, \"y\":0.0}"
             }
-            "[]"
+            "{\"x\":0.0, \"y\":0.0}"
         }
 
         return jsonAdapter.fromJson(json)
