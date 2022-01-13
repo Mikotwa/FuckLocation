@@ -79,13 +79,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val dialog = MaterialDialog(this, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
             title(R.string.custom_location_dialog)
             customView(R.layout.custom_view_fakelocation, scrollable = true, horizontalPadding = true)
+
+            flhelper = FakeLocationHelper.get()
+            val previousYInput = flhelper.readFakeLocation()?.y
+            val previousXInput = flhelper.readFakeLocation()?.x
+
+            findViewById<EditText>(R.id.custom_view_fl_x).setText(previousXInput.toString())
+            findViewById<EditText>(R.id.custom_view_fl_y).setText(previousYInput.toString())
+
             positiveButton(R.string.custom_location_dialog_save) { dialog ->
                 val yInput: EditText = dialog.getCustomView()   //TODO: 保存
                     .findViewById(R.id.custom_view_fl_y)
                 val xInput: EditText = dialog.getCustomView()
                     .findViewById(R.id.custom_view_fl_x)
 
-                flhelper = FakeLocationHelper.get()
                 flhelper.writeFakeLocation(xInput.text.toString().toDouble(), yInput.text.toString().toDouble())
             }
             negativeButton(R.string.custom_location_dialog_notsave)
