@@ -55,6 +55,7 @@ class LocationHookerAfterR {
                                 location.latitude = fakeLocation?.x!!
                                 location.longitude = fakeLocation?.y!!
                                 location.time = System.currentTimeMillis()
+                                location.accuracy = 22.1F
                                 location.altitude = 0.0
 
                                 XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
