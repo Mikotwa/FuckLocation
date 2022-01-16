@@ -55,6 +55,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S
                             || Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
                             LocationHookerAfterR().hookLastLocation(lpparam)
+                            WLANHooker().HookWifiManager(lpparam)
                         } else {    // For Android 10 and earlier, run this fallback version
                             LocationHookerPreQ().hookLastLocation(lpparam)
                         }

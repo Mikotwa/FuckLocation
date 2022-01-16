@@ -10,8 +10,8 @@ android {
         applicationId "fuck.location"
         minSdk 28
         targetSdk 31
-        versionCode 135
-        versionName "1.0.6.1"
+        versionCode 150
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
