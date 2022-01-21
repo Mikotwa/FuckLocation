@@ -1,5 +1,6 @@
 package fuck.location.app.helpers
 
+import androidx.annotation.Keep
 import com.github.kyuubiran.ezxhelper.utils.Log
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi

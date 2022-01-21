@@ -25,7 +25,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
         XposedBridge.log("FL: in initZygote!")
     }
 
-    @SuppressLint("PrivateApi", "ObsoleteSdkInt")
+    @SuppressLint("PrivateApi", "ObsoleteSdkInt", "NewApi")
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam?) {
         if (lpparam != null) {
             when (lpparam.packageName) {

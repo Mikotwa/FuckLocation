@@ -8,6 +8,7 @@ import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.Keep
 import androidx.appcompat.content.res.AppCompatResources
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
@@ -124,6 +125,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    @Keep
     fun isModuleActivated(): Boolean {
         return false
     }
