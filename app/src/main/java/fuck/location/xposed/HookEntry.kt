@@ -12,6 +12,7 @@ import fuck.location.BuildConfig
 
 import fuck.location.app.helpers.WhitelistPersistHelper
 import fuck.location.app.helpers.FakeLocationHelper
+import fuck.location.xposed.cellar.Hook
 import fuck.location.xposed.cellar.r.Cdma
 import java.lang.Exception
 
@@ -56,7 +57,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             || Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
                             LocationHookerAfterR().hookLastLocation(lpparam)
                             WLANHooker().HookWifiManager(lpparam)
-                            Cdma().HookCellIdentity(lpparam)
+                            Hook().hookAllNetTypeR(lpparam) // Cell data location
                         } else {    // For Android 10 and earlier, run this fallback version
                             LocationHookerPreQ().hookLastLocation(lpparam)
                         }

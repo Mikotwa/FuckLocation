@@ -17,8 +17,8 @@ class Tdscdma {
             name == "getAdditionalPlmns" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getAdditionalPlmns! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getAdditionalPlmns! Caller package name: " + packageName)
+                
             }
         }
 
@@ -26,8 +26,8 @@ class Tdscdma {
             name == "getCid" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getCid! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getCid! Caller package name: " + packageName)
+                
             }
         }
 
@@ -35,8 +35,8 @@ class Tdscdma {
             name == "getClosedSubscriberGroupInfo" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getClosedSubscriberGroupInfo! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getClosedSubscriberGroupInfo! Caller package name: " + packageName)
+                
             }
         }
 
@@ -44,8 +44,8 @@ class Tdscdma {
             name == "getCpid" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getCpid! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getCpid! Caller package name: " + packageName)
+                
             }
         }
 
@@ -53,8 +53,8 @@ class Tdscdma {
             name == "getLac" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getLac! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getLac! Caller package name: " + packageName)
+                
             }
         }
 
@@ -62,8 +62,8 @@ class Tdscdma {
             name == "getMccString" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMccString! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMccString! Caller package name: " + packageName)
+                
             }
         }
 
@@ -71,8 +71,8 @@ class Tdscdma {
             name == "getMncString" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMncString! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMncString! Caller package name: " + packageName)
+                
             }
         }
 
@@ -80,8 +80,8 @@ class Tdscdma {
             name == "getMobileNetworkOperator" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMobileNetworkOperator! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMobileNetworkOperator! Caller package name: " + packageName)
+                
             }
         }
 
@@ -89,8 +89,8 @@ class Tdscdma {
             name == "getUarfcn" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getUarfcn! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getUarfcn! Caller package name: " + packageName)
+                
             }
         }
     }

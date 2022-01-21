@@ -17,8 +17,8 @@ class Nr {
             name == "getAdditionalPlmns" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getAdditionalPlmns! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getAdditionalPlmns! Caller package name: " + packageName)
+                
             }
         }
 
@@ -26,8 +26,8 @@ class Nr {
             name == "getBands" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getBands! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getBands! Caller package name: " + packageName)
+                
             }
         }
 
@@ -35,8 +35,8 @@ class Nr {
             name == "getMccString" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMccString! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMccString! Caller package name: " + packageName)
+                
             }
         }
 
@@ -44,8 +44,8 @@ class Nr {
             name == "getMncString" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMncString! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMncString! Caller package name: " + packageName)
+                
             }
         }
 
@@ -53,8 +53,8 @@ class Nr {
             name == "getNci" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getNci! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getNci! Caller package name: " + packageName)
+                
             }
         }
 
@@ -62,8 +62,8 @@ class Nr {
             name == "getNrarfcn" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getNrarfcn! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getNrarfcn! Caller package name: " + packageName)
+                
             }
         }
 
@@ -71,8 +71,8 @@ class Nr {
             name == "getPci" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getPci! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getPci! Caller package name: " + packageName)
+                
             }
         }
 
@@ -80,8 +80,8 @@ class Nr {
             name == "getTac" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getTac! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getTac! Caller package name: " + packageName)
+                
             }
         }
     }

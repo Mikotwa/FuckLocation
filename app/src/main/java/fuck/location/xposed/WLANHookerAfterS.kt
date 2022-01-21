@@ -31,9 +31,9 @@ class WLANHooker {
                     XposedBridge.log("FL: Awesome! Now we are finding the REAL method...")
                     try {
                         val classloader = param.args[1] as PathClassLoader
-                        val wifi_clazz = classloader.loadClass("com.android.server.wifi.WifiServiceImpl")
+                        val wifiClazz = classloader.loadClass("com.android.server.wifi.WifiServiceImpl")
 
-                        findAllMethods(wifi_clazz) {
+                        findAllMethods(wifiClazz) {
                             name == "getScanResults" && isPublic
                         }.hookMethod {
                             after { param ->
@@ -58,6 +58,35 @@ class WLANHooker {
                                         param.result = result
 
                                         XposedBridge.log("FL: BSSID: ${customResult.BSSID}, SSID: ${customResult.SSID}")
+                                    }
+                                }
+                            }
+                        }
+
+                        findAllMethods(wifiClazz) {
+                            name == "getConnectionInfo" && isPublic
+                        }.hookMethod {
+                            after { param ->
+                                XposedBridge.log("FL: In getConnectionInfo with caller: " + param.args[0])
+
+                                val jsonAdapter: JsonAdapter<List<String>> = Moshi.Builder().build().adapter<List<String>>()
+                                val jsonFile = File("/data/system/fuck_location_test/whiteList.json")
+
+                                val list = jsonAdapter.fromJson(jsonFile.readText())
+
+                                for (name in list!!) {
+                                    if (param.args[0].toString().contains(name)) {
+                                        XposedBridge.log("FL: in whitelist! Return custom WiFi information")
+
+                                        var customResult = WifiInfo.Builder()
+                                            .setBssid("22:33:11:68:7e:3f")
+                                            .setSsid("Android-AP".toByteArray())
+                                            .setRssi(-1)
+                                            .setNetworkId(0)
+                                            .build()
+
+                                        param.result = customResult
+                                        XposedBridge.log("FL: BSSID: ${customResult.bssid}, SSID: ${customResult.ssid}")
                                     }
                                 }
                             }

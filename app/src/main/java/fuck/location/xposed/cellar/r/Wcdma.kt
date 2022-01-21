@@ -17,8 +17,8 @@ class Wcdma {
             name == "getAdditionalPlmns" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getAdditionalPlmns! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getAdditionalPlmns! Caller package name: " + packageName)
+                
             }
         }
 
@@ -26,8 +26,8 @@ class Wcdma {
             name == "getCid" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getCid! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getCid! Caller package name: " + packageName)
+                
             }
         }
 
@@ -35,8 +35,8 @@ class Wcdma {
             name == "getLac" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getLac! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getLac! Caller package name: " + packageName)
+                
             }
         }
 
@@ -44,8 +44,8 @@ class Wcdma {
             name == "getMcc" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMcc! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMcc! Caller package name: " + packageName)
+                
             }
         }
 
@@ -53,8 +53,8 @@ class Wcdma {
             name == "getMccString" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMccString! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMccString! Caller package name: " + packageName)
+                
             }
         }
 
@@ -62,8 +62,8 @@ class Wcdma {
             name == "getMnc" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMnc! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMnc! Caller package name: " + packageName)
+                
             }
         }
 
@@ -71,8 +71,8 @@ class Wcdma {
             name == "getMncString" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMncString! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMncString! Caller package name: " + packageName)
+                
             }
         }
 
@@ -80,8 +80,8 @@ class Wcdma {
             name == "getMobileNetworkOperator" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMobileNetworkOperator! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMobileNetworkOperator! Caller package name: " + packageName)
+                
             }
         }
 
@@ -89,8 +89,8 @@ class Wcdma {
             name == "getPsc" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getPsc! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getPsc! Caller package name: " + packageName)
+                
             }
         }
 
@@ -98,8 +98,8 @@ class Wcdma {
             name == "getUarfcn" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getUarfcn! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getUarfcn! Caller package name: " + packageName)
+                
             }
         }
     }

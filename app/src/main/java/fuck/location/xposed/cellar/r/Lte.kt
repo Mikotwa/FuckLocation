@@ -17,8 +17,8 @@ class Lte {
             name == "getAdditionalPlmns" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getAdditionalPlmns! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getAdditionalPlmns! Caller package name: " + packageName)
+                
             }
         }
 
@@ -26,8 +26,8 @@ class Lte {
             name == "getBands" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getBands! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getBands! Caller package name: " + packageName)
+                
             }
         }
 
@@ -35,8 +35,8 @@ class Lte {
             name == "getClosedSubscriberGroupInfo" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getClosedSubscriberGroupInfo! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getClosedSubscriberGroupInfo! Caller package name: " + packageName)
+                
             }
         }
 
@@ -44,8 +44,8 @@ class Lte {
             name == "getEarfcn" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getEarfcn! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getEarfcn! Caller package name: " + packageName)
+                
             }
         }
 
@@ -53,8 +53,8 @@ class Lte {
             name == "getMcc" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMcc! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMcc! Caller package name: " + packageName)
+                
             }
         }
 
@@ -62,8 +62,8 @@ class Lte {
             name == "getMccString" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMccString! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMccString! Caller package name: " + packageName)
+                
             }
         }
 
@@ -71,8 +71,8 @@ class Lte {
             name == "getMnc" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMnc! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMnc! Caller package name: " + packageName)
+                
             }
         }
 
@@ -80,8 +80,8 @@ class Lte {
             name == "getMncString" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMncString! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMncString! Caller package name: " + packageName)
+                
             }
         }
 
@@ -89,8 +89,8 @@ class Lte {
             name == "getMobileNetworkOperator" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getMobileNetworkOperator! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getMobileNetworkOperator! Caller package name: " + packageName)
+                
             }
         }
 
@@ -98,8 +98,8 @@ class Lte {
             name == "getPci" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getPci! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getPci! Caller package name: " + packageName)
+                
             }
         }
 
@@ -107,8 +107,8 @@ class Lte {
             name == "getTac" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getTac! Caller package name: " + param.args[0])
-                var cid = param.result as CellIdentity
+                XposedBridge.log("FL: in getTac! Caller package name: " + packageName)
+                
             }
         }
     }
