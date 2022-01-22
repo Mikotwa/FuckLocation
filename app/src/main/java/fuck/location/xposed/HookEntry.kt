@@ -57,12 +57,24 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             || Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
                             LocationHookerAfterR().hookLastLocation(lpparam)
                             WLANHooker().HookWifiManager(lpparam)
-                            Hook().hookAllNetTypeR(lpparam) // Cell data location
                         } else {    // For Android 10 and earlier, run this fallback version
                             LocationHookerPreQ().hookLastLocation(lpparam)
                         }
                     } catch (e: Exception) {
                         XposedBridge.log("FL: fuck with exceptions: ${e.toString()}")
+                    }
+                }
+
+                "com.android.phone" -> {
+                    try {
+                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S
+                            || Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
+                            Hook().hookAllNetTypeR(lpparam)
+                        } else {    // For Android 10 and earlier, run this fallback version
+                            XposedBridge.log("FL: Custom cellar data info is currently not supported for Android 10 or below.")
+                        }
+                    } catch (e: Exception) {
+                        XposedBridge.log("FL: fuck with exceptions (cellar): ${e.toString()}")
                     }
                 }
             }
