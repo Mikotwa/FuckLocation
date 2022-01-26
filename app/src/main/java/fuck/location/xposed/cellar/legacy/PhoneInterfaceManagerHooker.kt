@@ -1,6 +1,8 @@
 package fuck.location.xposed.cellar.legacy
 
 import android.annotation.SuppressLint
+import android.app.AndroidAppHelper
+import android.content.Intent
 import android.os.Build
 import android.telephony.*
 import androidx.annotation.RequiresApi
@@ -9,7 +11,10 @@ import com.github.kyuubiran.ezxhelper.utils.hookMethod
 import com.github.kyuubiran.ezxhelper.utils.isPublic
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import fuck.location.IFuckLocationManager
+import fuck.location.xposed.helpers.ServiceHelper
 import org.lsposed.hiddenapibypass.HiddenApiBypass
+import java.lang.Exception
 
 class PhoneInterfaceManagerHooker {
     @ExperimentalStdlibApi
@@ -18,7 +23,12 @@ class PhoneInterfaceManagerHooker {
     fun HookCellLocation(lpparam: XC_LoadPackage.LoadPackageParam) {
         val clazz: Class<*> =
             lpparam.classLoader.loadClass("com.android.phone.PhoneInterfaceManager")
+
+        val serviceHelper = ServiceHelper()
+        val binder = serviceHelper.startService()
+
         XposedBridge.log("FL: [Cellar] Finding method in PhoneInterfaceManager")
+
         findAllMethods(clazz) {
             name == "getImeiForSlot" && isPublic
         }.hookMethod {
@@ -28,6 +38,14 @@ class PhoneInterfaceManagerHooker {
 
                 param.result = customIMEI
                 XposedBridge.log("FL: return custom value for testing purpose: $customIMEI")
+
+                XposedBridge.log("FL: Trying to get custom value from FuckLocationService...")
+                val iFuckLocationManager = IFuckLocationManager.Stub.asInterface(binder)
+                try {
+                    XposedBridge.log("FL: boolean: " + iFuckLocationManager.inWhiteList("stub"))
+                } catch (e: Exception) {
+                    XposedBridge.log("FL: Fuck with exceptions! ${e.stackTrace}")
+                }
             }
         }
 
@@ -51,6 +69,7 @@ class PhoneInterfaceManagerHooker {
 
                 if (true) { // TODO: Check whether in whiteList by ContentProvider
                     XposedBridge.log("FL: [Cellar] in whiteList! Return custom cell data information")
+
                     when (param.result) {
                         is CellIdentityCdma -> {
                             XposedBridge.log("FL: [Cellar] Using CDMA Network...")

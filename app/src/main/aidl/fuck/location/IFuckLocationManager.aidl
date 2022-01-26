@@ -9,4 +9,5 @@ interface IFuckLocationManager {
      * and return values in AIDL.
      */
     boolean inWhiteList(String packageName);
+    void setWhiteList(String packageName);
 }
