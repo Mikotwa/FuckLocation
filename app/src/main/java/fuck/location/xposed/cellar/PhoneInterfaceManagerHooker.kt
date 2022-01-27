@@ -16,7 +16,7 @@ class PhoneInterfaceManagerHooker {
     @ExperimentalStdlibApi
     @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("PrivateApi")
-    fun HookCellLocation(lpparam: XC_LoadPackage.LoadPackageParam) {
+    fun hookCellLocation(lpparam: XC_LoadPackage.LoadPackageParam) {
         val clazz: Class<*> =
             lpparam.classLoader.loadClass("com.android.phone.PhoneInterfaceManager")
 
@@ -26,12 +26,16 @@ class PhoneInterfaceManagerHooker {
             name == "getImeiForSlot" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: [Cellar] in getImeiForSlot! Caller package name: ${param.args[1]}")
-                val customIMEI = "1234567891011120"
+                val packageName = param.args[1] as String
+                val customIMEI = "1234567891011120" // TODO: Support custom IMEI information
 
-                param.result = customIMEI
-                WhitelistGateway().inWhitelist(param.args[1] as String)
-                XposedBridge.log("FL: return custom value for testing purpose: $customIMEI")
+                XposedBridge.log("FL: [Cellar] in getImeiForSlot! Caller package name: $packageName")
+
+                if (WhitelistGateway().inWhitelist(packageName)) {
+                    param.result = customIMEI
+                    WhitelistGateway().inWhitelist(param.args[1] as String)
+                    XposedBridge.log("FL: [Cellar] In whiteList! Return custom value for testing purpose: $customIMEI")
+                }
             }
         }
 
@@ -39,12 +43,15 @@ class PhoneInterfaceManagerHooker {
             name == "getMeidForSlot" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: [Cellar] in getMeidForSlot! Caller package name: ${param.args[1]}")
-                val customMEID = "1234567891011120"
+                val packageName = param.args[1] as String
+                val customMEID = "1234567891011120" // TODO: Support custom MEID information
 
-                param.result = customMEID
-                WhitelistGateway().inWhitelist(param.args[1] as String)
-                XposedBridge.log("FL: return custom value for testing purpose: $customMEID")
+                XposedBridge.log("FL: [Cellar] in getMeidForSlot! Caller package name: $packageName")
+                if (WhitelistGateway().inWhitelist(packageName)) {
+                    param.result = customMEID
+                    WhitelistGateway().inWhitelist(param.args[1] as String)
+                    XposedBridge.log("FL: [Cellar] In whiteList! Return custom value for testing purpose: $customMEID")
+                }
             }
         }
 
@@ -124,12 +131,14 @@ class PhoneInterfaceManagerHooker {
             name == "getAllCellInfo" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: [Cellar] in getAllCellInfo! Caller package name: ${param.args[0]}")
+                val packageName = param.args[0] as String
+                XposedBridge.log("FL: [Cellar] in getAllCellInfo! Caller package name: $packageName")
 
-                val customAllCellInfo = ArrayList<CellInfo>()
-
-                param.result = customAllCellInfo
-                XposedBridge.log("FL: return empty AllCellInfo for testing purpose.")
+                if (WhitelistGateway().inWhitelist(packageName)) {
+                    XposedBridge.log("FL: [Cellar] in whiteList! Return empty AllCellInfo for testing purpose.")
+                    val customAllCellInfo = ArrayList<CellInfo>()
+                    param.result = customAllCellInfo
+                }
             }
         }
     }

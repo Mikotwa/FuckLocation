@@ -26,7 +26,7 @@ import kotlin.properties.Delegates
 class WhitelistGateway {
     // Magic number to identify whether this call is from our module
     private val magicNumber = -114514
-    lateinit var whitelistPersistHelper: WhitelistPersistHelper
+    private lateinit var whitelistPersistHelper: WhitelistPersistHelper
 
     // For getting started in framework
     @ExperimentalStdlibApi
@@ -45,7 +45,6 @@ class WhitelistGateway {
             before { param ->
                 if (param.args[1] == magicNumber) {
                     val packageName = param.args[0]
-                    XposedBridge.log("FL: [debug !!] Magic call received! Getting packageName: $packageName")
 
                     val jsonAdapter: JsonAdapter<List<String>> = Moshi.Builder().build().adapter<List<String>>()
                     val jsonFile = File("/data/system/fuck_location_test/whiteList.json")
@@ -74,13 +73,10 @@ class WhitelistGateway {
         val magicContext = AndroidAppHelper.currentApplication().applicationContext
         val activityManager = magicContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 
-        XposedBridge.log("FL: [debug !!] Calling magic method! $activityManager")
-
         val result = HiddenApiBypass.invoke(activityManager.javaClass,
             activityManager,
             "setProcessMemoryTrimLevel", packageName, magicNumber, 0) as Boolean
 
-        XposedBridge.log("FL: [debug !!] Finished calling method!")
         return result
     }
 }

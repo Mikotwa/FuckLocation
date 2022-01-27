@@ -10,8 +10,6 @@ import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.BuildConfig
 
-import fuck.location.app.helpers.WhitelistPersistHelper
-import fuck.location.app.helpers.FakeLocationHelper
 import fuck.location.xposed.cellar.PhoneInterfaceManagerHooker
 import fuck.location.xposed.helpers.WhitelistGateway
 import fuck.location.xposed.location.LocationHookerAfterR
@@ -20,9 +18,6 @@ import java.lang.Exception
 
 @ExperimentalStdlibApi
 class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
-    val wph = WhitelistPersistHelper.get()
-    val flhelper = FakeLocationHelper.get()
-
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
         EzXHelperInit.initZygote(startupParam)
         XposedBridge.log("FL: in initZygote!")
@@ -66,7 +61,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             LocationHookerPreQ().hookLastLocation(lpparam)
                         }
                     } catch (e: Exception) {
-                        XposedBridge.log("FL: fuck with exceptions: ${e.toString()}")
+                        XposedBridge.log("FL: fuck with exceptions: $e")
                     }
                 }
 
@@ -74,12 +69,12 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                     try {
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S
                             || Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
-                            PhoneInterfaceManagerHooker().HookCellLocation(lpparam)
+                            PhoneInterfaceManagerHooker().hookCellLocation(lpparam)
                         } else {    // For Android 10 and earlier, run this fallback version
                             XposedBridge.log("FL: Custom cellar data info is currently not supported for Android 10 or below.")
                         }
                     } catch (e: Exception) {
-                        XposedBridge.log("FL: fuck with exceptions (cellar): ${e.toString()}")
+                        XposedBridge.log("FL: fuck with exceptions (cellar): $e")
                     }
                 }
             }
