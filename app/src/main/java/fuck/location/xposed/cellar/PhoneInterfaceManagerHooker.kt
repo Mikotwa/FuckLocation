@@ -138,6 +138,8 @@ class PhoneInterfaceManagerHooker {
                     XposedBridge.log("FL: [Cellar] in whiteList! Return empty AllCellInfo for testing purpose.")
                     val customAllCellInfo = ArrayList<CellInfo>()
                     param.result = customAllCellInfo
+                } else {
+                    XposedBridge.log("FL: [Cellar] Not in whiteList!")
                 }
             }
         }

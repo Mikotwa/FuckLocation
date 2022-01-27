@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.AndroidAppHelper
 import android.content.Context
-import android.os.UserHandle
 import com.github.kyuubiran.ezxhelper.utils.*
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -12,11 +11,8 @@ import com.squareup.moshi.adapter
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.app.helpers.WhitelistPersistHelper
-import fuck.location.app.ui.activities.MainActivity
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
-import java.lang.Exception
-import kotlin.properties.Delegates
 
 /*
  * This hook acts as a gateway from phone to framework
@@ -53,9 +49,8 @@ class WhitelistGateway {
 
                     for (name in list!!) {
                         if (packageName.toString().contains(name)) {
-                            XposedBridge.log("FL: [debug !!] in whitelist!")
                             param.result = true
-                            break
+                            return@before
                         }
                     }
 
@@ -71,12 +66,13 @@ class WhitelistGateway {
     @SuppressLint("PrivateApi")
     fun inWhitelist(packageName: String): Boolean {
         val magicContext = AndroidAppHelper.currentApplication().applicationContext
-        val activityManager = magicContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val activityManager =
+            magicContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 
-        val result = HiddenApiBypass.invoke(activityManager.javaClass,
+        return HiddenApiBypass.invoke(
+            activityManager.javaClass,
             activityManager,
-            "setProcessMemoryTrimLevel", packageName, magicNumber, 0) as Boolean
-
-        return result
+            "setProcessMemoryTrimLevel", packageName, magicNumber, 0
+        ) as Boolean
     }
 }
