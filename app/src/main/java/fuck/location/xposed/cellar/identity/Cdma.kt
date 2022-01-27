@@ -1,7 +1,6 @@
-package fuck.location.xposed.cellar.r
+package fuck.location.xposed.cellar.identity
 
 import android.app.AndroidAppHelper
-import android.telephony.CellIdentity
 import com.github.kyuubiran.ezxhelper.utils.*
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage

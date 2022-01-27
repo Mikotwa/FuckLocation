@@ -1,18 +1,17 @@
-package fuck.location.xposed.cellar.r
+package fuck.location.xposed.cellar.identity
 
 import android.app.AndroidAppHelper
-import android.telephony.CellIdentity
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.hookMethod
 import com.github.kyuubiran.ezxhelper.utils.isPublic
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-class Nr {
+class Tdscdma {
     fun HookCellIdentity(lpparam: XC_LoadPackage.LoadPackageParam) {
         val packageName = AndroidAppHelper.currentApplication().applicationContext.packageName
-        val clazz: Class<*> = lpparam.classLoader.loadClass("android.telephony.CellIdentityNr")
-        XposedBridge.log("FL: Finding method in HookCellIdentity (NR)")
+        val clazz: Class<*> = lpparam.classLoader.loadClass("android.telephony.CellIdentityTdscdma")
+        XposedBridge.log("FL: Finding method in HookCellIdentity (TDSCDMA)")
         findAllMethods(clazz) {
             name == "getAdditionalPlmns" && isPublic
         }.hookMethod {
@@ -23,10 +22,37 @@ class Nr {
         }
 
         findAllMethods(clazz) {
-            name == "getBands" && isPublic
+            name == "getCid" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getBands! Caller package name: " + packageName)
+                XposedBridge.log("FL: in getCid! Caller package name: " + packageName)
+                
+            }
+        }
+
+        findAllMethods(clazz) {
+            name == "getClosedSubscriberGroupInfo" && isPublic
+        }.hookMethod {
+            after { param ->
+                XposedBridge.log("FL: in getClosedSubscriberGroupInfo! Caller package name: " + packageName)
+                
+            }
+        }
+
+        findAllMethods(clazz) {
+            name == "getCpid" && isPublic
+        }.hookMethod {
+            after { param ->
+                XposedBridge.log("FL: in getCpid! Caller package name: " + packageName)
+                
+            }
+        }
+
+        findAllMethods(clazz) {
+            name == "getLac" && isPublic
+        }.hookMethod {
+            after { param ->
+                XposedBridge.log("FL: in getLac! Caller package name: " + packageName)
                 
             }
         }
@@ -50,37 +76,19 @@ class Nr {
         }
 
         findAllMethods(clazz) {
-            name == "getNci" && isPublic
+            name == "getMobileNetworkOperator" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getNci! Caller package name: " + packageName)
+                XposedBridge.log("FL: in getMobileNetworkOperator! Caller package name: " + packageName)
                 
             }
         }
 
         findAllMethods(clazz) {
-            name == "getNrarfcn" && isPublic
+            name == "getUarfcn" && isPublic
         }.hookMethod {
             after { param ->
-                XposedBridge.log("FL: in getNrarfcn! Caller package name: " + packageName)
-                
-            }
-        }
-
-        findAllMethods(clazz) {
-            name == "getPci" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getPci! Caller package name: " + packageName)
-                
-            }
-        }
-
-        findAllMethods(clazz) {
-            name == "getTac" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getTac! Caller package name: " + packageName)
+                XposedBridge.log("FL: in getUarfcn! Caller package name: " + packageName)
                 
             }
         }

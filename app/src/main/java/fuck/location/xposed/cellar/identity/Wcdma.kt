@@ -1,7 +1,6 @@
-package fuck.location.xposed.cellar.r
+package fuck.location.xposed.cellar.identity
 
 import android.app.AndroidAppHelper
-import android.telephony.CellIdentity
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.hookMethod
 import com.github.kyuubiran.ezxhelper.utils.isPublic

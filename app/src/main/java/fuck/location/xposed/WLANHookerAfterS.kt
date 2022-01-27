@@ -14,6 +14,7 @@ import dalvik.system.PathClassLoader
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import fuck.location.xposed.helpers.WhitelistGateway
 import java.io.File
 
 class WLANHooker {
@@ -37,28 +38,22 @@ class WLANHooker {
                             name == "getScanResults" && isPublic
                         }.hookMethod {
                             after { param ->
-                                XposedBridge.log("FL: In getScanResults with caller: " + param.args[0])
+                                val packageName = param.args[0] as String
+                                XposedBridge.log("FL: In getScanResults with caller: $packageName")
 
-                                val jsonAdapter: JsonAdapter<List<String>> = Moshi.Builder().build().adapter<List<String>>()
-                                val jsonFile = File("/data/system/fuck_location_test/whiteList.json")
+                                if (WhitelistGateway().inWhitelist(packageName)) {
+                                    XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
-                                val list = jsonAdapter.fromJson(jsonFile.readText())
+                                    var customResult = ScanResult()
+                                    customResult.BSSID = "22:33:11:68:7e:3f"
+                                    customResult.SSID = "AndroidAP"
+                                    customResult.capabilities = "WPA-2"
+                                    customResult.level = -1
 
-                                for (name in list!!) {
-                                    if (param.args[0].toString().contains(name)) {
-                                        XposedBridge.log("FL: in whitelist! Return custom WiFi information")
+                                    val result: List<ScanResult> = listOf(customResult)
+                                    param.result = result
 
-                                        var customResult = ScanResult()
-                                        customResult.BSSID = "22:33:11:68:7e:3f"
-                                        customResult.SSID = "AndroidAP"
-                                        customResult.capabilities = "WPA-2"
-                                        customResult.level = -1
-
-                                        val result: List<ScanResult> = listOf(customResult)
-                                        param.result = result
-
-                                        XposedBridge.log("FL: BSSID: ${customResult.BSSID}, SSID: ${customResult.SSID}")
-                                    }
+                                    XposedBridge.log("FL: BSSID: ${customResult.BSSID}, SSID: ${customResult.SSID}")
                                 }
                             }
                         }
@@ -67,27 +62,21 @@ class WLANHooker {
                             name == "getConnectionInfo" && isPublic
                         }.hookMethod {
                             after { param ->
-                                XposedBridge.log("FL: In getConnectionInfo with caller: " + param.args[0])
+                                val packageName = param.args[0] as String
+                                XposedBridge.log("FL: In getConnectionInfo with caller: $packageName")
 
-                                val jsonAdapter: JsonAdapter<List<String>> = Moshi.Builder().build().adapter<List<String>>()
-                                val jsonFile = File("/data/system/fuck_location_test/whiteList.json")
+                                if (WhitelistGateway().inWhitelist(packageName)) {
+                                    XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
-                                val list = jsonAdapter.fromJson(jsonFile.readText())
+                                    var customResult = WifiInfo.Builder()
+                                        .setBssid("22:33:11:68:7e:3f")
+                                        .setSsid("Android-AP".toByteArray())
+                                        .setRssi(-1)
+                                        .setNetworkId(0)
+                                        .build()
 
-                                for (name in list!!) {
-                                    if (param.args[0].toString().contains(name)) {
-                                        XposedBridge.log("FL: in whitelist! Return custom WiFi information")
-
-                                        var customResult = WifiInfo.Builder()
-                                            .setBssid("22:33:11:68:7e:3f")
-                                            .setSsid("Android-AP".toByteArray())
-                                            .setRssi(-1)
-                                            .setNetworkId(0)
-                                            .build()
-
-                                        param.result = customResult
-                                        XposedBridge.log("FL: BSSID: ${customResult.bssid}, SSID: ${customResult.ssid}")
-                                    }
+                                    param.result = customResult
+                                    XposedBridge.log("FL: BSSID: ${customResult.bssid}, SSID: ${customResult.ssid}")
                                 }
                             }
                         }

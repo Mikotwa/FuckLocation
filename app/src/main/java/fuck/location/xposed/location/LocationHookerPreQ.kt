@@ -13,6 +13,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.app.ui.models.FakeLocation
+import fuck.location.xposed.helpers.WhitelistGateway
 import java.io.File
 import java.lang.Exception
 
@@ -28,35 +29,26 @@ class LocationHookerPreQ {
                 var packageName = AndroidAppHelper.currentApplication().applicationContext.packageName
                 XposedBridge.log("FL: in getLastLocation (pre Q)! Caller package name: $packageName");
 
-                val jsonAdapter: JsonAdapter<List<String>> = Moshi.Builder().build().adapter<List<String>>()
                 val jsonAdapterLocation: JsonAdapter<FakeLocation> = Moshi.Builder().add(
                     KotlinJsonAdapterFactory()
                 ).build().adapter<FakeLocation>()
-                val jsonFile: File
 
                 // TODO: Provide flexible provider options
                 val location = Location(LocationManager.GPS_PROVIDER)
                 try {
-                    jsonFile = File("/data/system/fuck_location_test/whiteList.json")
-                    val list = jsonAdapter.fromJson(jsonFile.readText().toString())
+                    if (WhitelistGateway().inWhitelist(packageName)) {
+                        XposedBridge.log("FL (pre Q): in whitelist! Return custom location")
 
-                    if (list != null) {
-                        for (name in list) {
-                            if (packageName.toString().contains(name)) {
-                                XposedBridge.log("FL (pre Q): in whitelist! Return custom location")
+                        val jsonFileLocation = File("/data/system/fuck_location_test/fakeLocation.json")
+                        val fakeLocation = jsonAdapterLocation.fromJson(jsonFileLocation.readText().toString())
 
-                                val jsonFileLocation = File("/data/system/fuck_location_test/fakeLocation.json")
-                                val fakeLocation = jsonAdapterLocation.fromJson(jsonFileLocation.readText().toString())
+                        location.latitude = fakeLocation?.x!!
+                        location.longitude = fakeLocation?.y!!
+                        location.time = System.currentTimeMillis()
+                        location.altitude = 0.0
 
-                                location.latitude = fakeLocation?.x!!
-                                location.longitude = fakeLocation?.y!!
-                                location.time = System.currentTimeMillis()
-                                location.altitude = 0.0
-
-                                XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
-                                it.result = location
-                            }
-                        }
+                        XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
+                        it.result = location
                     }
                 } catch (e: Exception) {
                     XposedBridge.log("FL: fuck with exceptions! ${e.toString()}")
