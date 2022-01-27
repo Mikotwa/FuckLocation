@@ -1,4 +1,4 @@
-package fuck.location.xposed.cellar.legacy
+package fuck.location.xposed.cellar
 
 import android.annotation.SuppressLint
 import android.os.Build
