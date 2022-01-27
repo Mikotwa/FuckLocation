@@ -59,10 +59,10 @@ class PhoneInterfaceManagerHooker {
             name == "getCellLocation" && isPublic
         }.hookMethod {
             after { param ->
-                val packageName = param.args[1] as String
+                val packageName = param.args[0] as String
                 XposedBridge.log("FL: [Cellar] in getCellLocation! Caller package name: $packageName")
 
-                if (WhitelistGateway().inWhitelist(packageName)) { // TODO: Check whether in whiteList by ContentProvider
+                if (WhitelistGateway().inWhitelist(packageName)) {
                     XposedBridge.log("FL: [Cellar] in whiteList! Return custom cell data information")
 
                     when (param.result) {
