@@ -26,4 +26,6 @@ Targeted in Android 12. Previous versions may also work.
 4. That's all. No reboot required. 完成。不需要重启，实时生效。
 
 ## Scope / 作用域
-You should only select Android Framework. 你只应选择 Android 框架作为作用域。
+You should only select / 你只应选择：
+- Android (android)
+- Telephone (com.android.phone)
