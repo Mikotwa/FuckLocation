@@ -11,7 +11,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.BuildConfig
 
 import fuck.location.xposed.cellar.PhoneInterfaceManagerHooker
-import fuck.location.xposed.helpers.WhitelistGateway
+import fuck.location.xposed.helpers.ConfigGateway
 import fuck.location.xposed.location.LocationHookerAfterR
 import fuck.location.xposed.location.LocationHookerPreQ
 import java.lang.Exception
@@ -49,7 +49,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                     XposedBridge.log("FL: Finding method")
 
                     try {
-                        WhitelistGateway().hookWillChangeBeEnabled(lpparam) // Initialize gateway
+                        ConfigGateway().hookWillChangeBeEnabled(lpparam) // Initialize gateway
 
                         // For Android 12 and 11, run this hook
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S

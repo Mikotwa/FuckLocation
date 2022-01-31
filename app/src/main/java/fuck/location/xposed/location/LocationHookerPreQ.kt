@@ -13,7 +13,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.app.ui.models.FakeLocation
-import fuck.location.xposed.helpers.WhitelistGateway
+import fuck.location.xposed.helpers.ConfigGateway
 import java.io.File
 import java.lang.Exception
 
@@ -36,7 +36,7 @@ class LocationHookerPreQ {
                 // TODO: Provide flexible provider options
                 val location = Location(LocationManager.GPS_PROVIDER)
                 try {
-                    if (WhitelistGateway().inWhitelist(packageName)) {
+                    if (ConfigGateway().inWhitelist(packageName)) {
                         XposedBridge.log("FL (pre Q): in whitelist! Return custom location")
 
                         val jsonFileLocation = File("/data/system/fuck_location_test/fakeLocation.json")

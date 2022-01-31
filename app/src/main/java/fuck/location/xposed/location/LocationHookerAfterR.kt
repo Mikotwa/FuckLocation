@@ -13,7 +13,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.app.ui.models.FakeLocation
-import fuck.location.xposed.helpers.WhitelistGateway
+import fuck.location.xposed.helpers.ConfigGateway
 import java.io.File
 import java.lang.Exception
 
@@ -33,10 +33,10 @@ class LocationHookerAfterR {
         }.hookMethod {
             after {
                 try {
-                    val packageName = WhitelistGateway().callerIdentityToPackageName(it.args[1])
+                    val packageName = ConfigGateway().callerIdentityToPackageName(it.args[1])
                     XposedBridge.log("FL: in getLastLocation! Caller package name: $packageName")
 
-                    if (WhitelistGateway().inWhitelist(packageName)) {
+                    if (ConfigGateway().inWhitelist(packageName)) {
                         XposedBridge.log("FL: in whitelist! Return custom location")
                         val jsonAdapterLocation: JsonAdapter<FakeLocation> = Moshi.Builder().add(
                             KotlinJsonAdapterFactory()

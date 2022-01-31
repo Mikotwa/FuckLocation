@@ -18,6 +18,7 @@ import kotlin.concurrent.thread
 
 import fuck.location.app.ui.models.AppListModel
 import fuck.location.app.helpers.WhitelistPersistHelper
+import fuck.location.xposed.helpers.ConfigGateway
 
 @ExperimentalStdlibApi
 class ModuleActivity : AppCompatActivity() {
@@ -45,8 +46,7 @@ class ModuleActivity : AppCompatActivity() {
 
     private fun initAppListView() {
         recyclerView = binding.recycler
-        val wph = WhitelistPersistHelper.get()
-        val storedList = wph.readPackageList()
+        val storedList = ConfigGateway().readPackageList()
 
         val packageInfos = this.packageManager.getInstalledPackages(0)
 
@@ -75,8 +75,7 @@ class ModuleActivity : AppCompatActivity() {
 
     class AppListModule : ItemModule<AppListModel>() {
         init {
-            val wph = WhitelistPersistHelper.get()
-            val selectedAppsList: MutableList<String> = wph.readPackageList() as MutableList<String>
+            val selectedAppsList: MutableList<String> = ConfigGateway().readPackageList() as MutableList<String>
 
             config {
                 layoutResource = R.layout.app_list_model
@@ -98,8 +97,7 @@ class ModuleActivity : AppCompatActivity() {
                         selectedAppsList.add(model.packageName)
                     }
 
-                    val wph = WhitelistPersistHelper.get()
-                    wph.writePackageList(selectedAppsList.toList())
+                    ConfigGateway().writePackageList(selectedAppsList.toList())
                 }
             }
             onUnbind { model, viewBinder, metadata ->

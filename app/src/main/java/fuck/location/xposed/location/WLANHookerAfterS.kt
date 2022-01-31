@@ -1,21 +1,15 @@
 package fuck.location.xposed
 
 import android.annotation.SuppressLint
-import android.app.AndroidAppHelper
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.github.kyuubiran.ezxhelper.utils.*
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 import dalvik.system.PathClassLoader
 import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import fuck.location.xposed.helpers.WhitelistGateway
-import java.io.File
+import fuck.location.xposed.helpers.ConfigGateway
 
 class WLANHooker {
     @RequiresApi(Build.VERSION_CODES.R)
@@ -41,7 +35,7 @@ class WLANHooker {
                                 val packageName = param.args[0] as String
                                 XposedBridge.log("FL: In getScanResults with caller: $packageName")
 
-                                if (WhitelistGateway().inWhitelist(packageName)) {
+                                if (ConfigGateway().inWhitelist(packageName)) {
                                     XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
                                     var customResult = ScanResult()
@@ -65,7 +59,7 @@ class WLANHooker {
                                 val packageName = param.args[0] as String
                                 XposedBridge.log("FL: In getConnectionInfo with caller: $packageName")
 
-                                if (WhitelistGateway().inWhitelist(packageName)) {
+                                if (ConfigGateway().inWhitelist(packageName)) {
                                     XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
                                     var customResult = WifiInfo.Builder()
