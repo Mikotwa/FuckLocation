@@ -33,10 +33,10 @@ class LocationHookerAfterR {
         }.hookMethod {
             after {
                 try {
-                    val packageName = ConfigGateway().callerIdentityToPackageName(it.args[1])
+                    val packageName = ConfigGateway.get().callerIdentityToPackageName(it.args[1])
                     XposedBridge.log("FL: in getLastLocation! Caller package name: $packageName")
 
-                    if (ConfigGateway().inWhitelist(packageName)) {
+                    if (ConfigGateway.get().inWhitelist(packageName)) {
                         XposedBridge.log("FL: in whitelist! Return custom location")
                         val jsonAdapterLocation: JsonAdapter<FakeLocation> = Moshi.Builder().add(
                             KotlinJsonAdapterFactory()

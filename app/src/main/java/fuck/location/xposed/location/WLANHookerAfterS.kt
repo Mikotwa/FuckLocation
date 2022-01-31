@@ -35,7 +35,7 @@ class WLANHooker {
                                 val packageName = param.args[0] as String
                                 XposedBridge.log("FL: In getScanResults with caller: $packageName")
 
-                                if (ConfigGateway().inWhitelist(packageName)) {
+                                if (ConfigGateway.get().inWhitelist(packageName)) {
                                     XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
                                     var customResult = ScanResult()
@@ -59,7 +59,7 @@ class WLANHooker {
                                 val packageName = param.args[0] as String
                                 XposedBridge.log("FL: In getConnectionInfo with caller: $packageName")
 
-                                if (ConfigGateway().inWhitelist(packageName)) {
+                                if (ConfigGateway.get().inWhitelist(packageName)) {
                                     XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
                                     var customResult = WifiInfo.Builder()

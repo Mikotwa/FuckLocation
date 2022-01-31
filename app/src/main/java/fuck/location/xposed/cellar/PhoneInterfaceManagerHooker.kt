@@ -31,9 +31,9 @@ class PhoneInterfaceManagerHooker {
 
                 XposedBridge.log("FL: [Cellar] in getImeiForSlot! Caller package name: $packageName")
 
-                if (ConfigGateway().inWhitelist(packageName)) {
+                if (ConfigGateway.get().inWhitelist(packageName)) {
                     param.result = customIMEI
-                    ConfigGateway().inWhitelist(param.args[1] as String)
+                    ConfigGateway.get().inWhitelist(param.args[1] as String)
                     XposedBridge.log("FL: [Cellar] In whiteList! Return custom value for testing purpose: $customIMEI")
                 }
             }
@@ -47,9 +47,9 @@ class PhoneInterfaceManagerHooker {
                 val customMEID = "1234567891011120" // TODO: Support custom MEID information
 
                 XposedBridge.log("FL: [Cellar] in getMeidForSlot! Caller package name: $packageName")
-                if (ConfigGateway().inWhitelist(packageName)) {
+                if (ConfigGateway.get().inWhitelist(packageName)) {
                     param.result = customMEID
-                    ConfigGateway().inWhitelist(param.args[1] as String)
+                    ConfigGateway.get().inWhitelist(param.args[1] as String)
                     XposedBridge.log("FL: [Cellar] In whiteList! Return custom value for testing purpose: $customMEID")
                 }
             }
@@ -62,7 +62,7 @@ class PhoneInterfaceManagerHooker {
                 val packageName = param.args[0] as String
                 XposedBridge.log("FL: [Cellar] in getCellLocation! Caller package name: $packageName")
 
-                if (ConfigGateway().inWhitelist(packageName)) {
+                if (ConfigGateway.get().inWhitelist(packageName)) {
                     XposedBridge.log("FL: [Cellar] in whiteList! Return custom cell data information")
 
                     when (param.result) {
@@ -102,7 +102,7 @@ class PhoneInterfaceManagerHooker {
                 val packageName = param.args[0] as String
                 XposedBridge.log("FL: [Cellar] in getAllCellInfo! Caller package name: $packageName")
 
-                if (ConfigGateway().inWhitelist(packageName)) {
+                if (ConfigGateway.get().inWhitelist(packageName)) {
                     XposedBridge.log("FL: [Cellar] in whiteList! Return empty AllCellInfo for testing purpose.")
                     val customAllCellInfo = ArrayList<CellInfo>()
                     param.result = customAllCellInfo

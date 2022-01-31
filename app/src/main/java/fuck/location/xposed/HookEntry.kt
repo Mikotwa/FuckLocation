@@ -49,7 +49,9 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                     XposedBridge.log("FL: Finding method")
 
                     try {
-                        ConfigGateway().hookWillChangeBeEnabled(lpparam) // Initialize gateway
+                        // Initialize gateway
+                        ConfigGateway.get().hookWillChangeBeEnabled(lpparam)
+                        ConfigGateway.get().hookGetTagForIntentSender(lpparam)
 
                         // For Android 12 and 11, run this hook
                         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S

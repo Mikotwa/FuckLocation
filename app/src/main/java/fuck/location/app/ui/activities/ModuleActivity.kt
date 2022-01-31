@@ -1,6 +1,5 @@
 package fuck.location.app.ui.activities
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +16,6 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import kotlin.concurrent.thread
 
 import fuck.location.app.ui.models.AppListModel
-import fuck.location.app.helpers.WhitelistPersistHelper
 import fuck.location.xposed.helpers.ConfigGateway
 
 @ExperimentalStdlibApi
@@ -29,6 +27,8 @@ class ModuleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ConfigGateway.get().setCustomContext(applicationContext)
 
         binding = ActivitySelectAppsBinding.inflate(layoutInflater)
         refreshLayout = binding.refreshLayout
@@ -46,11 +46,11 @@ class ModuleActivity : AppCompatActivity() {
 
     private fun initAppListView() {
         recyclerView = binding.recycler
-        val storedList = ConfigGateway().readPackageList()
+        val storedList = ConfigGateway.get().readPackageList()
 
         val packageInfos = this.packageManager.getInstalledPackages(0)
 
-        var list = packageInfos.map {
+        val list = packageInfos.map {
             AppListModel(it.applicationInfo.loadLabel(packageManager).toString(),
                 it.applicationInfo.packageName,
                 it.applicationInfo.loadIcon(packageManager))
@@ -75,7 +75,7 @@ class ModuleActivity : AppCompatActivity() {
 
     class AppListModule : ItemModule<AppListModel>() {
         init {
-            val selectedAppsList: MutableList<String> = ConfigGateway().readPackageList() as MutableList<String>
+            val selectedAppsList: MutableList<String> = ConfigGateway.get().readPackageList() as MutableList<String>
 
             config {
                 layoutResource = R.layout.app_list_model
@@ -97,7 +97,7 @@ class ModuleActivity : AppCompatActivity() {
                         selectedAppsList.add(model.packageName)
                     }
 
-                    ConfigGateway().writePackageList(selectedAppsList.toList())
+                    ConfigGateway.get().writePackageList(selectedAppsList.toList())
                 }
             }
             onUnbind { model, viewBinder, metadata ->

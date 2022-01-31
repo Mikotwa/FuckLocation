@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.annotation.Keep
 import androidx.appcompat.content.res.AppCompatResources
 import com.afollestad.materialdialogs.LayoutMode
@@ -16,15 +14,12 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import fuck.location.R
-import fuck.location.app.MyApplication
 import fuck.location.databinding.ActivityMainBinding
 
-import fuck.location.app.helpers.FakeLocationHelper
+import fuck.location.xposed.helpers.ConfigGateway
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    private val enabled = false
     private lateinit var binding: ActivityMainBinding
-    private lateinit var flhelper: FakeLocationHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +33,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.menuAbout.setOnClickListener(this)
 
         setContentView(binding.root)
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     @SuppressLint("CheckResult")
@@ -61,10 +52,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.menu_settings -> {
-                val type = InputType.TYPE_CLASS_NUMBER
-                var x: Float = 0F
-                var y: Float = 0F
-
                 setFakeLocation()
             }
 
@@ -77,13 +64,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     @ExperimentalStdlibApi
     private fun setFakeLocation() {
-        val dialog = MaterialDialog(this, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+        MaterialDialog(this, BottomSheet(LayoutMode.WRAP_CONTENT)).show {
             title(R.string.custom_location_dialog)
             customView(R.layout.custom_view_fakelocation, scrollable = true, horizontalPadding = true)
 
-            flhelper = FakeLocationHelper.get()
-            val previousYInput = flhelper.readFakeLocation()?.y
-            val previousXInput = flhelper.readFakeLocation()?.x
+            ConfigGateway.get().setCustomContext(applicationContext)
+            val previousYInput = ConfigGateway.get().readFakeLocation()?.y
+            val previousXInput = ConfigGateway.get().readFakeLocation()?.x
 
             findViewById<EditText>(R.id.custom_view_fl_x).setText(previousXInput.toString())
             findViewById<EditText>(R.id.custom_view_fl_y).setText(previousYInput.toString())
@@ -94,7 +81,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val xInput: EditText = dialog.getCustomView()
                     .findViewById(R.id.custom_view_fl_x)
 
-                flhelper.writeFakeLocation(xInput.text.toString().toDouble(), yInput.text.toString().toDouble())
+                ConfigGateway.get().writeFakeLocation(xInput.text.toString().toDouble(), yInput.text.toString().toDouble())
             }
             negativeButton(R.string.custom_location_dialog_notsave)
         }

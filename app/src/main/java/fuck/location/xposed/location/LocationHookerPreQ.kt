@@ -36,7 +36,7 @@ class LocationHookerPreQ {
                 // TODO: Provide flexible provider options
                 val location = Location(LocationManager.GPS_PROVIDER)
                 try {
-                    if (ConfigGateway().inWhitelist(packageName)) {
+                    if (ConfigGateway.get().inWhitelist(packageName)) {
                         XposedBridge.log("FL (pre Q): in whitelist! Return custom location")
 
                         val jsonFileLocation = File("/data/system/fuck_location_test/fakeLocation.json")
