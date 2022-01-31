@@ -13,6 +13,11 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.app.helpers.WhitelistPersistHelper
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
+import java.lang.IllegalArgumentException
+import java.lang.reflect.Field
+
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
+import kotlin.reflect.jvm.internal.impl.metadata.jvm.deserialization.JvmMemberSignature
 
 /*
  * This hook acts as a gateway from phone to framework
@@ -74,5 +79,23 @@ class WhitelistGateway {
             activityManager,
             "setProcessMemoryTrimLevel", packageName, magicNumber, 0
         ) as Boolean
+    }
+
+    // For converting CallerIdentity to packageName
+    fun callerIdentityToPackageName(callerIdentity: Any): String {
+        XposedBridge.log("FL: [debug !!] in callerIdentityToPackageName!")
+        val fields = HiddenApiBypass.getInstanceFields(callerIdentity.javaClass)
+
+        for (field in fields) {
+            // TODO: Change this fu**ing stupid check
+            if (field.toString() == "private final java.lang.String android.location.util.identity.CallerIdentity.mPackageName") {
+                val targetField = field as Field
+                targetField.isAccessible = true
+                return targetField.get(callerIdentity) as String
+            }
+        }
+
+        // Should always found a valid packageName. If not, we throw an exception.
+        throw IllegalArgumentException("FL: Invalid CallerIdentity! This should never happen, please report to developer.")
     }
 }

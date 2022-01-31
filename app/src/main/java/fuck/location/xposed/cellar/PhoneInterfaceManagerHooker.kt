@@ -9,8 +9,8 @@ import com.github.kyuubiran.ezxhelper.utils.hookMethod
 import com.github.kyuubiran.ezxhelper.utils.isPublic
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import fuck.location.xposed.cellar.identity.Lte
 import fuck.location.xposed.helpers.WhitelistGateway
-import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class PhoneInterfaceManagerHooker {
     @ExperimentalStdlibApi
@@ -74,41 +74,8 @@ class PhoneInterfaceManagerHooker {
                         }
                         is CellIdentityLte -> {
                             XposedBridge.log("FL: [Cellar] Using LTE Network...")
-
-                            val constructor = HiddenApiBypass.getDeclaredConstructor(CellIdentityLte::class.java,
-                                Int::class.java,    // ci
-                                Int::class.java,    // pci
-                                Int::class.java,    // tac
-                                Int::class.java,    // earfcn
-                                IntArray::class.java,  // bands
-                                Int::class.java,    // bandwidth
-                                String::class.java, // mccStr
-                                String::class.java, // mncStr
-                                String::class.java, // alphal
-                                String::class.java, // alphas
-                                Collection::class.java, // additionalPlmns
-                                ClosedSubscriberGroupInfo::class.java,  // csgInfo
-                            )
-
-                            XposedBridge.log("FL: [Cellar] Seems to be success 1/3... $constructor")
-
-                            val existedResult = param.result as CellIdentityLte
-                            val customResult = constructor.newInstance(
-                                existedResult.ci,
-                                existedResult.pci,
-                                existedResult.tac,
-                                existedResult.earfcn,
-                                existedResult.bands,
-                                existedResult.bandwidth,
-                                existedResult.mccString,
-                                existedResult.mncString,
-                                existedResult.operatorAlphaLong,
-                                existedResult.operatorAlphaShort,
-                                existedResult.additionalPlmns,
-                                existedResult.closedSubscriberGroupInfo
-                            )
-                            XposedBridge.log("FL: [Cellar] Seems to be success 2/3... $customResult")
-
+                            param.result = Lte().hookCellIdentity(param)
+                            return@after
                         }
                         is CellIdentityTdscdma -> {
                             XposedBridge.log("FL: [Cellar] Using TDSCDMA Network...")
