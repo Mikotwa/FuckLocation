@@ -30,7 +30,6 @@ jobs:
           name: app-debug.apk
           path: ./**/*.apk
       - name: Send notifications
-          id: send_notifications
           uses: danilat/externalized-telegram-notifications-action@0.1.1
           with:
             to: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
