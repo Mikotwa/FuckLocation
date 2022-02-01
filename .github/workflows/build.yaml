@@ -30,8 +30,8 @@ jobs:
           name: app-debug.apk
           path: ./**/*.apk
       - name: Send notifications
-        id: send_notifications
-        uses: danilat/externalized-telegram-notifications-action@master
+        if: cancelled() == false
+        uses: xinthink/action-telegram@v1.1
         with:
           chatId: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
           botToken: ${{ secrets.TELEGRAM_TOKEN }}
