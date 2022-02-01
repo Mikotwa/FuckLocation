@@ -36,4 +36,4 @@ jobs:
           to: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           content-url: https://github.com/Mikotwa/FuckLocation/actions/runs/${{ env.GITHUB_RUN_ID }}
-          parse_mode: html
+          parse-mode: html
