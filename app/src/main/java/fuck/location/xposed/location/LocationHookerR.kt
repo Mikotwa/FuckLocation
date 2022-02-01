@@ -8,6 +8,8 @@ import com.github.kyuubiran.ezxhelper.utils.isPublic
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.xposed.helpers.ConfigGateway
+
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.lang.Exception
 
 class LocationHookerR {
@@ -52,6 +54,12 @@ class LocationHookerR {
                     location.speed = 0F
                     location.speedAccuracyMetersPerSecond = 0F
 
+                    try {
+                        HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
+                    } catch (e: Exception) {
+                        XposedBridge.log("FL: Not possible to mock (R)! $e")
+                    }
+
                     XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
                     it.result = location
                 }
@@ -82,7 +90,7 @@ class LocationHookerR {
                     XposedBridge.log("FL: Finding method in LocationListener (R)")
 
                     val targetMethod = findAllMethods(locationListener) {
-                        name == "onLocationChanged" && parameterCount == 2
+                        name == "onLocationChanged" && parameterCount == 1
                     }
 
                     targetMethod.hookMethod {
@@ -97,7 +105,11 @@ class LocationHookerR {
                             originalLocation.speed = 0F
                             originalLocation.speedAccuracyMetersPerSecond = 0F
 
-                            param.args[0] = originalLocation
+                            try {
+                                HiddenApiBypass.invoke(originalLocation.javaClass, originalLocation, "setIsFromMockProvider", false)
+                            } catch (e: Exception) {
+                                XposedBridge.log("FL: Not possible to mock (R)! $e")
+                            }
                             XposedBridge.log("FL: Return custom location (R): $originalLocation")
                         }
                     }
