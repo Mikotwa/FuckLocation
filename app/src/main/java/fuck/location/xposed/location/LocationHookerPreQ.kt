@@ -1,5 +1,6 @@
 package fuck.location.xposed.location
 
+import android.annotation.SuppressLint
 import android.app.AndroidAppHelper
 import android.location.Location
 import android.location.LocationManager
@@ -14,44 +15,101 @@ import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.app.ui.models.FakeLocation
 import fuck.location.xposed.helpers.ConfigGateway
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 import java.lang.Exception
 
 class LocationHookerPreQ {
+    @SuppressLint("PrivateApi")
     @ExperimentalStdlibApi
     fun hookLastLocation(lpparam: XC_LoadPackage.LoadPackageParam) {
-        var clazz = lpparam.classLoader.loadClass("android.location.LocationManager")
+        val clazz = lpparam.classLoader.loadClass("com.android.server.LocationManagerService")
 
         findAllMethods(clazz) {
             name == "getLastLocation" && isPublic
         }.hookMethod {
             after {
-                var packageName = AndroidAppHelper.currentApplication().applicationContext.packageName
-                XposedBridge.log("FL: in getLastLocation (pre Q)! Caller package name: $packageName");
+                val packageName = ConfigGateway.get().callerIdentityToPackageName(it.args[1])
+                XposedBridge.log("FL: in getLastLocation (Pre Q)! Caller package name: $packageName")
 
-                val jsonAdapterLocation: JsonAdapter<FakeLocation> = Moshi.Builder().add(
-                    KotlinJsonAdapterFactory()
-                ).build().adapter<FakeLocation>()
+                if (ConfigGateway.get().inWhitelist(packageName)) {
+                    XposedBridge.log("FL: in whitelist! Return custom location")
+                    val fakeLocation = ConfigGateway.get().readFakeLocation()
 
-                // TODO: Provide flexible provider options
-                val location = Location(LocationManager.GPS_PROVIDER)
-                try {
-                    if (ConfigGateway.get().inWhitelist(packageName)) {
-                        XposedBridge.log("FL (pre Q): in whitelist! Return custom location")
+                    lateinit var location: Location
+                    lateinit var originLocation: Location
 
-                        val jsonFileLocation = File("/data/system/fuck_location_test/fakeLocation.json")
-                        val fakeLocation = jsonAdapterLocation.fromJson(jsonFileLocation.readText().toString())
+                    if (it.result == null) {
+                        location = Location(LocationManager.NETWORK_PROVIDER)
+                        location.time = System.currentTimeMillis() - (100..10000).random()
+                    } else {
+                        originLocation = it.result as Location
+                        location = Location(originLocation.provider)
 
-                        location.latitude = fakeLocation?.x!!
-                        location.longitude = fakeLocation?.y!!
-                        location.time = System.currentTimeMillis()
-                        location.altitude = 0.0
-
-                        XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
-                        it.result = location
+                        location.time = originLocation.time
+                        location.accuracy = originLocation.accuracy
+                        location.bearing = originLocation.bearing
+                        location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
+                        location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
+                        location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
                     }
-                } catch (e: Exception) {
-                    XposedBridge.log("FL: fuck with exceptions! ${e.toString()}")
+
+                    location.latitude = fakeLocation?.x!!
+                    location.longitude = fakeLocation.y
+                    location.altitude = 0.0
+                    location.speed = 0F
+                    location.speedAccuracyMetersPerSecond = 0F
+
+                    try {
+                        HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
+                    } catch (e: Exception) {
+                        XposedBridge.log("FL: Not possible to mock (Pre Q)! $e")
+                    }
+
+                    XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
+                    it.result = location
+                }
+            }
+        }
+
+        findAllMethods(clazz) {
+            name == "requestLocationUpdates" && isPublic
+        }.hookMethod {
+            after { param ->
+                val packageName = param.args[3] as String
+                XposedBridge.log("FL: in requestLocationUpdates (Pre Q)! Caller package name: $packageName")
+
+                if (ConfigGateway.get().inWhitelist(packageName)) {
+                    XposedBridge.log("FL: in whiteList! Inject custom location...")
+
+                    val locationListener = param.args[1].javaClass
+
+                    XposedBridge.log("FL: Finding method in LocationListener (Pre Q)")
+
+                    val targetMethod = findAllMethods(locationListener) {
+                        name == "onLocationChanged" && parameterCount == 1
+                    }
+
+                    targetMethod.hookMethod {
+                        before { param ->
+                            XposedBridge.log("FL: Hooking onLocationChanged for whitelist apps (Pre Q)!")
+                            val originalLocation = param.args[0] as Location
+                            val fakeLocation = ConfigGateway.get().readFakeLocation()
+
+                            originalLocation.latitude = fakeLocation?.x!!
+                            originalLocation.longitude = fakeLocation.y
+                            originalLocation.altitude = 0.0
+                            originalLocation.speed = 0F
+                            originalLocation.speedAccuracyMetersPerSecond = 0F
+
+                            try {
+                                HiddenApiBypass.invoke(originalLocation.javaClass, originalLocation, "setIsFromMockProvider", false)
+                            } catch (e: Exception) {
+                                XposedBridge.log("FL: Not possible to mock (Pre Q)! $e")
+                            }
+                            XposedBridge.log("FL: Return custom location (Pre Q): $originalLocation")
+                        }
+                    }
                 }
             }
         }
