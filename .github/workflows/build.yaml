@@ -30,10 +30,10 @@ jobs:
           name: app-debug.apk
           path: ./**/*.apk
       - name: Send notifications
-          uses: danilat/externalized-telegram-notifications-action@0.1.1
-          with:
-            to: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
-            token: ${{ secrets.TELEGRAM_TOKEN }}
-            content-url: https://github.com/Mikotwa/FuckLocation/actions/runs/${{ env.GITHUB_RUN_ID }}
-            parse_mode: parse_mode
-
+        id: send_notifications
+        uses: danilat/externalized-telegram-notifications-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          content-url: https://github.com/Mikotwa/FuckLocation/actions/runs/${{ env.GITHUB_RUN_ID }}
+          parse_mode: html
