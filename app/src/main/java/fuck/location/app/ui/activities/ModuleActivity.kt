@@ -1,5 +1,6 @@
 package fuck.location.app.ui.activities
 
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -50,7 +51,21 @@ class ModuleActivity : AppCompatActivity() {
 
         val packageInfos = this.packageManager.getInstalledPackages(0)
 
-        val list = packageInfos.map {
+        val list = packageInfos.sortedWith { lhs, rhs ->
+            val displayNameComparator = ApplicationInfo.DisplayNameComparator(packageManager)
+            if (storedList != null) {
+                val lChecked = storedList.contains(lhs.packageName)
+                val rChecked = storedList.contains(rhs.packageName)
+                when {
+                    lChecked == rChecked ->
+                        displayNameComparator.compare(lhs.applicationInfo, rhs.applicationInfo)
+                    lChecked -> -1
+                    else -> 1
+                }
+            } else {
+                displayNameComparator.compare(lhs.applicationInfo, rhs.applicationInfo)
+            }
+        }.map {
             AppListModel(it.applicationInfo.loadLabel(packageManager).toString(),
                 it.applicationInfo.packageName,
                 it.applicationInfo.loadIcon(packageManager))
