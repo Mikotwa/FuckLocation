@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.AndroidAppHelper
 import android.content.Context
+import android.os.Build
 import com.github.kyuubiran.ezxhelper.utils.*
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -276,7 +277,10 @@ class ConfigGateway private constructor(){
             }
         }
 
-        // Should always found a valid packageName. If not, we throw an exception.
+        // Workaround for Android 11
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+            return callerIdentity.toString()
+        }
         throw IllegalArgumentException("FL: Invalid CallerIdentity! This should never happen, please report to developer. $callerIdentity")
     }
 }
