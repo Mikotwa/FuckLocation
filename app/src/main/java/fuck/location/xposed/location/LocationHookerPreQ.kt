@@ -1,22 +1,15 @@
 package fuck.location.xposed.location
 
 import android.annotation.SuppressLint
-import android.app.AndroidAppHelper
 import android.location.Location
 import android.location.LocationManager
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.hookMethod
 import com.github.kyuubiran.ezxhelper.utils.isPublic
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import fuck.location.app.ui.models.FakeLocation
 import fuck.location.xposed.helpers.ConfigGateway
 import org.lsposed.hiddenapibypass.HiddenApiBypass
-import java.io.File
 import java.lang.Exception
 
 class LocationHookerPreQ {

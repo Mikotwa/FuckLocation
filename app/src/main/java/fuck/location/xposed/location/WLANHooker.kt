@@ -1,4 +1,4 @@
-package fuck.location.xposed
+package fuck.location.xposed.location
 
 import android.annotation.SuppressLint
 import android.net.wifi.ScanResult

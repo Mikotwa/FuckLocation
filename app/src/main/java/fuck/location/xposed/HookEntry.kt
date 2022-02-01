@@ -15,6 +15,7 @@ import fuck.location.xposed.helpers.ConfigGateway
 import fuck.location.xposed.location.LocationHookerAfterS
 import fuck.location.xposed.location.LocationHookerPreQ
 import fuck.location.xposed.location.LocationHookerR
+import fuck.location.xposed.location.WLANHooker
 import java.lang.Exception
 
 @ExperimentalStdlibApi
@@ -58,16 +59,16 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                         when (Build.VERSION.SDK_INT) {
                             Build.VERSION_CODES.S -> {
                                 LocationHookerAfterS().hookLastLocation(lpparam)
-                                WLANHooker().HookWifiManager(lpparam)
                             }
                             Build.VERSION_CODES.R -> {  // Android 11
                                 LocationHookerR().hookLastLocation(lpparam)
-                                WLANHooker().HookWifiManager(lpparam)
                             }
                             else -> {    // For Android 10 and earlier, run this fallback version
                                 LocationHookerPreQ().hookLastLocation(lpparam)
                             }
                         }
+
+                        WLANHooker().HookWifiManager(lpparam)
                     } catch (e: Exception) {
                         XposedBridge.log("FL: fuck with exceptions: $e")
                     }
