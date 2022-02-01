@@ -164,6 +164,11 @@ class ConfigGateway private constructor(){
     private fun readFakeLocationInternal(param: XC_MethodHook.MethodHookParam) {
         var jsonFile = File("/data/system/fuck_location_test/fakeLocation.json")
 
+        if (!jsonFile.exists()) {
+            val jsonFileDirectory = File("/data/system/fuck_location_test/")
+            jsonFileDirectory.mkdirs()
+        }
+
         val json: String = try {
             jsonFile.readText()
         } catch (e: FileNotFoundException) {
@@ -183,6 +188,12 @@ class ConfigGateway private constructor(){
 
     private fun writePackageListInternal(param: XC_MethodHook.MethodHookParam) {
         val jsonFile = File("/data/system/fuck_location_test/whiteList.json")
+
+        if (!jsonFile.exists()) {
+            val jsonFileDirectory = File("/data/system/fuck_location_test/")
+            jsonFileDirectory.mkdirs()
+        }
+
         jsonFile.writeText(param.args[0] as String)
 
         param.result = false    // Block from calling real method
@@ -191,6 +202,11 @@ class ConfigGateway private constructor(){
     private fun writeFakeLocationInternal(param: XC_MethodHook.MethodHookParam) {
         val jsonFile = File("/data/system/fuck_location_test/fakeLocation.json")
         jsonFile.writeText(param.args[0] as String)
+
+        if (!jsonFile.exists()) {
+            val jsonFileDirectory = File("/data/system/fuck_location_test/")
+            jsonFileDirectory.mkdirs()
+        }
 
         param.result = false    // Block from calling real method
     }
@@ -285,8 +301,9 @@ class ConfigGateway private constructor(){
 
         // Workaround for Android 11
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
-            return callerIdentity.toString()
+            return callerIdentity as String
         }
+
         throw IllegalArgumentException("FL: Invalid CallerIdentity! This should never happen, please report to developer. $callerIdentity")
     }
 }
