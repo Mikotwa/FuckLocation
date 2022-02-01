@@ -31,7 +31,9 @@ class AboutActivity: AbsAboutActivity() {
 
         items.add(Category(getString(R.string.about_developer_title)))
         items.add(Contributor(R.drawable.avatar_mogu, getString(R.string.about_developer_name_mogu), getString(R.string.about_developer_description_mogu)))
+        items.add(Contributor(R.drawable.avatar_zypa13510, getString(R.string.about_developer_name_zypa13510), getString(R.string.about_developer_description_zypa13510)))
         items.add(Contributor(R.drawable.avatar_nullptr, getString(R.string.about_developer_name_nullptr), getString(R.string.about_developer_description_nullptr)))
+        items.add(Contributor(R.drawable.avatar_leafstative, getString(R.string.about_developer_name_leafstative), getString(R.string.about_developer_description_leafstative)))
 
         items.add(Category(getString(R.string.about_opensource_title)))
         items.add(

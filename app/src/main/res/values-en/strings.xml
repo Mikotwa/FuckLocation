@@ -33,12 +33,18 @@
     <string name="about_legal_title">Legal information</string>
     <string name="about_legal_content">Although it is somewhat uninteresting to host a legal notice in an open source application, we put such a notice here to prevent abuse and repercussions by some unsuspecting people.\n\nThis module was developed for learning purposes. Please delete this module after 24 hrs of download. \nYou agree to use this module (i.e. Fuck Location, hereinafter) only for legally compliant purposes. You agree that the author will not be held liable for any consequences resulting from a violation of this statement. \n\nBy continuing to use this module, you agree to the above terms.\n\nNotice: If there are anything in English version contract to the original Chinese version, chinese version applied.</string>
 
-    <string name="about_developer_title">Developers</string>
+    <string name="about_developer_title">Developers &amp; Contributors</string>
     <string name="about_developer_name_mogu">Mogu</string>
     <string name="about_developer_description_mogu">Developer &amp; designer</string>
 
+    <string name="about_developer_name_zypa13510">zypA1350</string>
+    <string name="about_developer_description_zypa13510">Help to implement negative coordinate support</string>
+
     <string name="about_developer_name_nullptr">Dr-TSNG</string>
     <string name="about_developer_description_nullptr">Idea spark</string>
+
+    <string name="about_developer_name_leafstative">LeafStative</string>
+    <string name="about_developer_description_leafstative">Help to implement better app selection page</string>
 
     <string name="about_opensource_title">Open Source Licenses</string>
 </resources>
