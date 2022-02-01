@@ -33,7 +33,6 @@ jobs:
         id: send_notifications
         uses: danilat/externalized-telegram-notifications-action@master
         with:
-          to: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          content-url: https://github.com/Mikotwa/FuckLocation/actions/runs/${{ env.GITHUB_RUN_ID }}
-          parse-mode: html
+          chatId: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
+          botToken: ${{ secrets.TELEGRAM_TOKEN }}
+          jobStatus: ${{ job.status }}
