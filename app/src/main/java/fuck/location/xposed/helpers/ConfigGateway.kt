@@ -71,15 +71,12 @@ class ConfigGateway private constructor(){
                 if (param.args[1] == magicNumber) {
                     when {  // Check what this call intend to do
                         param.args[2] == 0 -> {
-                            XposedBridge.log("FL: [debug !!] Calling method inWhitelistOrNot")
                             inWhitelistOrNot(param)
                         }
                         param.args[2] == 1 -> {
-                            XposedBridge.log("FL: [debug !!] Calling method writePackageListInternal")
                             writePackageListInternal(param)
                         }
                         param.args[2] == 3 -> {
-                            XposedBridge.log("FL: [debug !!] Calling method writeFakeLocationInternal")
                             writeFakeLocationInternal(param)
                             return@before
                         }
@@ -105,11 +102,9 @@ class ConfigGateway private constructor(){
             before { param ->
                 when {
                     param.args[0] == magicNumber.toString() -> {
-                        XposedBridge.log("FL: [debug !!] Calling method readPackageListInternal")
                         readPackageListInternal(param)
                     }
                     param.args[0] == magicNumberLocation.toString() -> {
-                        XposedBridge.log("FL: [debug !!] Calling method readFakeLocationInternal")
                         readFakeLocationInternal(param)
                     }
                 }
@@ -282,6 +277,6 @@ class ConfigGateway private constructor(){
         }
 
         // Should always found a valid packageName. If not, we throw an exception.
-        throw IllegalArgumentException("FL: Invalid CallerIdentity! This should never happen, please report to developer.")
+        throw IllegalArgumentException("FL: Invalid CallerIdentity! This should never happen, please report to developer. $callerIdentity")
     }
 }

@@ -12,8 +12,9 @@ import fuck.location.BuildConfig
 
 import fuck.location.xposed.cellar.PhoneInterfaceManagerHooker
 import fuck.location.xposed.helpers.ConfigGateway
-import fuck.location.xposed.location.LocationHookerAfterR
+import fuck.location.xposed.location.LocationHookerAfterS
 import fuck.location.xposed.location.LocationHookerPreQ
+import fuck.location.xposed.location.LocationHookerR
 import java.lang.Exception
 
 @ExperimentalStdlibApi
@@ -53,14 +54,19 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                         ConfigGateway.get().hookWillChangeBeEnabled(lpparam)
                         ConfigGateway.get().hookGetTagForIntentSender(lpparam)
 
-                        // For Android 12 and 11, run this hook
-                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S
-                            || Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
-                            LocationHookerAfterR().hookLastLocation(lpparam)
-                            WLANHooker().HookWifiManager(lpparam)
-
-                        } else {    // For Android 10 and earlier, run this fallback version
-                            LocationHookerPreQ().hookLastLocation(lpparam)
+                        // For Android 12, run this hook
+                        when (Build.VERSION.SDK_INT) {
+                            Build.VERSION_CODES.S -> {
+                                LocationHookerAfterS().hookLastLocation(lpparam)
+                                WLANHooker().HookWifiManager(lpparam)
+                            }
+                            Build.VERSION_CODES.R -> {  // Android 11
+                                LocationHookerR().hookLastLocation(lpparam)
+                                WLANHooker().HookWifiManager(lpparam)
+                            }
+                            else -> {    // For Android 10 and earlier, run this fallback version
+                                LocationHookerPreQ().hookLastLocation(lpparam)
+                            }
                         }
                     } catch (e: Exception) {
                         XposedBridge.log("FL: fuck with exceptions: $e")
