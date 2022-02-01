@@ -206,7 +206,7 @@ class ConfigGateway private constructor(){
             val jsonFileDirectory = File("/data/system/fuck_location_test/")
             jsonFileDirectory.mkdirs()
         }
-        
+
         jsonFile.writeText(param.args[0] as String)
 
         param.result = false    // Block from calling real method

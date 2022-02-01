@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FuckLocation</string>
+    <string name="app_name">Fuck Location</string>
     <string name="select_apps_activity_title">Select Apps</string>
 
     <string name="title_fucklocation_test">Test settings</string>
@@ -36,6 +36,9 @@
     <string name="about_developer_title">Developers</string>
     <string name="about_developer_name_mogu">Mogu</string>
     <string name="about_developer_description_mogu">Developer &amp; designer</string>
+
+    <string name="about_developer_name_nullptr">Dr-TSNG</string>
+    <string name="about_developer_description_nullptr">Idea spark</string>
 
     <string name="about_opensource_title">Open Source Licenses</string>
 </resources>
