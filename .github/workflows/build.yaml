@@ -1,4 +1,4 @@
-name: android_build
+name: Fuck Location CI Build
 
 on:
   workflow_dispatch:
@@ -12,9 +12,9 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: 1.11
       - id: get-project
-        name: Get project name
+        name: Get project FuckLocation
         run: echo "::set-output name=PROJECT::$(cat project-to-build)"
       - name: Clone project
         run: git clone --depth=1 ${{ steps.get-project.outputs.PROJECT }} https://github.com/Mikotwa/FuckLocation.git
