@@ -1,11 +1,11 @@
 name: Fuck Location CI Build
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout the code
         uses: actions/checkout@v2
@@ -27,6 +27,6 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: my-build-apk
+          name: app-debug
           path: ./**/*.apk
 
