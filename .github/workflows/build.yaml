@@ -17,9 +17,9 @@ jobs:
         name: Get project name
         run: echo "::set-output name=PROJECT::$(cat project-to-build)"
       - name: Clone project
-        run: git clone --depth=1 ${{ steps.get-project.outputs.PROJECT }} project
+        run: git clone --depth=1 ${{ steps.get-project.outputs.PROJECT }} https://github.com/Mikotwa/FuckLocation.git
       - name: Build the app
-        working-directory: ./project
+        working-directory: ./FuckLocation
         run: |
           if [ ! -f "gradlew" ]; then gradle wrapper; fi
           chmod +x gradlew
