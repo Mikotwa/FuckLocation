@@ -17,6 +17,7 @@ import fuck.location.app.ui.models.FakeLocation
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 import java.io.FileNotFoundException
+import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.lang.reflect.Field
 
@@ -121,16 +122,21 @@ class ConfigGateway private constructor(){
         val jsonAdapter: JsonAdapter<List<String>> = Moshi.Builder().build().adapter()
         val jsonFile = File("/data/system/fuck_location_test/whiteList.json")
 
-        val list = jsonAdapter.fromJson(jsonFile.readText())
+        try {
+            val list = jsonAdapter.fromJson(jsonFile.readText())
 
-        for (name in list!!) {
-            if (packageName.toString().contains(name)) {
-                param.result = true
-                return
+            for (name in list!!) {
+                if (packageName.toString().contains(name)) {
+                    param.result = true
+                    return
+                }
             }
+        } catch (e: Exception) {
+            XposedBridge.log("FL: No whitelist file found. You may need to create one first")
         }
 
-        param.result = false    // Block from calling real method
+        param.result = false
+        return
     }
 
     @ExperimentalStdlibApi
