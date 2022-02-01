@@ -36,3 +36,4 @@ jobs:
           chatId: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
           botToken: ${{ secrets.TELEGRAM_TOKEN }}
           jobStatus: ${{ job.status }}
+          skipSuccess: false
