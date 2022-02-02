@@ -100,7 +100,6 @@ class LocationHookerAfterS {
 
                         targetMethod.hookMethod {
                             before { param ->
-                                XposedBridge.log("FL: Hooking onLocationChanged for whitelist apps!")
                                 val originalLocationList = param.args[0] as List<*>
                                 val originalFirstLocation = originalLocationList[0] as Location
 
@@ -115,7 +114,6 @@ class LocationHookerAfterS {
 
                                 val newLocationList = arrayListOf(originalFirstLocation)
                                 param.args[0] = newLocationList
-                                XposedBridge.log("FL: Return custom location: $newLocationList")
                             }
                         }
                     } else {

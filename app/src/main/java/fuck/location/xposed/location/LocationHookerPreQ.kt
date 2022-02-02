@@ -85,7 +85,6 @@ class LocationHookerPreQ {
 
                     targetMethod.hookMethod {
                         before { param ->
-                            XposedBridge.log("FL: Hooking onLocationChanged for whitelist apps (Pre Q)!")
                             val originalLocation = param.args[0] as Location
                             val fakeLocation = ConfigGateway.get().readFakeLocation()
 
@@ -100,7 +99,6 @@ class LocationHookerPreQ {
                             } catch (e: Exception) {
                                 XposedBridge.log("FL: Not possible to mock (Pre Q)! $e")
                             }
-                            XposedBridge.log("FL: Return custom location (Pre Q): $originalLocation")
                         }
                     }
                 }
