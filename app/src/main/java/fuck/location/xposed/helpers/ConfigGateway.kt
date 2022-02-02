@@ -255,7 +255,6 @@ class ConfigGateway private constructor(){
         val json = universalAPICaller("null", 2) as String
 
         return jsonAdapter.fromJson(json)
-
     }
 
     @ExperimentalStdlibApi
