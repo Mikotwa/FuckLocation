@@ -74,6 +74,7 @@ class LocationHookerAfterS {
                 XposedBridge.log("FL: in getCurrentLocation! Caller package name: $packageName")
 
                 XposedBridge.log("FL: param 3: ${param.args[3]}")
+                param.result = null
             }
         }
 

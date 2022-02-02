@@ -62,8 +62,6 @@ class LocationHookerR {
 
                     XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
                     it.result = location
-
-                    XposedBridge.log("FL: [debug oddo!!] Finished hooking getLastLocation (R)")
                 }
             }
         }
@@ -75,7 +73,7 @@ class LocationHookerR {
                 val packageName = ConfigGateway.get().callerIdentityToPackageName(param.args[2])
                 XposedBridge.log("FL: in getCurrentLocation! Caller package name: $packageName")
 
-                XposedBridge.log("FL: [debug oddo!!] Finished hooking getCurrentLocation (R)")
+                param.result = null
             }
         }
 
@@ -113,8 +111,6 @@ class LocationHookerR {
                             } catch (e: Exception) {
                                 XposedBridge.log("FL: Not possible to mock (R)! $e")
                             }
-
-                            XposedBridge.log("FL: [debug oddo!!] Finished hooking onLocationChanged (R)")
                         }
                     }
                 }
