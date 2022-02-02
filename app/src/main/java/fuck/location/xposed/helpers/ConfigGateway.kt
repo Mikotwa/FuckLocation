@@ -252,7 +252,7 @@ class ConfigGateway private constructor(){
     @ExperimentalStdlibApi
     fun readPackageList(): List<String>? {
         val jsonAdapter: JsonAdapter<List<String>> = moshi.adapter()
-        val json = universalAPICaller("null", 2) as String
+        val json = universalAPICaller("None", 2) as String
 
         return jsonAdapter.fromJson(json)
     }
@@ -260,7 +260,7 @@ class ConfigGateway private constructor(){
     @ExperimentalStdlibApi
     fun readFakeLocation(): FakeLocation? {
         val jsonAdapter: JsonAdapter<FakeLocation> = moshi.adapter()
-        val json = universalAPICaller("null", 4) as String
+        val json = universalAPICaller("None", 4) as String
 
         return jsonAdapter.fromJson(json)
     }

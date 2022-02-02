@@ -62,6 +62,7 @@ class LocationHookerAfterS {
                     }
                 } catch (e: Exception) {
                     XposedBridge.log("FL: Fuck with exceptions! $e")
+                    e.printStackTrace()
                 }
             }
         }
@@ -73,8 +74,10 @@ class LocationHookerAfterS {
                 val packageName = ConfigGateway.get().callerIdentityToPackageName(param.args[1])
                 XposedBridge.log("FL: in getCurrentLocation! Caller package name: $packageName")
 
-                XposedBridge.log("FL: param 3: ${param.args[3]}")
-                param.result = null
+                if (ConfigGateway.get().inWhitelist(packageName)) {
+                    XposedBridge.log("FL: in whiteList! Inject null...")
+                    param.result = null
+                }
             }
         }
 

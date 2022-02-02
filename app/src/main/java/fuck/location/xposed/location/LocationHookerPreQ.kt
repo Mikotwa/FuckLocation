@@ -33,7 +33,7 @@ class LocationHookerPreQ {
                     lateinit var originLocation: Location
 
                     if (it.result == null) {
-                        location = Location(LocationManager.NETWORK_PROVIDER)
+                        location = Location(LocationManager.GPS_PROVIDER)
                         location.time = System.currentTimeMillis() - (100..10000).random()
                     } else {
                         originLocation = it.result as Location

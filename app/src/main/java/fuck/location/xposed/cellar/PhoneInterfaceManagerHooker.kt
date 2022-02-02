@@ -6,9 +6,11 @@ import android.telephony.*
 import androidx.annotation.RequiresApi
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import com.github.kyuubiran.ezxhelper.utils.hookMethod
+import com.github.kyuubiran.ezxhelper.utils.isPrivate
 import com.github.kyuubiran.ezxhelper.utils.isPublic
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import fuck.location.xposed.cellar.identity.Gsm
 import fuck.location.xposed.cellar.identity.Lte
 import fuck.location.xposed.helpers.ConfigGateway
 
@@ -71,6 +73,8 @@ class PhoneInterfaceManagerHooker {
                         }
                         is CellIdentityGsm -> {
                             XposedBridge.log("FL: [Cellar] Using GSM Network...")
+                            param.result = Gsm().HookCellIdentity(param)
+                            return@after
                         }
                         is CellIdentityLte -> {
                             XposedBridge.log("FL: [Cellar] Using LTE Network...")
@@ -106,6 +110,21 @@ class PhoneInterfaceManagerHooker {
                     XposedBridge.log("FL: [Cellar] in whiteList! Return empty AllCellInfo for testing purpose.")
                     val customAllCellInfo = ArrayList<CellInfo>()
                     param.result = customAllCellInfo
+                }
+            }
+        }
+
+        findAllMethods(clazz) {
+            name == "getNeighboringCellInfo" && isPublic
+        }.hookMethod {
+            after { param ->
+                val packageName = param.args[0] as String
+                XposedBridge.log("FL: [Cellar] in getNeighboringCellInfo! Caller package name: $packageName")
+
+                if (ConfigGateway.get().inWhitelist(packageName)) {
+                    XposedBridge.log("FL: [Cellar] in whiteList! Return empty NeighboringCellInfo for testing purpose.")
+                    val customNeighboringCellInfo = ArrayList<NeighboringCellInfo>()
+                    param.result = customNeighboringCellInfo
                 }
             }
         }
