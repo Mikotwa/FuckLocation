@@ -97,7 +97,7 @@ class ConfigGateway private constructor(){
     fun hookGetTagForIntentSender(lpparam: XC_LoadPackage.LoadPackageParam) {
         val clazz = lpparam.classLoader.loadClass("com.android.server.pm.PackageManagerService")
 
-        XposedBridge.log("FL: [debug !!] Finding method in getDefaultBrowserPackageNameAsUser")
+        XposedBridge.log("FL: [debug !!] Finding method in getInstallerPackageName")
         findAllMethods(clazz) {
             name == "getInstallerPackageName"
         }.hookMethod {
