@@ -79,52 +79,49 @@ class LocationHookerR {
         findAllMethods(clazz) {
             name == "requestLocationUpdates" && isPublic
         }.hookMethod {
-            after { param ->
+            before { param ->
                 val packageName = param.args[3] as String
                 XposedBridge.log("FL: in requestLocationUpdates (R)! Caller package name: $packageName")
 
                 if (ConfigGateway.get().inWhitelist(packageName)) {
                     XposedBridge.log("FL: in whiteList! Inject custom location...")
 
-                    val locationListener = param.args[1].javaClass
+                    val lastParam = param.args[1].javaClass
+                    if (lastParam.typeName == "android.location.ILocationListener\$Stub\$Proxy") {
+                        XposedBridge.log("FL: is LocationListener (R)!")
 
-                    XposedBridge.log("FL: Finding method in LocationListener (R)")
+                        XposedBridge.log("FL: Finding method in LocationListener (R)")
 
-                    val targetMethod = findAllMethods(locationListener) {
-                        name == "onLocationChanged" && parameterCount == 1
-                    }
-
-                    targetMethod.hookMethod {
-                        before { param ->
-                            val originalLocationList = param.args[0] as List<*>
-                            val originLocation = originalLocationList[0] as Location
-
-                            val fakeLocation = ConfigGateway.get().readFakeLocation()
-                            val location = Location(originLocation.provider)
-
-                            location.latitude = fakeLocation?.x!!
-                            location.longitude = fakeLocation.y
-                            location.altitude = 0.0
-                            location.speed = 0F
-                            location.speedAccuracyMetersPerSecond = 0F
-
-                            location.time = originLocation.time
-                            location.accuracy = originLocation.accuracy
-                            location.bearing = originLocation.bearing
-                            location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
-                            location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
-                            location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
-
-                            val newLocationList = arrayListOf(location)
-
-                            try {
-                                HiddenApiBypass.invoke(originLocation.javaClass, originLocation, "setIsFromMockProvider", false)
-                            } catch (e: Exception) {
-                                XposedBridge.log("FL: Not possible to mock (R)! $e")
-                            }
-
-                            param.args[0] = newLocationList
+                        val targetMethod = findAllMethods(lastParam) {
+                            name == "onLocationChanged" && parameterCount == 1
                         }
+
+                        targetMethod.hookMethod {
+                            before { param ->
+                                val originLocation = param.args[0] as Location
+
+                                val fakeLocation = ConfigGateway.get().readFakeLocation()
+                                val location = Location(originLocation.provider)
+
+                                location.latitude = fakeLocation?.x!!
+                                location.longitude = fakeLocation.y
+                                location.altitude = 0.0
+                                location.speed = 0F
+                                location.speedAccuracyMetersPerSecond = 0F
+
+                                location.time = originLocation.time
+                                location.accuracy = originLocation.accuracy
+                                location.bearing = originLocation.bearing
+                                location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
+                                location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
+                                location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
+
+                                param.args[0] = location
+                            }
+                        }
+                    } else {
+                        // TODO: Implement PendingIntent
+                        XposedBridge.log("FL: is PendingIntent that currently not supported")
                     }
                 }
             }

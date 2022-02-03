@@ -36,6 +36,7 @@ class LocationHookerAfterS {
 
                         if (param.result == null) {
                             location = Location(LocationManager.FUSED_PROVIDER)
+                            location.accuracy = (1..100).random().toFloat()
                             location.time = System.currentTimeMillis() - (100..10000).random()
                         } else {
                             originLocation = param.result as Location
@@ -85,7 +86,7 @@ class LocationHookerAfterS {
         findAllMethods(clazz) {
             name == "registerLocationListener" && isPublic
         }.hookMethod {
-            after { param ->
+            before { param ->
                 val packageName = param.args[3] as String
                 XposedBridge.log("FL: in registerLocationListener! Caller package name: $packageName")
 
@@ -95,11 +96,10 @@ class LocationHookerAfterS {
                     val lastParam = param.args[2].javaClass
                     if (lastParam.typeName == "android.location.ILocationListener\$Stub\$Proxy") {
                         XposedBridge.log("FL: is LocationListener!")
-                        val locationListener = param.args[3].javaClass
 
                         XposedBridge.log("FL: Finding method in LocationListener")
 
-                        val targetMethod = findAllMethods(locationListener) {
+                        val targetMethod = findAllMethods(lastParam) {
                             name == "onLocationChanged" && parameterCount == 2
                         }
 
