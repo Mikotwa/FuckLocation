@@ -96,20 +96,34 @@ class LocationHookerR {
 
                     targetMethod.hookMethod {
                         before { param ->
-                            val originalLocation = param.args[0] as Location
-                            val fakeLocation = ConfigGateway.get().readFakeLocation()
+                            val originalLocationList = param.args[0] as List<*>
+                            val originLocation = originalLocationList[0] as Location
 
-                            originalLocation.latitude = fakeLocation?.x!!
-                            originalLocation.longitude = fakeLocation.y
-                            originalLocation.altitude = 0.0
-                            originalLocation.speed = 0F
-                            originalLocation.speedAccuracyMetersPerSecond = 0F
+                            val fakeLocation = ConfigGateway.get().readFakeLocation()
+                            val location = Location(originLocation.provider)
+
+                            location.latitude = fakeLocation?.x!!
+                            location.longitude = fakeLocation.y
+                            location.altitude = 0.0
+                            location.speed = 0F
+                            location.speedAccuracyMetersPerSecond = 0F
+
+                            location.time = originLocation.time
+                            location.accuracy = originLocation.accuracy
+                            location.bearing = originLocation.bearing
+                            location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
+                            location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
+                            location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
+
+                            val newLocationList = arrayListOf(location)
 
                             try {
-                                HiddenApiBypass.invoke(originalLocation.javaClass, originalLocation, "setIsFromMockProvider", false)
+                                HiddenApiBypass.invoke(originLocation.javaClass, originLocation, "setIsFromMockProvider", false)
                             } catch (e: Exception) {
                                 XposedBridge.log("FL: Not possible to mock (R)! $e")
                             }
+
+                            param.args[0] = newLocationList
                         }
                     }
                 }

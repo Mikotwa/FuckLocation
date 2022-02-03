@@ -108,6 +108,7 @@ class ConfigGateway private constructor(){
                     }
                     param.args[0] == magicNumberLocation.toString() -> {
                         readFakeLocationInternal(param)
+                        return@before
                     }
                 }
                 return@before
@@ -164,26 +165,32 @@ class ConfigGateway private constructor(){
     private fun readFakeLocationInternal(param: XC_MethodHook.MethodHookParam) {
         var jsonFile = File("/data/system/fuck_location_test/fakeLocation.json")
 
-        if (!jsonFile.exists()) {
-            val jsonFileDirectory = File("/data/system/fuck_location_test/")
-            jsonFileDirectory.mkdirs()
-        }
-
-        val json: String = try {
-            jsonFile.readText()
-        } catch (e: FileNotFoundException) {
-            Log.d("FL: fakeLocation.json not found. Trying to refresh File holder")
-            try {
-                jsonFile = File("/data/system/fuck_location_test/fakeLocation.json")
-                jsonFile.readText()
-                Log.d("FL: fakeLocation.json resumed.")
-            } catch (e: FileNotFoundException) {
-                Log.d("FL: not possible to refresh. Fallback to {\"x\":0.0, \"y\":0.0}")
+        try {
+            if (!jsonFile.exists()) {
+                val jsonFileDirectory = File("/data/system/fuck_location_test/")
+                jsonFileDirectory.mkdirs()
             }
-            "{\"x\":0.0, \"y\":0.0}"
-        }
 
-        param.result = json
+            val json: String = try {
+                jsonFile.readText()
+            } catch (e: FileNotFoundException) {
+                Log.d("FL: fakeLocation.json not found. Trying to refresh File holder")
+                try {
+                    jsonFile = File("/data/system/fuck_location_test/fakeLocation.json")
+                    jsonFile.readText()
+                    Log.d("FL: fakeLocation.json resumed.")
+                } catch (e: FileNotFoundException) {
+                    Log.d("FL: not possible to refresh. Fallback to {\"x\":0.0, \"y\":0.0}")
+                }
+                "{\"x\":0.0, \"y\":0.0}"
+            }
+
+            param.result = json
+        } catch (e: Exception) {
+            XposedBridge.log("FL: [debug !!] Fuck with exceptions! $e")
+
+            param.result = "{\"x\":0.0, \"y\":0.0}"
+        }
     }
 
     private fun writePackageListInternal(param: XC_MethodHook.MethodHookParam) {
@@ -252,7 +259,12 @@ class ConfigGateway private constructor(){
     @ExperimentalStdlibApi
     fun readPackageList(): List<String>? {
         val jsonAdapter: JsonAdapter<List<String>> = moshi.adapter()
-        val json = universalAPICaller("None", 2) as String
+        val json = try {
+            universalAPICaller("None", 2) as String
+        } catch (e: Exception) {
+            XposedBridge.log("FL: Failed to read package list. Fallback to []")
+            "[]"
+        }
 
         return jsonAdapter.fromJson(json)
     }
@@ -260,7 +272,12 @@ class ConfigGateway private constructor(){
     @ExperimentalStdlibApi
     fun readFakeLocation(): FakeLocation? {
         val jsonAdapter: JsonAdapter<FakeLocation> = moshi.adapter()
-        val json = universalAPICaller("None", 4) as String
+        val json = try {
+            universalAPICaller("None", 4) as String
+        } catch (e: Exception) {
+            XposedBridge.log("FL: Failed to read fake location. Fallback to {\"x\":0.0, \"y\":0.0}")
+            "{\"x\":0.0, \"y\":0.0}"
+        }
 
         return jsonAdapter.fromJson(json)
     }

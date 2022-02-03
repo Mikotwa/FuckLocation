@@ -39,12 +39,12 @@ class WLANHooker {
                                     XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
                                     var customResult = ScanResult()
-                                    customResult.BSSID = "22:33:11:68:7e:3f"
+                                    customResult.BSSID = ""
                                     customResult.SSID = "AndroidAP"
                                     customResult.capabilities = "WPA-2"
                                     customResult.level = -1
 
-                                    val result: List<ScanResult> = listOf(customResult)
+                                    val result: List<ScanResult> = listOf()
                                     param.result = result
 
                                     XposedBridge.log("FL: BSSID: ${customResult.BSSID}, SSID: ${customResult.SSID}")
@@ -63,7 +63,7 @@ class WLANHooker {
                                     XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
                                     var customResult = WifiInfo.Builder()
-                                        .setBssid("22:33:11:68:7e:3f")
+                                        .setBssid("")
                                         .setSsid("Android-AP".toByteArray())
                                         .setRssi(-1)
                                         .setNetworkId(0)

@@ -74,12 +74,10 @@ class PhoneInterfaceManagerHooker {
                         is CellIdentityGsm -> {
                             XposedBridge.log("FL: [Cellar] Using GSM Network...")
                             param.result = Gsm().HookCellIdentity(param)
-                            return@after
                         }
                         is CellIdentityLte -> {
                             XposedBridge.log("FL: [Cellar] Using LTE Network...")
                             param.result = Lte().hookCellIdentity(param)
-                            return@after
                         }
                         is CellIdentityTdscdma -> {
                             XposedBridge.log("FL: [Cellar] Using TDSCDMA Network...")
@@ -102,7 +100,7 @@ class PhoneInterfaceManagerHooker {
         findAllMethods(clazz) {
             name == "getAllCellInfo" && isPublic
         }.hookMethod {
-            after { param ->
+            before { param ->
                 val packageName = param.args[0] as String
                 XposedBridge.log("FL: [Cellar] in getAllCellInfo! Caller package name: $packageName")
 
@@ -117,7 +115,7 @@ class PhoneInterfaceManagerHooker {
         findAllMethods(clazz) {
             name == "getNeighboringCellInfo" && isPublic
         }.hookMethod {
-            after { param ->
+            before { param ->
                 val packageName = param.args[0] as String
                 XposedBridge.log("FL: [Cellar] in getNeighboringCellInfo! Caller package name: $packageName")
 

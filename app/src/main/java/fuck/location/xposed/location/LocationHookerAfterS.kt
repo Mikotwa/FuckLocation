@@ -17,14 +17,14 @@ class LocationHookerAfterS {
     @RequiresApi(Build.VERSION_CODES.S)
     @ExperimentalStdlibApi
     fun hookLastLocation(lpparam: XC_LoadPackage.LoadPackageParam) {
-        val clazz = lpparam.classLoader.loadClass("com.android.server.location.provider.LocationProviderManager")
+        val clazz = lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
 
         findAllMethods(clazz) {
             name == "getLastLocation" && isPublic
         }.hookMethod {
-            after {
+            after { param ->
                 try {
-                    val packageName = ConfigGateway.get().callerIdentityToPackageName(it.args[1])
+                    val packageName = param.args[2] as String
                     XposedBridge.log("FL: in getLastLocation! Caller package name: $packageName")
 
                     if (ConfigGateway.get().inWhitelist(packageName)) {
@@ -34,11 +34,12 @@ class LocationHookerAfterS {
                         lateinit var location: Location
                         lateinit var originLocation: Location
 
-                        if (it.result == null) {
+                        if (param.result == null) {
                             location = Location(LocationManager.FUSED_PROVIDER)
                             location.time = System.currentTimeMillis() - (100..10000).random()
                         } else {
-                            originLocation = it.result as Location
+                            originLocation = param.result as Location
+
                             location = Location(originLocation.provider)
 
                             location.time = originLocation.time
@@ -58,7 +59,7 @@ class LocationHookerAfterS {
                         location.speedAccuracyMetersPerSecond = 0F
 
                         XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
-                        it.result = location
+                        param.result = location
                     }
                 } catch (e: Exception) {
                     XposedBridge.log("FL: Fuck with exceptions! $e")
@@ -71,7 +72,7 @@ class LocationHookerAfterS {
             name == "getCurrentLocation" && isPublic
         }.hookMethod {
             after { param ->
-                val packageName = ConfigGateway.get().callerIdentityToPackageName(param.args[1])
+                val packageName = param.args[3] as String
                 XposedBridge.log("FL: in getCurrentLocation! Caller package name: $packageName")
 
                 if (ConfigGateway.get().inWhitelist(packageName)) {
@@ -82,16 +83,16 @@ class LocationHookerAfterS {
         }
 
         findAllMethods(clazz) {
-            name == "registerLocationRequest" && isPublic
+            name == "registerLocationListener" && isPublic
         }.hookMethod {
             after { param ->
-                val packageName = ConfigGateway.get().callerIdentityToPackageName(param.args[1])
-                XposedBridge.log("FL: in registerLocationRequest! Caller package name: $packageName")
+                val packageName = param.args[3] as String
+                XposedBridge.log("FL: in registerLocationListener! Caller package name: $packageName")
 
                 if (ConfigGateway.get().inWhitelist(packageName)) {
                     XposedBridge.log("FL: in whiteList! Inject custom location...")
 
-                    val lastParam = param.args[3].javaClass
+                    val lastParam = param.args[2].javaClass
                     if (lastParam.typeName == "android.location.ILocationListener\$Stub\$Proxy") {
                         XposedBridge.log("FL: is LocationListener!")
                         val locationListener = param.args[3].javaClass
@@ -105,18 +106,27 @@ class LocationHookerAfterS {
                         targetMethod.hookMethod {
                             before { param ->
                                 val originalLocationList = param.args[0] as List<*>
-                                val originalFirstLocation = originalLocationList[0] as Location
+                                val originLocation = originalLocationList[0] as Location
 
                                 val fakeLocation = ConfigGateway.get().readFakeLocation()
+                                val location = Location(originLocation.provider)
 
-                                originalFirstLocation.latitude = fakeLocation?.x!!
-                                originalFirstLocation.longitude = fakeLocation.y
-                                originalFirstLocation.altitude = 0.0
-                                originalFirstLocation.isMock = false
-                                originalFirstLocation.speed = 0F
-                                originalFirstLocation.speedAccuracyMetersPerSecond = 0F
+                                location.latitude = fakeLocation?.x!!
+                                location.longitude = fakeLocation.y
+                                location.altitude = 0.0
+                                location.isMock = false
+                                location.speed = 0F
+                                location.speedAccuracyMetersPerSecond = 0F
 
-                                val newLocationList = arrayListOf(originalFirstLocation)
+                                location.time = originLocation.time
+                                location.accuracy = originLocation.accuracy
+                                location.bearing = originLocation.bearing
+                                location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
+                                location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
+                                location.elapsedRealtimeUncertaintyNanos = originLocation.elapsedRealtimeUncertaintyNanos
+                                location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
+
+                                val newLocationList = arrayListOf(location)
                                 param.args[0] = newLocationList
                             }
                         }
