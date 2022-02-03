@@ -116,6 +116,12 @@ class LocationHookerR {
                                 location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
                                 location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
 
+                                try {
+                                    HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
+                                } catch (e: Exception) {
+                                    XposedBridge.log("FL: Not possible to mock (R)! $e")
+                                }
+
                                 param.args[0] = location
                             }
                         }
