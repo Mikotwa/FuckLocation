@@ -15,8 +15,8 @@
     <string name="card_detail_activated">Go settings for further set up</string>
     <string name="card_serve_time">Served for 0 times</string>
 
-    <string name="dialog_not_avaliable_dialog">Not available</string>
-    <string name="dialog_not_avaliable_content">Coming soon :)</string>
+    <string name="dialog_not_available_dialog">Not available</string>
+    <string name="dialog_not_available_content">Coming soon :)</string>
 
     <string name="system_app">System apps</string>
     <string name="custom_location_dialog">Location</string>
@@ -47,4 +47,5 @@
     <string name="about_developer_description_leafstative">Help to implement better app selection page</string>
 
     <string name="about_opensource_title">Open Source Licenses</string>
+    <string name="no_result">No result</string>
 </resources>
