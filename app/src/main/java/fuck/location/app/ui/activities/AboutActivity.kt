@@ -11,9 +11,6 @@ import fuck.location.BuildConfig
 import fuck.location.R
 import com.drakeet.about.License
 
-
-
-
 class AboutActivity: AbsAboutActivity() {
     @SuppressLint("SetTextI18n")    // version.txt doesn't need translation
     override fun onCreateHeader(icon: ImageView, slogan: TextView, version: TextView) {
