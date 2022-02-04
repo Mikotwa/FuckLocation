@@ -68,7 +68,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             }
                         }
 
-                        WLANHooker().HookWifiManager(lpparam)
+                        WLANHooker().hookWifiManager(lpparam)
                     } catch (e: Exception) {
                         XposedBridge.log("FL: fuck with exceptions: $e")
                     }

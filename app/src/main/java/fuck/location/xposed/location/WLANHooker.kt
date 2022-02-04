@@ -15,7 +15,7 @@ class WLANHooker {
     @RequiresApi(Build.VERSION_CODES.R)
     @ExperimentalStdlibApi
     @SuppressLint("PrivateApi")
-    fun HookWifiManager(lpparam: XC_LoadPackage.LoadPackageParam) {
+    fun hookWifiManager(lpparam: XC_LoadPackage.LoadPackageParam) {
         val clazz: Class<*> = lpparam.classLoader.loadClass("com.android.server.SystemServiceManager")
         findAllMethods(clazz) {
             name == "loadClassFromLoader" && isPrivate && isStatic
@@ -38,7 +38,7 @@ class WLANHooker {
                                 if (ConfigGateway.get().inWhitelist(packageName)) {
                                     XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
-                                    var customResult = ScanResult()
+                                    val customResult = ScanResult()
                                     customResult.BSSID = ""
                                     customResult.SSID = "AndroidAP"
                                     customResult.capabilities = "WPA-2"
@@ -62,7 +62,7 @@ class WLANHooker {
                                 if (ConfigGateway.get().inWhitelist(packageName)) {
                                     XposedBridge.log("FL: in whitelist! Return custom WiFi information")
 
-                                    var customResult = WifiInfo.Builder()
+                                    val customResult = WifiInfo.Builder()
                                         .setBssid("")
                                         .setSsid("Android-AP".toByteArray())
                                         .setRssi(-1)
