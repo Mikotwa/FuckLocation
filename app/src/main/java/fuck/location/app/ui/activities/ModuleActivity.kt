@@ -2,6 +2,8 @@ package fuck.location.app.ui.activities
 
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
+import android.view.Menu
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,13 +13,17 @@ import com.idanatz.oneadapter.external.modules.ItemModule
 import fuck.location.R
 import fuck.location.databinding.ActivitySelectAppsBinding
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.SearchView
 import com.github.kyuubiran.ezxhelper.utils.runOnMainThread
 import com.idanatz.oneadapter.external.event_hooks.ClickEventHook
+import com.idanatz.oneadapter.external.modules.EmptinessModule
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import kotlin.concurrent.thread
 
 import fuck.location.app.ui.models.AppListModel
 import fuck.location.xposed.helpers.ConfigGateway
+import java.util.stream.Collectors
 
 @ExperimentalStdlibApi
 class ModuleActivity : AppCompatActivity() {
@@ -25,6 +31,10 @@ class ModuleActivity : AppCompatActivity() {
     private lateinit var refreshLayout: RefreshLayout
 
     private lateinit var binding: ActivitySelectAppsBinding
+    private lateinit var oneAdapter: OneAdapter
+    private lateinit var packageInfos: List<AppListModel>
+
+    private var searchKeyword = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +42,50 @@ class ModuleActivity : AppCompatActivity() {
         ConfigGateway.get().setCustomContext(applicationContext)
 
         binding = ActivitySelectAppsBinding.inflate(layoutInflater)
+        recyclerView = binding.recycler
+        oneAdapter = OneAdapter(recyclerView) {
+            itemModules += AppListModule()
+            emptinessModule = EmptyListModule()
+        }
+
+        recyclerView = binding.recycler
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
         refreshLayout = binding.refreshLayout
         refreshLayout.setOnRefreshListener { refresh() }.autoRefresh()
 
         setContentView(binding.root)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_app_list, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val searchView = menu?.findItem(R.id.menu_search)?.actionView as SearchView?
+            ?: return super.onPrepareOptionsMenu(menu)
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchKeyword = newText?.lowercase() ?: ""
+
+                thread {
+                    updateSearchResult(searchKeyword)
+                }
+
+                return true
+            }
+        })
+
+        searchView.findViewById<View>(
+            androidx.appcompat.R.id.search_edit_frame).layoutDirection = View.LAYOUT_DIRECTION_INHERIT
+
+        return super.onPrepareOptionsMenu(menu)
     }
 
     private fun refresh() {
@@ -46,45 +96,51 @@ class ModuleActivity : AppCompatActivity() {
     }
 
     private fun initAppListView() {
-        recyclerView = binding.recycler
+        updateInstalledPackages()
+        updateSearchResult(searchKeyword)
+    }
+
+    private fun updateInstalledPackages() {
         val storedList = ConfigGateway.get().readPackageList()
+        val checkCircle = AppCompatResources.getDrawable(this, R.drawable.baseline_check_circle_24)!!
+        val displayNameComparator = ApplicationInfo.DisplayNameComparator(this.packageManager)
 
-        val packageInfos = this.packageManager.getInstalledPackages(0)
-
-        val list = packageInfos.sortedWith { lhs, rhs ->
-            val displayNameComparator = ApplicationInfo.DisplayNameComparator(packageManager)
-            if (storedList != null) {
-                val lChecked = storedList.contains(lhs.packageName)
-                val rChecked = storedList.contains(rhs.packageName)
-                when {
-                    lChecked == rChecked ->
-                        displayNameComparator.compare(lhs.applicationInfo, rhs.applicationInfo)
-                    lChecked -> -1
-                    else -> 1
+        packageInfos = this.packageManager.getInstalledPackages(0)
+            .parallelStream().sorted { lhs, rhs ->
+                if (storedList != null) {
+                    val lChecked = storedList.contains(lhs.packageName)
+                    val rChecked = storedList.contains(rhs.packageName)
+                    when {
+                        lChecked == rChecked ->
+                            displayNameComparator.compare(lhs.applicationInfo, rhs.applicationInfo)
+                        lChecked -> -1
+                        else -> 1
+                    }
+                } else {
+                    displayNameComparator.compare(lhs.applicationInfo, rhs.applicationInfo)
                 }
-            } else {
-                displayNameComparator.compare(lhs.applicationInfo, rhs.applicationInfo)
-            }
-        }.map {
-            AppListModel(it.applicationInfo.loadLabel(packageManager).toString(),
-                it.applicationInfo.packageName,
-                it.applicationInfo.loadIcon(packageManager))
-        }.toList()
+            }.map {
+                val packageName = it.applicationInfo.packageName
+                val icon = if (storedList?.contains(packageName) == true) checkCircle else it.applicationInfo.loadIcon(packageManager)
 
-        list.forEach { unit ->
-            if (storedList != null) {
-                if (storedList.contains(unit.packageName)) unit.icon = getDrawable(R.drawable.baseline_check_circle_24)!!
-            }
+                AppListModel(it.applicationInfo.loadLabel(packageManager).toString(),
+                    packageName,
+                    icon)
+            }.collect(Collectors.toList())
+    }
+
+    private fun updateSearchResult(keyword: String) {
+
+        val searchResult = if (keyword.isNotEmpty()) {
+            packageInfos.parallelStream().filter {
+                it.title.lowercase().contains(keyword)
+            }.collect(Collectors.toList())
+        } else {
+            packageInfos
         }
 
         runOnMainThread {
-            val oneAdapter = OneAdapter(recyclerView) {
-                itemModules += AppListModule()
-            }
-            oneAdapter.setItems(list)
-
-            recyclerView = binding.recycler
-            recyclerView.layoutManager = LinearLayoutManager(this)
+            oneAdapter.setItems(searchResult)
         }
     }
 
@@ -117,6 +173,14 @@ class ModuleActivity : AppCompatActivity() {
             }
             onUnbind { model, viewBinder, metadata ->
 
+            }
+        }
+    }
+
+    class EmptyListModule : EmptinessModule() {
+        init {
+            config {
+                layoutResource = R.layout.empty_app_list
             }
         }
     }
