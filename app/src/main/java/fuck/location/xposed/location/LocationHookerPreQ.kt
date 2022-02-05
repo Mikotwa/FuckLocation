@@ -68,7 +68,7 @@ class LocationHookerPreQ {
             name == "handleLocationChangedLocked" && isNotPublic
         }.hookMethod {
             before { param ->
-                XposedBridge.log("FL: in handleLocationChangedLocked (Q)! Removing whitelisted apps...")
+                XposedBridge.log("FL: in handleLocationChangedLocked (Pre Q)! Removing whitelisted apps...")
                 val mRecordsByProviderField = findField(clazz) {
                     name == "mRecordsByProvider"
                 }
@@ -118,7 +118,7 @@ class LocationHookerPreQ {
                             try {
                                 HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
                             } catch (e: Exception) {
-                                XposedBridge.log("FL: Not possible to mock (R)! $e")
+                                XposedBridge.log("FL: Not possible to mock (Pre Q)! $e")
                             }
 
                             // TODO: this is a unsafe call that bypass the validation of system
