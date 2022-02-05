@@ -117,6 +117,35 @@ class LocationHookerR {
 
                         if (!ConfigGateway.get().inWhitelist(packageName)) {
                             newValue.add(record)
+                        } else {
+                            val originLocation = (param.args[1] as Location).takeIf { param.args[1] != null } ?: Location(LocationManager.GPS_PROVIDER)
+                            val fakeLocation = ConfigGateway.get().readFakeLocation()
+
+                            val location = Location(originLocation.provider)
+
+                            location.latitude = fakeLocation?.x!!
+                            location.longitude = fakeLocation.y
+                            location.altitude = 0.0
+                            location.speed = 0F
+                            location.speedAccuracyMetersPerSecond = 0F
+
+                            location.time = originLocation.time
+                            location.accuracy = originLocation.accuracy
+                            location.bearing = originLocation.bearing
+                            location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
+                            location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
+                            location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
+
+                            try {
+                                HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
+                            } catch (e: Exception) {
+                                XposedBridge.log("FL: Not possible to mock (R)! $e")
+                            }
+
+                            // TODO: this is a unsafe call that bypass the validation of system
+                            findMethod(mReceiver.javaClass, false) {
+                                name == "callLocationChangedLocked" && isPublic
+                            }.invoke(mReceiver, location)
                         }
                     }
 
