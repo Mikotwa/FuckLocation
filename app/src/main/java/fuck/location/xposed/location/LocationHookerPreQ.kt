@@ -3,9 +3,8 @@ package fuck.location.xposed.location
 import android.annotation.SuppressLint
 import android.location.Location
 import android.location.LocationManager
-import com.github.kyuubiran.ezxhelper.utils.findAllMethods
-import com.github.kyuubiran.ezxhelper.utils.hookMethod
-import com.github.kyuubiran.ezxhelper.utils.isPublic
+import android.os.Bundle
+import com.github.kyuubiran.ezxhelper.utils.*
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.xposed.helpers.ConfigGateway
@@ -66,59 +65,74 @@ class LocationHookerPreQ {
         }
 
         findAllMethods(clazz) {
-            name == "requestLocationUpdates" && isPublic
+            name == "handleLocationChangedLocked" && isNotPublic
         }.hookMethod {
             before { param ->
-                val packageName = param.args[3] as String
-                XposedBridge.log("FL: in requestLocationUpdates (Pre Q)! Caller package name: $packageName")
-
-                if (ConfigGateway.get().inWhitelist(packageName)) {
-                    XposedBridge.log("FL: in whiteList! Inject custom location...")
-
-                    val lastParam = param.args[1].javaClass
-                    if (lastParam.typeName == "android.location.ILocationListener\$Stub\$Proxy") {
-                        XposedBridge.log("FL: is LocationListener (Pre Q)!")
-
-                        XposedBridge.log("FL: Finding method in LocationListener (Pre Q)")
-
-                        val targetMethod = findAllMethods(lastParam) {
-                            name == "onLocationChanged" && parameterCount == 1
-                        }
-
-                        targetMethod.hookMethod {
-                            before { param ->
-                                val originLocation = param.args[0] as Location
-
-                                val fakeLocation = ConfigGateway.get().readFakeLocation()
-                                val location = Location(originLocation.provider)
-
-                                location.latitude = fakeLocation?.x!!
-                                location.longitude = fakeLocation.y
-                                location.altitude = 0.0
-                                location.speed = 0F
-                                location.speedAccuracyMetersPerSecond = 0F
-
-                                location.time = originLocation.time
-                                location.accuracy = originLocation.accuracy
-                                location.bearing = originLocation.bearing
-                                location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
-                                location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
-                                location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
-
-                                try {
-                                    HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
-                                } catch (e: Exception) {
-                                    XposedBridge.log("FL: Not possible to mock (Pre Q)! $e")
-                                }
-
-                                param.args[0] = location
-                            }
-                        }
-                    } else {
-                        // TODO: Implement PendingIntent
-                        XposedBridge.log("FL: is PendingIntent that currently not supported")
-                    }
+                XposedBridge.log("FL: in handleLocationChangedLocked (Q)! Removing whitelisted apps...")
+                val mRecordsByProviderField = findField(clazz) {
+                    name == "mRecordsByProvider"
                 }
+
+                mRecordsByProviderField.isAccessible = true
+
+                val records = mRecordsByProviderField.get(param.thisObject) as HashMap<*, *>
+                val newRecords = HashMap<String, ArrayList<*>>()
+
+                records.entries.forEach { entry ->
+                    val key = entry.key as String
+                    val value = entry.value as ArrayList<*>
+                    val newValue = ArrayList<Any>()
+
+                    value.forEach { record ->
+                        val mReceiver = findField(record.javaClass) {
+                            name == "mReceiver"
+                        }.get(record)
+
+                        val mCallerIdentity = findField(mReceiver.javaClass, true) {
+                            name == "mCallerIdentity"
+                        }.get(mReceiver)
+
+                        val packageName = ConfigGateway.get().callerIdentityToPackageName(mCallerIdentity)
+
+                        if (!ConfigGateway.get().inWhitelist(packageName)) {
+                            newValue.add(record)
+                        } else {
+                            val originLocation = (param.args[0] as Location).takeIf { param.args[0] != null } ?: Location(LocationManager.GPS_PROVIDER)
+                            val fakeLocation = ConfigGateway.get().readFakeLocation()
+
+                            val location = Location(originLocation.provider)
+
+                            location.latitude = fakeLocation?.x!!
+                            location.longitude = fakeLocation.y
+                            location.altitude = 0.0
+                            location.speed = 0F
+                            location.speedAccuracyMetersPerSecond = 0F
+
+                            location.time = originLocation.time
+                            location.accuracy = originLocation.accuracy
+                            location.bearing = originLocation.bearing
+                            location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
+                            location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
+                            location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
+
+                            try {
+                                HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
+                            } catch (e: Exception) {
+                                XposedBridge.log("FL: Not possible to mock (R)! $e")
+                            }
+
+                            // TODO: this is a unsafe call that bypass the validation of system
+                            findMethod(mReceiver.javaClass, false) {
+                                name == "callLocationChangedLocked" && isPublic
+                            }.invoke(location)
+                        }
+                    }
+
+                    newRecords[key] = newValue
+                }
+
+                mRecordsByProviderField.set(param.thisObject, newRecords)
+                XposedBridge.log("FL: Finished delivering altered records...")
             }
         }
     }

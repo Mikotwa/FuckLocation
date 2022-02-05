@@ -89,7 +89,7 @@ class LocationHookerR {
             name == "handleLocationChangedLocked" && isNotPublic
         }.hookMethod {
             before { param ->
-                XposedBridge.log("FL: in handleLocationChangedLocked (R, before)! Removing whitelisted apps...")
+                XposedBridge.log("FL: in handleLocationChangedLocked (R)! Removing whitelisted apps...")
                 val mRecordsByProviderField = findField(clazz) {
                     name == "mRecordsByProvider"
                 }
