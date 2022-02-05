@@ -2,9 +2,7 @@ package fuck.location.xposed.location
 
 import android.annotation.SuppressLint
 import android.location.*
-import com.github.kyuubiran.ezxhelper.utils.findAllMethods
-import com.github.kyuubiran.ezxhelper.utils.hookMethod
-import com.github.kyuubiran.ezxhelper.utils.isPublic
+import com.github.kyuubiran.ezxhelper.utils.*
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.xposed.helpers.ConfigGateway
@@ -77,58 +75,28 @@ class LocationHookerR {
         }
 
         findAllMethods(clazz) {
-            name == "requestLocationUpdates" && isPublic
+            name == "requestLocationUpdatesLocked" && isNotPublic
         }.hookMethod {
             before { param ->
-                val packageName = param.args[3] as String
-                XposedBridge.log("FL: in requestLocationUpdates (R)! Caller package name: $packageName")
+                val receiver = param.args[1]
+                XposedBridge.log("FL: in requestLocationUpdatesLocked (R)!")
 
-                if (ConfigGateway.get().inWhitelist(packageName)) {
-                    XposedBridge.log("FL: in whiteList! Inject custom location...")
+                val methods = findAllMethods(receiver.javaClass) {
+                    name == "getListener" && isPublic
+                }
 
-                    val lastParam = param.args[1].javaClass
-                    if (lastParam.typeName == "android.location.ILocationListener\$Stub\$Proxy") {
-                        XposedBridge.log("FL: is LocationListener (R)!")
+                XposedBridge.log("FL: Finished finding method (R)! Here is all methods: ")
 
-                        XposedBridge.log("FL: Finding method in LocationListener (R)")
+                for (i in methods) {
+                    XposedBridge.log("FL: $i")
+                }
 
-                        val targetMethod = findAllMethods(lastParam) {
-                            name == "onLocationChanged" && parameterCount == 1
-                        }
+                val listener = methods.invokeMethod("getListener")
 
-                        targetMethod.hookMethod {
-                            before { param ->
-                                val originLocation = param.args[0] as Location
-
-                                val fakeLocation = ConfigGateway.get().readFakeLocation()
-                                val location = Location(originLocation.provider)
-
-                                location.latitude = fakeLocation?.x!!
-                                location.longitude = fakeLocation.y
-                                location.altitude = 0.0
-                                location.speed = 0F
-                                location.speedAccuracyMetersPerSecond = 0F
-
-                                location.time = originLocation.time
-                                location.accuracy = originLocation.accuracy
-                                location.bearing = originLocation.bearing
-                                location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
-                                location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
-                                location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
-
-                                try {
-                                    HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
-                                } catch (e: Exception) {
-                                    XposedBridge.log("FL: Not possible to mock (R)! $e")
-                                }
-
-                                param.args[0] = location
-                            }
-                        }
-                    } else {
-                        // TODO: Implement PendingIntent
-                        XposedBridge.log("FL: is PendingIntent that currently not supported")
-                    }
+                if (listener != null) {
+                    XposedBridge.log("FL: Finished finding listener (R)! Hooking method...")
+                } else {
+                    XposedBridge.log("FL: Listener is null, this situation in currently not handled...")
                 }
             }
         }

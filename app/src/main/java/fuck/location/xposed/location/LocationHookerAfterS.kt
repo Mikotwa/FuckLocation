@@ -1,16 +1,18 @@
 package fuck.location.xposed.location
 
 import android.annotation.SuppressLint
+import android.app.AndroidAppHelper
 import android.location.*
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.github.kyuubiran.ezxhelper.utils.findAllMethods
-import com.github.kyuubiran.ezxhelper.utils.hookMethod
-import com.github.kyuubiran.ezxhelper.utils.isPublic
+import com.github.kyuubiran.ezxhelper.utils.*
 import de.robv.android.xposed.XposedBridge
+import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.xposed.helpers.ConfigGateway
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.lang.Exception
+import java.lang.reflect.Field
 
 class LocationHookerAfterS {
     @SuppressLint("PrivateApi")
@@ -86,55 +88,22 @@ class LocationHookerAfterS {
         findAllMethods(clazz) {
             name == "registerLocationListener" && isPublic
         }.hookMethod {
-            before { param ->
+            after { param ->
                 val packageName = param.args[3] as String
                 XposedBridge.log("FL: in registerLocationListener! Caller package name: $packageName")
 
-                if (ConfigGateway.get().inWhitelist(packageName)) {
+                //if (ConfigGateway.get().inWhitelist(packageName)) {
                     XposedBridge.log("FL: in whiteList! Inject custom location...")
 
                     val lastParam = param.args[2].javaClass
-                    if (lastParam.typeName == "android.location.ILocationListener\$Stub\$Proxy") {
-                        XposedBridge.log("FL: is LocationListener!")
-
-                        XposedBridge.log("FL: Finding method in LocationListener")
-
-                        val targetMethod = findAllMethods(lastParam) {
-                            name == "onLocationChanged" && parameterCount == 2
+                    if (lastParam.name == "android.location.ILocationListener\$Stub\$Proxy") {
+                        findAllMethods(lastParam) {
+                            name == "onLocationChanged"
+                        }.hookBefore {
+                            XposedBridge.log("FL: ${AndroidAppHelper.currentPackageName()}")
                         }
-
-                        targetMethod.hookMethod {
-                            before { param ->
-                                val originalLocationList = param.args[0] as List<*>
-                                val originLocation = originalLocationList[0] as Location
-
-                                val fakeLocation = ConfigGateway.get().readFakeLocation()
-                                val location = Location(originLocation.provider)
-
-                                location.latitude = fakeLocation?.x!!
-                                location.longitude = fakeLocation.y
-                                location.altitude = 0.0
-                                location.isMock = false
-                                location.speed = 0F
-                                location.speedAccuracyMetersPerSecond = 0F
-
-                                location.time = originLocation.time
-                                location.accuracy = originLocation.accuracy
-                                location.bearing = originLocation.bearing
-                                location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
-                                location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
-                                location.elapsedRealtimeUncertaintyNanos = originLocation.elapsedRealtimeUncertaintyNanos
-                                location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
-
-                                val newLocationList = arrayListOf(location)
-                                param.args[0] = newLocationList
-                            }
-                        }
-                    } else {
-                        // TODO: Implement PendingIntent
-                        XposedBridge.log("FL: is PendingIntent that currently not supported")
                     }
-                }
+                //}
             }
         }
     }
