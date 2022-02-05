@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">Fuck Location</string>
+    <string name="select_apps_activity_title">选择应用</string>
+
+    <string name="title_fucklocation_test">测试设定</string>
+    <string name="title_fucklocation_credit">位置白名单</string>
+    <string name="title_fucklocation_settings">设置</string>
+    <string name="title_fucklocation_about">关于本模块</string>
+
+    <string name="card_title_not_activated">模块未激活</string>
+    <string name="card_detail_not_activated">请检查你是否已经正确激活了模块</string>
+
+    <string name="card_title_activated">模块已经激活</string>
+    <string name="card_detail_activated">请前往“设置”以对模块进行进一步设定</string>
+    <string name="card_serve_time">已合计为您服务 0 次</string>
+
+    <string name="dialog_not_available_dialog">暂未写好</string>
+    <string name="dialog_not_available_content">前面的区域，以后再来探索吧</string>
+
+    <string name="system_app">系统应用</string>
+    <string name="custom_location_dialog">定位坐标</string>
+    <string name="custom_location_dialog_save">保存</string>
+    <string name="custom_location_dialog_notsave">不保存</string>
+
+    <string name="custom_view_textview_x">坐标轴 x</string>
+    <string name="custom_view_textview_y">坐标轴 y</string>
+
+    <string name="about_slogan">关于该模块</string>
+    <string name="about_introduction_title">关于和帮助</string>
+    <string name="about_introduction_content">一个用于向应用返回指定位置信息的模块。\n\n这个应用旨在像特定的应用返回合适的位置信息（而不是随时都在后台使用高精度定位），在满足使用场景的情况下，保护隐私。</string>
+
+    <string name="about_legal_title">法律与合规</string>
+    <string name="about_legal_content">尽管在一个开源应用里存放法律声明有些无趣，但为了防止某些不怀好意的人滥用并造成影响，我们还是在这里放了这样一份声明。\n\n该模块的一切开发旨在学习开发。请在下载 24 小时之后删除本模块。\n您同意仅将本模块（即 Fuck Location，下同）用于合法合规的用途。如因违反该声明而造成任何后果，您同意作者不为此承担任何责任。\n\n继续使用本模块，即视为您同意上述条款和内容。</string>
+
+    <string name="about_developer_title">开发者 &amp; 致谢</string>
+    <string name="about_developer_name_mogu">Mogu</string>
+    <string name="about_developer_description_mogu">开发 &amp; 设计</string>
+
+    <string name="about_developer_name_zypa13510">zypA13510</string>
+    <string name="about_developer_description_zypa13510">帮忙实现了负坐标系选择</string>
+
+    <string name="about_developer_name_nullptr">Dr-TSNG</string>
+    <string name="about_developer_description_nullptr">提供灵感</string>
+
+    <string name="about_developer_name_leafstative">LeafStative</string>
+    <string name="about_developer_description_leafstative">帮忙实现了更好的应用选择页面</string>
+
+    <string name="about_opensource_title">开源许可证</string>
+    <string name="no_result">无结果</string>
+
+</resources>

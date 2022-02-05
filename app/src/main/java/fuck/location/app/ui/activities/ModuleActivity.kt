@@ -32,7 +32,7 @@ class ModuleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySelectAppsBinding
     private lateinit var oneAdapter: OneAdapter
-    private lateinit var packageInfos: List<AppListModel>
+    private  var packageInfos: List<AppListModel> = arrayListOf()   // Prevent from search crash
 
     private var searchKeyword = ""
 

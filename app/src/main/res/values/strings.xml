@@ -1,51 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Fuck Location</string>
-    <string name="select_apps_activity_title">选择应用</string>
+    <string name="select_apps_activity_title">Select Apps</string>
 
-    <string name="title_fucklocation_test">测试设定</string>
-    <string name="title_fucklocation_credit">位置白名单</string>
-    <string name="title_fucklocation_settings">设置</string>
-    <string name="title_fucklocation_about">关于本模块</string>
+    <string name="title_fucklocation_test">Test settings</string>
+    <string name="title_fucklocation_credit">Location whitelist</string>
+    <string name="title_fucklocation_settings">Settings</string>
+    <string name="title_fucklocation_about">About this module</string>
 
-    <string name="card_title_not_activated">模块未激活</string>
-    <string name="card_detail_not_activated">请检查你是否已经正确激活了模块</string>
+    <string name="card_title_not_activated">Not activated</string>
+    <string name="card_detail_not_activated">Make sure you have correctly set up this module</string>
 
-    <string name="card_title_activated">模块已经激活</string>
-    <string name="card_detail_activated">请前往“设置”以对模块进行进一步设定</string>
-    <string name="card_serve_time">已合计为您服务 0 次</string>
+    <string name="card_title_activated">Activated</string>
+    <string name="card_detail_activated">Go settings for further set up</string>
+    <string name="card_serve_time">Served for 0 times</string>
 
-    <string name="dialog_not_available_dialog">暂未写好</string>
-    <string name="dialog_not_available_content">前面的区域，以后再来探索吧</string>
+    <string name="dialog_not_available_dialog">Not available</string>
+    <string name="dialog_not_available_content">Coming soon :)</string>
 
-    <string name="system_app">系统应用</string>
-    <string name="custom_location_dialog">定位坐标</string>
-    <string name="custom_location_dialog_save">保存</string>
-    <string name="custom_location_dialog_notsave">不保存</string>
+    <string name="system_app">System apps</string>
+    <string name="custom_location_dialog">Location</string>
+    <string name="custom_location_dialog_save">Save</string>
+    <string name="custom_location_dialog_notsave">Discard</string>
 
-    <string name="custom_view_textview_x">坐标轴 x</string>
-    <string name="custom_view_textview_y">坐标轴 y</string>
+    <string name="custom_view_textview_x">x</string>
+    <string name="custom_view_textview_y">y</string>
 
-    <string name="about_slogan">关于该模块</string>
-    <string name="about_introduction_title">关于和帮助</string>
-    <string name="about_introduction_content">一个用于向应用返回指定位置信息的模块。\n\n这个应用旨在像特定的应用返回合适的位置信息（而不是随时都在后台使用高精度定位），在满足使用场景的情况下，保护隐私。</string>
+    <string name="about_slogan">About this module</string>
+    <string name="about_introduction_title">Tips and help</string>
+    <string name="about_introduction_content">A module for returning specified location information to an application.\n\nThis application is designed to return the appropriate location information like a specific application (instead of using high precision positioning in the background at all times) to protect privacy while satisfying the usage scenario.</string>
 
-    <string name="about_legal_title">法律与合规</string>
-    <string name="about_legal_content">尽管在一个开源应用里存放法律声明有些无趣，但为了防止某些不怀好意的人滥用并造成影响，我们还是在这里放了这样一份声明。\n\n该模块的一切开发旨在学习开发。请在下载 24 小时之后删除本模块。\n您同意仅将本模块（即 Fuck Location，下同）用于合法合规的用途。如因违反该声明而造成任何后果，您同意作者不为此承担任何责任。\n\n继续使用本模块，即视为您同意上述条款和内容。</string>
+    <string name="about_legal_title">Legal information</string>
+    <string name="about_legal_content">Although it is somewhat uninteresting to host a legal notice in an open source application, we put such a notice here to prevent abuse and repercussions by some unsuspecting people.\n\nThis module was developed for learning purposes. Please delete this module after 24 hrs of download. \nYou agree to use this module (i.e. Fuck Location, hereinafter) only for legally compliant purposes. You agree that the author will not be held liable for any consequences resulting from a violation of this statement. \n\nBy continuing to use this module, you agree to the above terms.\n\nNotice: If there are anything in English version contract to the original Chinese version, chinese version applied.</string>
 
-    <string name="about_developer_title">开发者 &amp; 致谢</string>
+    <string name="about_developer_title">Developers &amp; Contributors</string>
     <string name="about_developer_name_mogu">Mogu</string>
-    <string name="about_developer_description_mogu">开发 &amp; 设计</string>
+    <string name="about_developer_description_mogu">Developer &amp; designer</string>
 
     <string name="about_developer_name_zypa13510">zypA13510</string>
-    <string name="about_developer_description_zypa13510">帮忙实现了负坐标系选择</string>
+    <string name="about_developer_description_zypa13510">Help to implement negative coordinate support</string>
 
     <string name="about_developer_name_nullptr">Dr-TSNG</string>
-    <string name="about_developer_description_nullptr">提供灵感</string>
+    <string name="about_developer_description_nullptr">Idea spark</string>
 
     <string name="about_developer_name_leafstative">LeafStative</string>
-    <string name="about_developer_description_leafstative">帮忙实现了更好的应用选择页面</string>
+    <string name="about_developer_description_leafstative">Help to implement better app selection page</string>
 
-    <string name="about_opensource_title">开源许可证</string>
-    <string name="no_result">无结果</string>
-
+    <string name="about_opensource_title">Open Source Licenses</string>
+    <string name="no_result">No result</string>
 </resources>
