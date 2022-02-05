@@ -11,5 +11,5 @@ class AppListModel(val title: String, val packageName: String, var icon: Drawabl
         return other is AppListModel && title == other.title
     }
 
-    override val uniqueIdentifier: Long = id;
+    override val uniqueIdentifier: Long = id
 }

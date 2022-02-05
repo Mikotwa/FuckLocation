@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         when (v.id) {
             R.id.menu_detection_test -> {
                 MaterialDialog(this).show {
-                    title(text = getString(R.string.dialog_not_avaliable_dialog))
-                    message(text = getString(R.string.dialog_not_avaliable_content))
+                    title(text = getString(R.string.dialog_not_available_dialog))
+                    message(text = getString(R.string.dialog_not_available_content))
                 }
             }
 
