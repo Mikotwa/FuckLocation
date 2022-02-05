@@ -1,6 +1,8 @@
 package fuck.location.xposed.location
 
 import android.annotation.SuppressLint
+import android.app.AndroidAppHelper
+import android.graphics.Bitmap
 import android.location.*
 import com.github.kyuubiran.ezxhelper.utils.*
 import de.robv.android.xposed.XposedBridge
@@ -9,6 +11,7 @@ import fuck.location.xposed.helpers.ConfigGateway
 
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.lang.Exception
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 class LocationHookerR {
     @SuppressLint("PrivateApi")
@@ -16,7 +19,6 @@ class LocationHookerR {
     fun hookLastLocation(lpparam: XC_LoadPackage.LoadPackageParam) {
         val clazz: Class<*> = lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
 
-        // TODO: Upgrade to modern WhitelistGateway
         findAllMethods(clazz) {
             name == "getLastLocation" && isPublic
         }.hookMethod {
@@ -59,6 +61,7 @@ class LocationHookerR {
                     }
 
                     XposedBridge.log("FL: x: ${location.latitude}, y: ${location.longitude}")
+                    it.result = location
                 }
             }
         }
@@ -74,30 +77,54 @@ class LocationHookerR {
             }
         }
 
+        /* What we are doing there is:
+         * Firstly, we remove all the package that are listed on the whitelist (before)
+         * Then, we will manually notify these apps individually (after)
+         *
+         * In short, we let the framework broadcast all normal apps first,
+         * then we will manually give other answers to whitelisted apps :)
+         */
+
         findAllMethods(clazz) {
-            name == "requestLocationUpdatesLocked" && isNotPublic
+            name == "handleLocationChangedLocked" && isNotPublic
         }.hookMethod {
             before { param ->
-                val receiver = param.args[1]
-                XposedBridge.log("FL: in requestLocationUpdatesLocked (R)!")
-
-                val methods = findAllMethods(receiver.javaClass) {
-                    name == "getListener" && isPublic
+                XposedBridge.log("FL: in handleLocationChangedLocked (R, before)! Removing whitelisted apps...")
+                val mRecordsByProviderField = findField(clazz) {
+                    name == "mRecordsByProvider"
                 }
 
-                XposedBridge.log("FL: Finished finding method (R)! Here is all methods: ")
+                mRecordsByProviderField.isAccessible = true
 
-                for (i in methods) {
-                    XposedBridge.log("FL: $i")
+                val records = mRecordsByProviderField.get(param.thisObject) as HashMap<*, *>
+                val newRecords = HashMap<String, ArrayList<*>>()
+
+                records.entries.forEach { entry ->
+                    val key = entry.key as String
+                    val value = entry.value as ArrayList<*>
+                    val newValue = ArrayList<Any>()
+
+                    value.forEach { record ->
+                        val mReceiver = findField(record.javaClass) {
+                            name == "mReceiver"
+                        }.get(record)
+
+                        val mCallerIdentity = findField(mReceiver.javaClass, true) {
+                            name == "mCallerIdentity"
+                        }.get(mReceiver)
+
+                        val packageName = ConfigGateway.get().callerIdentityToPackageName(mCallerIdentity)
+
+                        if (!ConfigGateway.get().inWhitelist(packageName)) {
+                            newValue.add(record)
+                        }
+                    }
+
+                    newRecords[key] = newValue
                 }
 
-                val listener = methods.invokeMethod("getListener")
-
-                if (listener != null) {
-                    XposedBridge.log("FL: Finished finding listener (R)! Hooking method...")
-                } else {
-                    XposedBridge.log("FL: Listener is null, this situation in currently not handled...")
-                }
+                mRecordsByProviderField.set(param.thisObject, newRecords)
+                XposedBridge.log("FL: Finished delivering altered records...")
             }
         }
     }

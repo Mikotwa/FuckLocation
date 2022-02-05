@@ -307,9 +307,12 @@ class ConfigGateway private constructor(){
     fun callerIdentityToPackageName(callerIdentity: Any): String {
         val fields = HiddenApiBypass.getInstanceFields(callerIdentity.javaClass)
 
+        val targetFieldName: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) "private final java.lang.String android.location.util.identity.CallerIdentity.mPackageName"
+        else "public final java.lang.String com.android.server.location.CallerIdentity.packageName"
+
         for (field in fields) {
             // TODO: Change this fu**ing stupid check
-            if (field.toString() == "private final java.lang.String android.location.util.identity.CallerIdentity.mPackageName") {
+            if (field.toString() == targetFieldName) {
                 val targetField = field as Field
                 targetField.isAccessible = true
                 return targetField.get(callerIdentity) as String
