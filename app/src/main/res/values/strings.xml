@@ -14,8 +14,8 @@
     <string name="card_detail_activated">请前往“设置”以对模块进行进一步设定</string>
     <string name="card_serve_time">已合计为您服务 0 次</string>
 
-    <string name="dialog_not_avaliable_dialog">暂未写好</string>
-    <string name="dialog_not_avaliable_content">前面的区域，以后再来探索吧</string>
+    <string name="dialog_not_available_dialog">暂未写好</string>
+    <string name="dialog_not_available_content">前面的区域，以后再来探索吧</string>
 
     <string name="system_app">系统应用</string>
     <string name="custom_location_dialog">定位坐标</string>
@@ -46,5 +46,6 @@
     <string name="about_developer_description_leafstative">帮忙实现了更好的应用选择页面</string>
 
     <string name="about_opensource_title">开源许可证</string>
+    <string name="no_result">无结果</string>
 
 </resources>
