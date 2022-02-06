@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fuck Vị trí</string>
+    <string name="select_apps_activity_title">Chọn ứng dụng</string>
+
+    <string name="title_fucklocation_test">Kiểm tra cài đặt</string>
+    <string name="title_fucklocation_credit">Danh sách trắng vị trí</string>
+    <string name="title_fucklocation_settings">Cài đặt</string>
+    <string name="title_fucklocation_about">Về mô-đun này</string>
+
+    <string name="card_title_not_activated">Chưa được kích hoạt</string>
+    <string name="card_detail_not_activated">Hãy chắc chắn rằng bạn đã thiết lập đúng mô-đun này</string>
+
+    <string name="card_title_activated">Đã được kích hoạt</string>
+    <string name="card_detail_activated">Đi tới cài đặt để thiết lập thêm</string>
+    <string name="card_serve_time">Đã phục vụ 0 lần</string>
+
+    <string name="dialog_not_available_dialog">Chưa khả dụng</string>
+    <string name="dialog_not_available_content">Sắp có :)</string>
+
+    <string name="system_app">Ứng dụng hệ thống</string>
+    <string name="custom_location_dialog">Vị trí</string>
+    <string name="custom_location_dialog_save">Lưu</string>
+    <string name="custom_location_dialog_notsave">Bỏ</string>
+
+    <string name="custom_view_textview_x">x</string>
+    <string name="custom_view_textview_y">y</string>
+
+    <string name="about_slogan">Về mô-đun này</string>
+    <string name="about_introduction_title">Mẹo và trợ giúp</string>
+    <string name="about_introduction_content">Một mô-đun để trả lại thông tin vị trí cụ thể cho một ứng dụng.\n\nỨng dụng này được thiết kế để trả lại thông tin vị trí thích hợp giống như một ứng dụng cụ thể (thay vì luôn sử dụng định vị chính xác cao trong nền) để bảo vệ quyền riêng tư trong khi đáp ứng tình huống sử dụng.</string>
+
+    <string name="about_legal_title">Thông tin pháp lý</string>
+    <string name="about_legal_content">Mặc dù việc lưu trữ một thông báo pháp lý trong một ứng dụng nguồn mở có phần không thú vị, nhưng chúng tôi đặt một thông báo như vậy ở đây để ngăn chặn sự lạm dụng và hậu quả của một số người không nghi ngờ. \n\nMô-đun này được phát triển cho mục đích học tập. Vui lòng xóa mô-đun này sau 24 giờ tải xuống. \nBạn đồng ý sử dụng mô-đun này (tức là Fuck Vị trí, sau đây gọi là) chỉ cho các mục đích tuân thủ pháp luật. Bạn đồng ý rằng tác giả sẽ không chịu trách nhiệm về bất kỳ hậu quả nào do vi phạm tuyên bố này. \n\nBằng cách tiếp tục sử dụng mô-đun này, bạn đồng ý với các điều khoản trên. \n\nLưu ý: Nếu có bất kỳ điều gì trong hợp đồng phiên bản tiếng Anh đối với phiên bản gốc của Trung Quốc, thì phiên bản tiếng Trung sẽ được áp dụng.</string>
+
+    <string name="about_developer_title">Nhà phát triển &amp; Người đóng góp</string>
+    <string name="about_developer_name_mogu">Mogu</string>
+    <string name="about_developer_description_mogu">Nhà phát triển &amp; Người thiết kế</string>
+
+    <string name="about_developer_name_zypa13510">zypA13510</string>
+    <string name="about_developer_description_zypa13510">Giúp thực hiện hỗ trợ toạ độ âm</string>
+
+    <string name="about_developer_name_nullptr">Dr-TSNG</string>
+    <string name="about_developer_description_nullptr">Tia lửa ý tưởng</string>
+
+    <string name="about_developer_name_leafstative">LeafStative</string>
+    <string name="about_developer_description_leafstative">Giúp triển khai trang lựa chọn ứng dụng tốt hơn</string>
+
+    <string name="about_opensource_title">Giấy phép nguồn mở</string>
+    <string name="no_result">Không có kết quả</string>
+</resources>
