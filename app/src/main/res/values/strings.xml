@@ -46,6 +46,9 @@
     <string name="about_developer_name_leafstative">LeafStative</string>
     <string name="about_developer_description_leafstative">Help to implement better app selection page</string>
 
+    <string name="about_developer_name_theprimalpea">ThePrimalPea</string>
+    <string name="about_developer_description_theprimalpea">Vietnamese translation</string>
+
     <string name="about_opensource_title">Open Source Licenses</string>
     <string name="no_result">No result</string>
 </resources>

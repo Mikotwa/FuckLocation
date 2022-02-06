@@ -45,6 +45,9 @@
     <string name="about_developer_name_leafstative">LeafStative</string>
     <string name="about_developer_description_leafstative">帮忙实现了更好的应用选择页面</string>
 
+    <string name="about_developer_name_theprimalpea">ThePrimalPea</string>
+    <string name="about_developer_description_theprimalpea">帮忙提供越南语翻译</string>
+
     <string name="about_opensource_title">开源许可证</string>
     <string name="no_result">无结果</string>
 

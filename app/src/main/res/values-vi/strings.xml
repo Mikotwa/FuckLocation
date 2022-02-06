@@ -46,6 +46,9 @@
     <string name="about_developer_name_leafstative">LeafStative</string>
     <string name="about_developer_description_leafstative">Giúp triển khai trang lựa chọn ứng dụng tốt hơn</string>
 
+    <string name="about_developer_name_theprimalpea">ThePrimalPea</string>
+    <string name="about_developer_description_theprimalpea">Tiếng Việt</string>
+
     <string name="about_opensource_title">Giấy phép nguồn mở</string>
     <string name="no_result">Không có kết quả</string>
 </resources>
