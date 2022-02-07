@@ -35,7 +35,7 @@ class GnssManagerServiceHookerR {
 
             if (ConfigGateway.get().inWhitelist(packageName)) {
                 XposedBridge.log("FL: in whiteList! Dropping register request...")
-                param.result = null
+                param.result = false
                 return@hookBefore
             }
         }
