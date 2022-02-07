@@ -154,4 +154,48 @@ class LocationHookerAfterS {
             }
         }
     }
+
+    @SuppressLint("PrivateApi")
+    fun hookDLC(lpparam: XC_LoadPackage.LoadPackageParam) {
+        val clazz = lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
+
+        findAllMethods(clazz) {
+            name == "registerGnssStatusCallback" && isPublic
+        }.hookBefore { param ->
+            val packageName = param.args[1] as String
+            XposedBridge.log("FL: in registerGnssStatusCallback (S, DLC)! Caller package name: $packageName")
+
+            if (ConfigGateway.get().inWhitelist(packageName)) {
+                XposedBridge.log("FL: in whiteList! Dropping register request...")
+                param.result = null
+                return@hookBefore
+            }
+        }
+
+        findAllMethods(clazz) {
+            name == "registerGnssNmeaCallback" && isPublic
+        }.hookBefore { param ->
+            val packageName = param.args[1] as String
+            XposedBridge.log("FL: in registerGnssNmeaCallback (S, DLC)! Caller package name: $packageName")
+
+            if (ConfigGateway.get().inWhitelist(packageName)) {
+                XposedBridge.log("FL: in whiteList! Dropping register request...")
+                param.result = null
+                return@hookBefore
+            }
+        }
+
+        findAllMethods(clazz) {
+            name == "requestGeofence" && isPublic
+        }.hookBefore { param ->
+            val packageName = param.args[2] as String
+            XposedBridge.log("FL: in requestGeofence (S, DLC)! Caller package name: $packageName")
+
+            if (ConfigGateway.get().inWhitelist(packageName)) {
+                XposedBridge.log("FL: in whiteList! Dropping register request...")
+                param.result = null
+                return@hookBefore
+            }
+        }
+    }
 }

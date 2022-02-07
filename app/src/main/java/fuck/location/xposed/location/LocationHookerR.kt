@@ -156,5 +156,18 @@ class LocationHookerR {
                 XposedBridge.log("FL: Finished delivering altered records...")
             }
         }
+
+        findAllMethods(clazz) {
+            name == "requestGeofence" && isPublic
+        }.hookBefore { param ->
+            val packageName = param.args[3] as String
+            XposedBridge.log("FL: in requestGeofence (R)! Caller package name: $packageName")
+
+            if (ConfigGateway.get().inWhitelist(packageName)) {
+                XposedBridge.log("FL: in whiteList! Dropping register request...")
+                param.result = null
+                return@hookBefore
+            }
+        }
     }
 }

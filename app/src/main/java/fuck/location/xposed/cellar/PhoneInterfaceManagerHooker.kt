@@ -5,6 +5,7 @@ import android.os.Build
 import android.telephony.*
 import androidx.annotation.RequiresApi
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
+import com.github.kyuubiran.ezxhelper.utils.hookBefore
 import com.github.kyuubiran.ezxhelper.utils.hookMethod
 import com.github.kyuubiran.ezxhelper.utils.isPublic
 import de.robv.android.xposed.XposedBridge
@@ -69,6 +70,7 @@ class PhoneInterfaceManagerHooker {
                     when (param.result) {
                         is CellIdentityCdma -> {
                             XposedBridge.log("FL: [Cellar] Using CDMA Network...")
+                            param.result = null
                         }
                         is CellIdentityGsm -> {
                             XposedBridge.log("FL: [Cellar] Using GSM Network...")
@@ -80,15 +82,18 @@ class PhoneInterfaceManagerHooker {
                         }
                         is CellIdentityTdscdma -> {
                             XposedBridge.log("FL: [Cellar] Using TDSCDMA Network...")
+                            param.result = null
                         }
                         is CellIdentityWcdma -> {
                             XposedBridge.log("FL: [Cellar] Using WCDMA Network...")
+                            param.result = null
                         }
                     }
 
                     // Android 9 does not have this network type
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && param.result is CellIdentityNr) {
                         XposedBridge.log("FL: [Cellar] Using NR Network...")
+                        param.result = null
                     }
                 } else {
                     XposedBridge.log("FL: [Cellar] Not in whitelist...")
@@ -123,6 +128,19 @@ class PhoneInterfaceManagerHooker {
                     val customNeighboringCellInfo = ArrayList<NeighboringCellInfo>()
                     param.result = customNeighboringCellInfo
                 }
+            }
+        }
+
+        findAllMethods(clazz) {
+            name == "requestCellInfoUpdateInternal" && isPublic
+        }.hookBefore { param ->
+            val packageName = param.args[2] as String
+            XposedBridge.log("FL: [Cellar] in requestCellInfoUpdateInternal! Caller package name: $packageName")
+
+            if (ConfigGateway.get().inWhitelist(packageName)) {
+                XposedBridge.log("FL: in whiteList! Dropping register request...")
+                param.result = null
+                return@hookBefore
             }
         }
     }
