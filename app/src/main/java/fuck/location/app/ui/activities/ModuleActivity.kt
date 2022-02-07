@@ -1,5 +1,6 @@
 package fuck.location.app.ui.activities
 
+import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.view.Menu
@@ -32,7 +33,7 @@ class ModuleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySelectAppsBinding
     private lateinit var oneAdapter: OneAdapter
-    private  var packageInfos: List<AppListModel> = arrayListOf()   // Prevent from search crash
+    private var packageInfos: List<AppListModel> = arrayListOf()   // Prevent from search crash
 
     private var searchKeyword = ""
 
@@ -44,7 +45,7 @@ class ModuleActivity : AppCompatActivity() {
         binding = ActivitySelectAppsBinding.inflate(layoutInflater)
         recyclerView = binding.recycler
         oneAdapter = OneAdapter(recyclerView) {
-            itemModules += AppListModule()
+            itemModules += AppListModule(this@ModuleActivity)
             emptinessModule = EmptyListModule()
         }
 
@@ -144,7 +145,7 @@ class ModuleActivity : AppCompatActivity() {
         }
     }
 
-    class AppListModule : ItemModule<AppListModel>() {
+    class AppListModule(context: Context) : ItemModule<AppListModel>() {
         init {
             val selectedAppsList: MutableList<String> = ConfigGateway.get().readPackageList() as MutableList<String>
 
@@ -162,9 +163,11 @@ class ModuleActivity : AppCompatActivity() {
                     val icon = viewBinder.findViewById<ImageView>(R.id.app_list_module_icon)
                     if (selectedAppsList.contains(model.packageName)) {
                         icon.setImageResource(R.drawable.baseline_radio_button_unchecked_24)
+                        model.icon = AppCompatResources.getDrawable(context, R.drawable.baseline_radio_button_unchecked_24)!!
                         selectedAppsList.remove(model.packageName)
                     } else {
                         icon.setImageResource(R.drawable.baseline_check_circle_24)
+                        model.icon = AppCompatResources.getDrawable(context, R.drawable.baseline_check_circle_24)!!
                         selectedAppsList.add(model.packageName)
                     }
 
