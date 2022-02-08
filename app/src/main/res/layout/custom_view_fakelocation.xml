@@ -49,4 +49,109 @@
         tools:ignore="Autofill,HardcodedText,LabelFor"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="ECI"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"
+        />
+
+    <EditText
+        android:id="@+id/custom_view_fl_eci"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:inputType="numberDecimal|numberSigned"
+        android:text="0.0"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="18sp"
+        tools:ignore="Autofill,HardcodedText,LabelFor"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Pci"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"
+        />
+
+    <EditText
+        android:id="@+id/custom_view_fl_pci"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:inputType="numberDecimal|numberSigned"
+        android:text="0.0"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="18sp"
+        tools:ignore="Autofill,HardcodedText,LabelFor"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Tac"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"
+        />
+
+    <EditText
+        android:id="@+id/custom_view_fl_tac"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:inputType="numberDecimal|numberSigned"
+        android:text="0.0"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="18sp"
+        tools:ignore="Autofill,HardcodedText,LabelFor"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Earfcn"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"
+        />
+
+    <EditText
+        android:id="@+id/custom_view_fl_earfcn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:inputType="numberDecimal|numberSigned"
+        android:text="0.0"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="18sp"
+        tools:ignore="Autofill,HardcodedText,LabelFor"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Bandwidth"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"
+        />
+
+    <EditText
+        android:id="@+id/custom_view_fl_bandwidth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:inputType="numberDecimal|numberSigned"
+        android:text="0.0"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="18sp"
+        tools:ignore="Autofill,HardcodedText,LabelFor"
+        />
+
 </LinearLayout>

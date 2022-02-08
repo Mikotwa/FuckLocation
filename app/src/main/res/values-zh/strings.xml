@@ -22,8 +22,8 @@
     <string name="custom_location_dialog_save">保存</string>
     <string name="custom_location_dialog_notsave">不保存</string>
 
-    <string name="custom_view_textview_x">坐标轴 x</string>
-    <string name="custom_view_textview_y">坐标轴 y</string>
+    <string name="custom_view_textview_x">纬度</string>
+    <string name="custom_view_textview_y">经度</string>
 
     <string name="about_slogan">关于该模块</string>
     <string name="about_introduction_title">关于和帮助</string>

@@ -71,17 +71,45 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             ConfigGateway.get().setCustomContext(applicationContext)
             val previousYInput = ConfigGateway.get().readFakeLocation()?.y
             val previousXInput = ConfigGateway.get().readFakeLocation()?.x
+            val previousECIInput = ConfigGateway.get().readFakeLocation()?.eci
+            val previousPCIInput = ConfigGateway.get().readFakeLocation()?.pci
+            val previousTACInput = ConfigGateway.get().readFakeLocation()?.tac
+            val previousEarfCNInput = ConfigGateway.get().readFakeLocation()?.earfcn
+            val previousBandwidthInput = ConfigGateway.get().readFakeLocation()?.bandwidth
 
             findViewById<EditText>(R.id.custom_view_fl_x).setText(previousXInput.toString())
             findViewById<EditText>(R.id.custom_view_fl_y).setText(previousYInput.toString())
+            findViewById<EditText>(R.id.custom_view_fl_eci).setText(previousECIInput.toString())
+            findViewById<EditText>(R.id.custom_view_fl_pci).setText(previousPCIInput.toString())
+            findViewById<EditText>(R.id.custom_view_fl_tac).setText(previousTACInput.toString())
+            findViewById<EditText>(R.id.custom_view_fl_earfcn).setText(previousEarfCNInput.toString())
+            findViewById<EditText>(R.id.custom_view_fl_bandwidth).setText(previousBandwidthInput.toString())
 
             positiveButton(R.string.custom_location_dialog_save) { dialog ->
-                val yInput: EditText = dialog.getCustomView()   //TODO: 保存
+                val yInput: EditText = dialog.getCustomView()
                     .findViewById(R.id.custom_view_fl_y)
                 val xInput: EditText = dialog.getCustomView()
                     .findViewById(R.id.custom_view_fl_x)
+                val eciInput: EditText = dialog.getCustomView()
+                    .findViewById(R.id.custom_view_fl_eci)
+                val pciInput: EditText = dialog.getCustomView()
+                    .findViewById(R.id.custom_view_fl_pci)
+                val tacInput: EditText = dialog.getCustomView()
+                    .findViewById(R.id.custom_view_fl_tac)
+                val earfcnInput: EditText = dialog.getCustomView()
+                    .findViewById(R.id.custom_view_fl_earfcn)
+                val bandwidthInput: EditText = dialog.getCustomView()
+                    .findViewById(R.id.custom_view_fl_bandwidth)
 
-                ConfigGateway.get().writeFakeLocation(xInput.text.toString().toDouble(), yInput.text.toString().toDouble())
+                ConfigGateway.get().writeFakeLocation(
+                    xInput.text.toString().toDouble(),
+                    yInput.text.toString().toDouble(),
+                    eciInput.text.toString().toInt(),
+                    pciInput.text.toString().toInt(),
+                    tacInput.text.toString().toInt(),
+                    earfcnInput.text.toString().toInt(),
+                    bandwidthInput.text.toString().toInt()
+                )
             }
             negativeButton(R.string.custom_location_dialog_notsave)
         }

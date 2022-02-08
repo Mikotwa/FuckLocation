@@ -23,8 +23,8 @@
     <string name="custom_location_dialog_save">Save</string>
     <string name="custom_location_dialog_notsave">Discard</string>
 
-    <string name="custom_view_textview_x">x</string>
-    <string name="custom_view_textview_y">y</string>
+    <string name="custom_view_textview_x">Latitude</string>
+    <string name="custom_view_textview_y">Longitude</string>
 
     <string name="about_slogan">About this module</string>
     <string name="about_introduction_title">Tips and help</string>

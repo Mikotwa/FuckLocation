@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import com.github.kyuubiran.ezxhelper.utils.*
 import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -14,6 +15,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.app.ui.models.FakeLocation
+import fuck.location.app.ui.models.FakeLocationHistory
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 import java.io.FileNotFoundException
@@ -182,16 +184,16 @@ class ConfigGateway private constructor() {
                     jsonFile.readText()
                     Log.d("FL: fakeLocation.json resumed.")
                 } catch (e: FileNotFoundException) {
-                    Log.d("FL: not possible to refresh. Fallback to {\"x\":0.0, \"y\":0.0}")
+                    Log.d("FL: not possible to refresh. Fallback to {\"x\":0.0, \"y\":0.0, \"eci\":0, \"pci\":0, \"tac\":0, \"earfcn\":0, \"bandwidth\":0}")
                 }
-                "{\"x\":0.0, \"y\":0.0}"
+                "{\"x\":0.0, \"y\":0.0, \"eci\":0, \"pci\":0, \"tac\":0, \"earfcn\":0, \"bandwidth\":0}"
             }
 
             param.result = json
         } catch (e: Exception) {
             XposedBridge.log("FL: [debug !!] Fuck with exceptions! $e")
 
-            param.result = "{\"x\":0.0, \"y\":0.0}"
+            param.result = "{\"x\":0.0, \"y\":0.0, \"eci\":0, \"pci\":0, \"tac\":0, \"earfcn\":0, \"bandwidth\":0}"
         }
     }
 
@@ -277,11 +279,33 @@ class ConfigGateway private constructor() {
         val json = try {
             universalAPICaller("None", 4) as String
         } catch (e: Exception) {
-            XposedBridge.log("FL: Failed to read fake location. Fallback to {\"x\":0.0, \"y\":0.0}")
-            "{\"x\":0.0, \"y\":0.0}"
+            XposedBridge.log("FL: Failed to read fake location. Fallback to {\"x\":0.0, \"y\":0.0, \"eci\":0, \"pci\":0, \"tac\":0, \"earfcn\":0, \"bandwidth\":0}")
+            "{\"x\":0.0, \"y\":0.0, \"eci\":0, \"pci\":0, \"tac\":0, \"earfcn\":0, \"bandwidth\":0}"
         }
 
-        return jsonAdapter.fromJson(json)
+        lateinit var jsonAdapterResult : FakeLocation
+
+        // Migrate from older config
+        try {
+            jsonAdapterResult = jsonAdapter.fromJson(json)!!
+        } catch (e: JsonDataException) {
+            val jsonAdapterMigrate: JsonAdapter<FakeLocationHistory> = moshi.adapter()
+            val oldJsonAdapterResult = jsonAdapterMigrate.fromJson(json)
+
+            val modernFakeLocation = FakeLocation(
+                oldJsonAdapterResult!!.x,
+                oldJsonAdapterResult.y,
+                0,
+                0,
+                0,
+                0,
+                0,
+            )
+
+            jsonAdapterResult = modernFakeLocation
+        }
+
+        return jsonAdapterResult
     }
 
     @ExperimentalStdlibApi
@@ -293,8 +317,8 @@ class ConfigGateway private constructor() {
     }
 
     @ExperimentalStdlibApi
-    fun writeFakeLocation(x: Double, y: Double) {
-        val newFakeLocation = FakeLocation(x, y)
+    fun writeFakeLocation(x: Double, y: Double, eci: Int, pci: Int, tac: Int, earfcn: Int, bandwidth: Int) {
+        val newFakeLocation = FakeLocation(x, y, eci, pci, tac, earfcn, bandwidth)
         val jsonAdapter: JsonAdapter<FakeLocation> = moshi.adapter()
 
         val json: String = jsonAdapter.toJson(newFakeLocation)
