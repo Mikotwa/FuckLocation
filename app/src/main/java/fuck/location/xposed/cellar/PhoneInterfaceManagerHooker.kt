@@ -35,7 +35,6 @@ class PhoneInterfaceManagerHooker {
 
                 if (ConfigGateway.get().inWhitelist(packageName)) {
                     param.result = customIMEI
-                    ConfigGateway.get().inWhitelist(param.args[1] as String)
                     XposedBridge.log("FL: [Cellar] In whiteList! Return custom value for testing purpose: $customIMEI")
                 }
             }

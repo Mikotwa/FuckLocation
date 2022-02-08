@@ -26,7 +26,7 @@ import java.lang.reflect.Field
  * in order to read the config file
  */
 
-class ConfigGateway private constructor(){
+class ConfigGateway private constructor() {
     // Magic number to identify whether this call is from our module
     private val magicNumber = -114514
     private val magicNumberLocation = -191931
@@ -55,6 +55,7 @@ class ConfigGateway private constructor(){
                 }
                 return field
             }
+
         fun get(): ConfigGateway {
             return instance!!
         }
@@ -133,7 +134,8 @@ class ConfigGateway private constructor(){
                 }
             }
         } catch (e: Exception) {
-            XposedBridge.log("FL: No whitelist file found. You may need to create one first")
+            XposedBridge.log("FL: [Track samsung !!] No whitelist file found. You may need to create one first $e")
+            e.printStackTrace()
         }
 
         param.result = false
@@ -307,8 +309,9 @@ class ConfigGateway private constructor(){
     fun callerIdentityToPackageName(callerIdentity: Any): String {
         val fields = HiddenApiBypass.getInstanceFields(callerIdentity.javaClass)
 
-        val targetFieldName: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) "private final java.lang.String android.location.util.identity.CallerIdentity.mPackageName"
-        else "public final java.lang.String com.android.server.location.CallerIdentity.packageName"
+        val targetFieldName: String =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) "private final java.lang.String android.location.util.identity.CallerIdentity.mPackageName"
+            else "public final java.lang.String com.android.server.location.CallerIdentity.packageName"
 
         for (field in fields) {
             // TODO: Change this fu**ing stupid check

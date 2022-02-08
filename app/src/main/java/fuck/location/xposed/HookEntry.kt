@@ -11,6 +11,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.BuildConfig
 
 import fuck.location.xposed.cellar.PhoneInterfaceManagerHooker
+import fuck.location.xposed.cellar.TelephonyRegistryHooker
 import fuck.location.xposed.helpers.ConfigGateway
 import fuck.location.xposed.location.LocationHookerAfterS
 import fuck.location.xposed.location.LocationHookerPreQ
@@ -56,6 +57,8 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                         // Initialize gateway
                         ConfigGateway.get().hookWillChangeBeEnabled(lpparam)
                         ConfigGateway.get().hookGetTagForIntentSender(lpparam)
+
+                        TelephonyRegistryHooker().hookListen(lpparam)
 
                         // For Android 12, run this hook
                         when (Build.VERSION.SDK_INT) {
