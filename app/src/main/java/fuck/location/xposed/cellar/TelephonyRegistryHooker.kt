@@ -8,9 +8,7 @@ import com.github.kyuubiran.ezxhelper.utils.*
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import fuck.location.xposed.cellar.info.Lte
 import fuck.location.xposed.helpers.ConfigGateway
-import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class TelephonyRegistryHooker {
     @ExperimentalStdlibApi
@@ -56,10 +54,14 @@ class TelephonyRegistryHooker {
                             if (mCellIdentity != null) {
                                 if ((phoneId as Int) >= 0 && phoneId < (mCellIdentity as Array<*>).size) {
                                     val originalCellIdentity = mCellIdentity[phoneId]
-                                    if (originalCellIdentity != null) {
+                                    if (originalCellIdentity != null && originalCellIdentity is CellIdentityLte) {
                                         findMethod(callBack.javaClass) {
                                             name == "onCellLocationChanged"
-                                        }.invoke(callBack, fuck.location.xposed.cellar.identity.Lte().alterCellIdentity(originalCellIdentity as CellIdentityLte))    // return cellIdentity
+                                        }.invoke(callBack, fuck.location.xposed.cellar.identity.Lte().alterCellIdentity(originalCellIdentity))    // return cellIdentity
+                                    } else {
+                                        findMethod(callBack.javaClass) {
+                                            name == "onCellLocationChanged"
+                                        }.invoke(callBack, null)
                                     }
                                 }
                             }
@@ -67,6 +69,8 @@ class TelephonyRegistryHooker {
 
                         param.result = false
                     }
+
+                    // TODO: Maybe a better implement?
                     11 -> {
                         XposedBridge.log("FL: [Cellar] in whiteList! Alter EVENT_CELL_INFO_CHANGED for now.")
                         findMethod(callBack.javaClass) {

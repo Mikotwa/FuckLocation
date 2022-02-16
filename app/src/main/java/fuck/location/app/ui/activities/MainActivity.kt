@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.widget.EditText
 import androidx.annotation.Keep
@@ -100,6 +101,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     .findViewById(R.id.custom_view_fl_earfcn)
                 val bandwidthInput: EditText = dialog.getCustomView()
                     .findViewById(R.id.custom_view_fl_bandwidth)
+
+                xInput.setText(xInput.text.takeIf { xInput.text.isNotEmpty() } ?: "0.0")
+                yInput.setText(yInput.text.takeIf { yInput.text.isNotEmpty() } ?: "0.0")
+                eciInput.setText(eciInput.text.takeIf { eciInput.text.isNotEmpty() } ?: "0")
+                pciInput.setText(pciInput.text.takeIf { pciInput.text.isNotEmpty() } ?: "0")
+                tacInput.setText(tacInput.text.takeIf { tacInput.text.isNotEmpty() } ?: "0")
+                earfcnInput.setText(earfcnInput.text.takeIf { earfcnInput.text.isNotEmpty() } ?: "0")
+                bandwidthInput.setText(bandwidthInput.text.takeIf { bandwidthInput.text.isNotEmpty() } ?: "0")
 
                 ConfigGateway.get().writeFakeLocation(
                     xInput.text.toString().toDouble(),
