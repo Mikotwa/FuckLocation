@@ -77,7 +77,7 @@ class PhoneInterfaceManagerHooker {
                         }
                         is CellIdentityLte -> {
                             XposedBridge.log("FL: [Cellar] Using LTE Network...")
-                            param.result = Lte().hookCellIdentity(param)
+                            param.result = Lte().alterCellIdentity(param.result as CellIdentityLte)
                         }
                         is CellIdentityTdscdma -> {
                             XposedBridge.log("FL: [Cellar] Using TDSCDMA Network...")
