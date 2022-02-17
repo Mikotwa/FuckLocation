@@ -356,7 +356,7 @@ class ConfigGateway private constructor() {
 
     fun setDataPath(){
         File("/data/system").list()?.forEach {
-            if (it.equals("fuck_location_test")) {
+            if (it.equals("fuck_location_test")) {  // Migrate from older version
                 val randomizedFile = "/data/system/fuck_location_${generateRandomAppendix()}"
                 File("/data/system/$it").renameTo(File(randomizedFile))
                 dataDir = randomizedFile

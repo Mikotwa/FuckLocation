@@ -17,6 +17,7 @@ import fuck.location.xposed.location.LocationHookerAfterS
 import fuck.location.xposed.location.LocationHookerPreQ
 import fuck.location.xposed.location.LocationHookerR
 import fuck.location.xposed.location.WLANHooker
+import fuck.location.xposed.location.gnss.GnssHookerPreQ
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerR
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerS
 import java.lang.Exception
@@ -77,6 +78,8 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             }
                             else -> {    // For Android 10 and earlier, run this fallback version
                                 LocationHookerPreQ().hookLastLocation(lpparam)
+
+                                GnssHookerPreQ().hookAddGnssBatchingCallback(lpparam)
                             }
                         }
 
