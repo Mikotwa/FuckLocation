@@ -29,11 +29,16 @@ jobs:
         with:
           name: app-debug.apk
           path: ./**/*.apk
-      - name: Send notifications
-        if: cancelled() == false
-        uses: xinthink/action-telegram@v1.1
+      - name: Send apk to telegram
+        if: success()
+        uses: appleboy/telegram-action@master
         with:
-          chatId: ${{ secrets.TELEGRAM_ID_OR_CHANNEL }}
-          botToken: ${{ secrets.TELEGRAM_TOKEN }}
-          jobStatus: ${{ job.status }}
-          skipSuccess: false
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |+
+            New push to github!
+            *${{ github.event.head_commit.message }}* by ${{ github.event.head_commit.author.name }}
+            See commit detail [here](${{ github.event.head_commit.url }})
+            Snapshot apk is attached
+          document: ./**/app-debug.apk
