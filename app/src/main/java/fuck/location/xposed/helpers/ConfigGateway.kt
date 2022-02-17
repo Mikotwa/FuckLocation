@@ -353,15 +353,19 @@ class ConfigGateway private constructor() {
     }
 
     fun setDataPath(){
-        File("/data/system").list()?.forEach {
+        File("/data/system").list()?.forEach {  // Try to find the existing config
             if (it.equals("fuck_location_test")) {  // Migrate from older version
-                val randomizedFile = "/data/system/fuck_location_${generateRandomAppendix()}"
-                File("/data/system/$it").renameTo(File(randomizedFile))
-                dataDir = randomizedFile
+                val randomizedPath = "/data/system/fuck_location_${generateRandomAppendix()}"
+                File("/data/system/$it").renameTo(File(randomizedPath))
+                dataDir = randomizedPath
             } else if (it.startsWith("fuck_location")) {
                 if (this::dataDir.isInitialized) File("/data/system/$it").deleteRecursively()
                 else dataDir = "/data/system/$it"
             }
+        }
+
+        if (!this::dataDir.isInitialized) { // Not possible, we create a new config folder
+            dataDir = "/data/system/fuck_location_${generateRandomAppendix()}"
         }
     }
 
