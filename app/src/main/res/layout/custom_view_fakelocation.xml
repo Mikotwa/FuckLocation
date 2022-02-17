@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="ECI"
+        android:text="ECI / NCI"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         />
@@ -116,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="Earfcn"
+        android:text="Earfcn / nrArfcn"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         />

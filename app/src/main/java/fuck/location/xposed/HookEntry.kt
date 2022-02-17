@@ -86,12 +86,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
 
                 "com.android.phone" -> {
                     try {
-                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S
-                            || Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
-                            PhoneInterfaceManagerHooker().hookCellLocation(lpparam)
-                        } else {    // For Android 10 and earlier, run this fallback version
-                            XposedBridge.log( "FL: Custom cellar data info is currently not supported for Android 10 or below.")
-                        }
+                        PhoneInterfaceManagerHooker().hookCellLocation(lpparam)
                     } catch (e: Exception) {
                         XposedBridge.log("FL: fuck with exceptions (cellar): $e")
                     }

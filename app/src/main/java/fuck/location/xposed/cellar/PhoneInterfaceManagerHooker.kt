@@ -10,8 +10,8 @@ import com.github.kyuubiran.ezxhelper.utils.hookMethod
 import com.github.kyuubiran.ezxhelper.utils.isPublic
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import fuck.location.xposed.cellar.identity.Gsm
 import fuck.location.xposed.cellar.identity.Lte
+import fuck.location.xposed.cellar.identity.Nr
 import fuck.location.xposed.helpers.ConfigGateway
 
 class PhoneInterfaceManagerHooker {
@@ -67,24 +67,16 @@ class PhoneInterfaceManagerHooker {
                     XposedBridge.log("FL: [Cellar] in whiteList! Return custom cell data information")
 
                     when (param.result) {
-                        is CellIdentityCdma -> {
-                            XposedBridge.log("FL: [Cellar] Using CDMA Network...")
-                            param.result = null
-                        }
-                        is CellIdentityGsm -> {
-                            XposedBridge.log("FL: [Cellar] Using GSM Network...")
-                            param.result = Gsm().HookCellIdentity(param)
-                        }
                         is CellIdentityLte -> {
                             XposedBridge.log("FL: [Cellar] Using LTE Network...")
                             param.result = Lte().alterCellIdentity(param.result as CellIdentityLte)
                         }
-                        is CellIdentityTdscdma -> {
-                            XposedBridge.log("FL: [Cellar] Using TDSCDMA Network...")
-                            param.result = null
+                        is CellIdentityNr -> {
+                            XposedBridge.log("FL: [Cellar] Using Nr Network...")
+                            param.result = Nr().alterCellIdentity(param.result as CellIdentityNr)
                         }
-                        is CellIdentityWcdma -> {
-                            XposedBridge.log("FL: [Cellar] Using WCDMA Network...")
+                        else -> {
+                            XposedBridge.log("FL: [Cellar] Unsupported network type. Return null as fallback")
                             param.result = null
                         }
                     }
@@ -92,10 +84,8 @@ class PhoneInterfaceManagerHooker {
                     // Android 9 does not have this network type
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && param.result is CellIdentityNr) {
                         XposedBridge.log("FL: [Cellar] Using NR Network...")
-                        param.result = null
+                        param.result = Nr().alterCellIdentity(param.result as CellIdentityNr)
                     }
-                } else {
-                    XposedBridge.log("FL: [Cellar] Not in whitelist...")
                 }
             }
         }

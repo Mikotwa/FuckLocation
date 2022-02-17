@@ -8,6 +8,8 @@ import com.github.kyuubiran.ezxhelper.utils.*
 import com.github.kyuubiran.ezxhelper.utils.findAllMethods
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import fuck.location.xposed.cellar.identity.Lte
+import fuck.location.xposed.cellar.identity.Nr
 import fuck.location.xposed.helpers.ConfigGateway
 
 class TelephonyRegistryHooker {
@@ -54,10 +56,24 @@ class TelephonyRegistryHooker {
                             if (mCellIdentity != null) {
                                 if ((phoneId as Int) >= 0 && phoneId < (mCellIdentity as Array<*>).size) {
                                     val originalCellIdentity = mCellIdentity[phoneId]
-                                    if (originalCellIdentity != null && originalCellIdentity is CellIdentityLte) {
-                                        findMethod(callBack.javaClass) {
-                                            name == "onCellLocationChanged"
-                                        }.invoke(callBack, fuck.location.xposed.cellar.identity.Lte().alterCellIdentity(originalCellIdentity))    // return cellIdentity
+                                    if (originalCellIdentity != null) {
+                                        when (originalCellIdentity) {
+                                            is CellIdentityLte -> {
+                                                findMethod(callBack.javaClass) {
+                                                    name == "onCellLocationChanged"
+                                                }.invoke(callBack, Lte().alterCellIdentity(originalCellIdentity))    // return cellIdentity
+                                            }
+                                            is CellIdentityNr -> {
+                                                findMethod(callBack.javaClass) {
+                                                    name == "onCellLocationChanged"
+                                                }.invoke(callBack, Nr().alterCellIdentity(originalCellIdentity))
+                                            }
+                                            else -> {
+                                                findMethod(callBack.javaClass) {
+                                                    name == "onCellLocationChanged"
+                                                }.invoke(callBack, null)
+                                            }
+                                        }
                                     } else {
                                         findMethod(callBack.javaClass) {
                                             name == "onCellLocationChanged"

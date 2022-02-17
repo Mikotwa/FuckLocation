@@ -1,87 +1,71 @@
 package fuck.location.xposed.cellar.identity
 
 import android.app.AndroidAppHelper
-import com.github.kyuubiran.ezxhelper.utils.findAllMethods
-import com.github.kyuubiran.ezxhelper.utils.hookMethod
-import com.github.kyuubiran.ezxhelper.utils.isPublic
+import android.os.Build
+import android.telephony.CellIdentityNr
+import androidx.annotation.RequiresApi
 import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.callbacks.XC_LoadPackage
+import fuck.location.xposed.helpers.ConfigGateway
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class Nr {
-    fun HookCellIdentity(lpparam: XC_LoadPackage.LoadPackageParam) {
-        val packageName = AndroidAppHelper.currentApplication().applicationContext.packageName
-        val clazz: Class<*> = lpparam.classLoader.loadClass("android.telephony.CellIdentityNr")
-        XposedBridge.log("FL: Finding method in HookCellIdentity (NR)")
-        findAllMethods(clazz) {
-            name == "getAdditionalPlmns" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getAdditionalPlmns! Caller package name: " + packageName)
-                
-            }
+    @RequiresApi(Build.VERSION_CODES.Q)
+    @OptIn(ExperimentalStdlibApi::class)
+    fun alterCellIdentity(cellIdentityNr: CellIdentityNr): CellIdentityNr {
+        val constructor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            HiddenApiBypass.getDeclaredConstructor(
+                CellIdentityNr::class.java,
+                Int::class.java,    // pci
+                Int::class.java,    // tac
+                Int::class.java,    // nrArfcn
+                IntArray::class.java,  // bands
+                String::class.java, // mccStr
+                String::class.java, // mncStr
+                Long::class.java,   // nci
+                String::class.java, // alphal
+                String::class.java, // alphas
+                Collection::class.java, // additionalPlmns
+            )
+        } else {
+            HiddenApiBypass.getDeclaredConstructor(
+                CellIdentityNr::class.java,
+                Int::class.java,    // pci
+                Int::class.java,    // tac
+                Int::class.java,    // nrArfcn
+                String::class.java, // mccStr
+                String::class.java, // mncStr
+                Long::class.java,   // nci
+                String::class.java, // alphal
+                String::class.java, // alphas
+            )
         }
 
-        findAllMethods(clazz) {
-            name == "getBands" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getBands! Caller package name: " + packageName)
-                
-            }
-        }
+        val customResult = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            constructor.newInstance(
+                ConfigGateway.get().readFakeLocation()!!.pci,
+                ConfigGateway.get().readFakeLocation()!!.tac,
+                ConfigGateway.get().readFakeLocation()!!.earfcn,
+                cellIdentityNr.bands,
+                cellIdentityNr.mccString,
+                cellIdentityNr.mncString,
+                ConfigGateway.get().readFakeLocation()!!.eci.toLong(),
+                cellIdentityNr.operatorAlphaLong,
+                cellIdentityNr.operatorAlphaShort
+            )
+        } else {
+            constructor.newInstance(
+                ConfigGateway.get().readFakeLocation()!!.pci,
+                ConfigGateway.get().readFakeLocation()!!.tac,
+                ConfigGateway.get().readFakeLocation()!!.earfcn,
+                cellIdentityNr.mccString,
+                cellIdentityNr.mncString,
+                ConfigGateway.get().readFakeLocation()!!.eci.toLong(),
+                cellIdentityNr.operatorAlphaLong,
+                cellIdentityNr.operatorAlphaShort
+            )
+        } as CellIdentityNr
+        XposedBridge.log("FL: [Cellar] Returning custom result: $customResult")
 
-        findAllMethods(clazz) {
-            name == "getMccString" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getMccString! Caller package name: " + packageName)
-                
-            }
-        }
-
-        findAllMethods(clazz) {
-            name == "getMncString" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getMncString! Caller package name: " + packageName)
-                
-            }
-        }
-
-        findAllMethods(clazz) {
-            name == "getNci" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getNci! Caller package name: " + packageName)
-                
-            }
-        }
-
-        findAllMethods(clazz) {
-            name == "getNrarfcn" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getNrarfcn! Caller package name: " + packageName)
-                
-            }
-        }
-
-        findAllMethods(clazz) {
-            name == "getPci" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getPci! Caller package name: " + packageName)
-                
-            }
-        }
-
-        findAllMethods(clazz) {
-            name == "getTac" && isPublic
-        }.hookMethod {
-            after { param ->
-                XposedBridge.log("FL: in getTac! Caller package name: " + packageName)
-                
-            }
-        }
+        return customResult
     }
 }
