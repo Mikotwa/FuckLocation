@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="ECI / NCI"
+        android:text="@string/custom_view_textview_ci"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         />
@@ -74,7 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="Pci"
+        android:text="@string/custom_view_textview_pci"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         />
@@ -95,7 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="Tac"
+        android:text="@string/custom_view_textview_tac"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         />
@@ -116,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="Earfcn / nrArfcn"
+        android:text="@string/custom_view_textview_arfcn"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         />
@@ -137,7 +137,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:text="Bandwidth"
+        android:text="@string/custom_view_textview_bandwidth"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"
         />

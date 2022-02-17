@@ -25,6 +25,7 @@
 
     <string name="custom_view_textview_x">x</string>
     <string name="custom_view_textview_y">y</string>
+    <string name="custom_view_textview_bandwidth">Bandwidth</string>
 
     <string name="about_slogan">Về mô-đun này</string>
     <string name="about_introduction_title">Mẹo và trợ giúp</string>
