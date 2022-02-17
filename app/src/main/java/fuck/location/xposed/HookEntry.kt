@@ -26,6 +26,8 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
         EzXHelperInit.initZygote(startupParam)
         XposedBridge.log("FL: in initZygote!")
+
+        ConfigGateway.get().setDataPath()
     }
 
     @SuppressLint("PrivateApi", "ObsoleteSdkInt", "NewApi")

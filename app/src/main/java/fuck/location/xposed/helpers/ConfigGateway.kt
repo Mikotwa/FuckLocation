@@ -34,6 +34,7 @@ class ConfigGateway private constructor() {
     private val magicNumberLocation = -191931
 
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    private lateinit var dataDir: String
     private lateinit var customContext: Context
 
     /* For getting started in framework. In default, it judges whether a
@@ -47,7 +48,6 @@ class ConfigGateway private constructor() {
      * 4: input: void; output: jsonString (readFakeLocation)
      */
 
-    // 单例，防止写入与读取过程出现竞争
     companion object {
         // TODO: Memory leak
         private var instance: ConfigGateway? = null
@@ -274,7 +274,7 @@ class ConfigGateway private constructor() {
     }
 
     @ExperimentalStdlibApi
-    fun readFakeLocation(): FakeLocation? {
+    fun readFakeLocation(): FakeLocation {
         val jsonAdapter: JsonAdapter<FakeLocation> = moshi.adapter()
         val json = try {
             universalAPICaller("None", 4) as String
@@ -352,5 +352,23 @@ class ConfigGateway private constructor() {
         }
 
         throw IllegalArgumentException("FL: Invalid CallerIdentity! This should never happen, please report to developer. $callerIdentity")
+    }
+
+    fun setDataPath(){
+        File("/data/system").list()?.forEach {
+            if (it.equals("fuck_location_test")) {
+                val randomizedFile = "/data/system/fuck_location_${generateRandomAppendix()}"
+                File("/data/system/$it").renameTo(File(randomizedFile))
+                dataDir = randomizedFile
+            } else if (it.startsWith("fuck_location")) {
+                if (this::dataDir.isInitialized) File("/data/system/$it").deleteRecursively()
+                else dataDir = "/data/system/$it"
+            }
+        }
+    }
+
+    private fun generateRandomAppendix() : String {
+        val chars = ('a'..'Z') + ('A'..'Z') + ('0'..'9')
+        return List(32) { chars.random() }.joinToString("")
     }
 }
