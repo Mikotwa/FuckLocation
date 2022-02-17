@@ -124,7 +124,7 @@ class ConfigGateway private constructor() {
         val packageName = param.args[0]
 
         val jsonAdapter: JsonAdapter<List<String>> = Moshi.Builder().build().adapter()
-        val jsonFile = File("/data/system/fuck_location_test/whiteList.json")
+        val jsonFile = File("$dataDir/whiteList.json")
 
         try {
             val list = jsonAdapter.fromJson(jsonFile.readText())
@@ -146,14 +146,14 @@ class ConfigGateway private constructor() {
 
     @ExperimentalStdlibApi
     private fun readPackageListInternal(param: XC_MethodHook.MethodHookParam) {
-        var jsonFile = File("/data/system/fuck_location_test/whiteList.json")
+        var jsonFile = File("$dataDir/whiteList.json")
 
         val json: String = try {
             jsonFile.readText()
         } catch (e: FileNotFoundException) {
             Log.d("FL: whiteList.json not found. Trying to refresh File holder")
             try {
-                jsonFile = File("/data/system/fuck_location_test/whiteList.json")
+                jsonFile = File("$dataDir/whiteList.json")
                 jsonFile.readText()
                 Log.d("FL: whiteList.json resumed.")
             } catch (e: FileNotFoundException) {
@@ -167,11 +167,11 @@ class ConfigGateway private constructor() {
 
     @ExperimentalStdlibApi
     private fun readFakeLocationInternal(param: XC_MethodHook.MethodHookParam) {
-        var jsonFile = File("/data/system/fuck_location_test/fakeLocation.json")
+        var jsonFile = File("$dataDir/fakeLocation.json")
 
         try {
             if (!jsonFile.exists()) {
-                val jsonFileDirectory = File("/data/system/fuck_location_test/")
+                val jsonFileDirectory = File("$dataDir/")
                 jsonFileDirectory.mkdirs()
             }
 
@@ -180,7 +180,7 @@ class ConfigGateway private constructor() {
             } catch (e: FileNotFoundException) {
                 Log.d("FL: fakeLocation.json not found. Trying to refresh File holder")
                 try {
-                    jsonFile = File("/data/system/fuck_location_test/fakeLocation.json")
+                    jsonFile = File("$dataDir/fakeLocation.json")
                     jsonFile.readText()
                     Log.d("FL: fakeLocation.json resumed.")
                 } catch (e: FileNotFoundException) {
@@ -198,10 +198,10 @@ class ConfigGateway private constructor() {
     }
 
     private fun writePackageListInternal(param: XC_MethodHook.MethodHookParam) {
-        val jsonFile = File("/data/system/fuck_location_test/whiteList.json")
+        val jsonFile = File("$dataDir/whiteList.json")
 
         if (!jsonFile.exists()) {
-            val jsonFileDirectory = File("/data/system/fuck_location_test/")
+            val jsonFileDirectory = File("$dataDir/")
             jsonFileDirectory.mkdirs()
         }
 
@@ -211,10 +211,10 @@ class ConfigGateway private constructor() {
     }
 
     private fun writeFakeLocationInternal(param: XC_MethodHook.MethodHookParam) {
-        val jsonFile = File("/data/system/fuck_location_test/fakeLocation.json")
+        val jsonFile = File("$dataDir/fakeLocation.json")
 
         if (!jsonFile.exists()) {
-            val jsonFileDirectory = File("/data/system/fuck_location_test/")
+            val jsonFileDirectory = File("$dataDir/")
             jsonFileDirectory.mkdirs()
         }
 
@@ -369,6 +369,6 @@ class ConfigGateway private constructor() {
 
     private fun generateRandomAppendix() : String {
         val chars = ('a'..'Z') + ('A'..'Z') + ('0'..'9')
-        return List(32) { chars.random() }.joinToString("")
+        return List(16) { chars.random() }.joinToString("")
     }
 }
