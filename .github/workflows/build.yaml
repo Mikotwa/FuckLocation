@@ -23,12 +23,12 @@ jobs:
         run: |
           if [ ! -f "gradlew" ]; then gradle wrapper; fi
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
           name: app-debug.apk
-          path: ${{ github.workspace }}/app/build/outputs/apk/debug/app-debug.apk
+          path: ./FuckLocation/app/build/outputs/apk/debug/app-debug.apk
       - name: Send apk to telegram
         if: success()
         uses: appleboy/telegram-action@master
@@ -41,4 +41,4 @@ jobs:
             *${{ github.event.head_commit.message }}* by ${{ github.event.head_commit.author.name }}
             See commit detail in [here](${{ github.event.head_commit.url }})
             Snapshot apk is attached
-          document: ${{ github.workspace }}/app/build/outputs/apk/debug/app-debug.apk
+          document: ./FuckLocation/app/build/outputs/apk/debug/app-debug.apk
