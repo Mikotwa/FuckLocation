@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-debug.apk
-          path: ./**/app-debug.apk
+          path: ${{ github.workspace }}/app/build/outputs/apk/debug/app-debug.apk
       - name: Send apk to telegram
         if: success()
         uses: appleboy/telegram-action@master
