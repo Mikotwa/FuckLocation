@@ -338,7 +338,7 @@ class ConfigGateway private constructor() {
             else "public final java.lang.String com.android.server.location.CallerIdentity.packageName"
 
         for (field in fields) {
-            // TODO: Change this fu**ing stupid check
+            Log.d("FL: [debug Q!!] $field")
             if (field.toString() == targetFieldName) {
                 val targetField = field as Field
                 targetField.isAccessible = true
@@ -347,9 +347,7 @@ class ConfigGateway private constructor() {
         }
 
         // Workaround for Android 11
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
-            return callerIdentity as String
-        }
+        if (callerIdentity is String) return callerIdentity
 
         throw IllegalArgumentException("FL: Invalid CallerIdentity! This should never happen, please report to developer. $callerIdentity")
     }
