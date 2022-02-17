@@ -36,9 +36,9 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           format: markdown
-          document: ${{ github.workspace }}/**/app-debug.apk
           message: |+
             New push to github!
             *${{ github.event.head_commit.message }}* by ${{ github.event.head_commit.author.name }}
             See commit detail in [here](${{ github.event.head_commit.url }})
             Snapshot apk is attached
+          document: ${{ github.workspace }}/app/build/outputs/apk/debug/app-debug.apk
