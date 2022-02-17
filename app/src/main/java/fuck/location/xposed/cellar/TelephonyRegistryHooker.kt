@@ -107,7 +107,7 @@ class TelephonyRegistryHooker {
 
                         param.result = false
                     }
-                    
+
                     11 -> {
                         XposedBridge.log("FL: [Cellar] in whiteList! Alter EVENT_CELL_INFO_CHANGED for now.")
 
@@ -117,7 +117,7 @@ class TelephonyRegistryHooker {
                             }.get(param.thisObject)
 
                             if (mCellInfo != null) {
-                                if ((phoneId as Int) >= 0 && phoneId < (mCellInfo as Array<*>).size) {
+                                if ((phoneId as Int) >= 0 && phoneId < (mCellInfo as ArrayList<*>).size) {
                                     val originalCellInfoList = mCellInfo[phoneId]
                                     if (originalCellInfoList != null) {
                                         val modifiedCellInfoList = mutableListOf<CellInfo>()
