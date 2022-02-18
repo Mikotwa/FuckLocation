@@ -333,9 +333,13 @@ class ConfigGateway private constructor() {
     fun callerIdentityToPackageName(callerIdentity: Any): String {
         val fields = HiddenApiBypass.getInstanceFields(callerIdentity.javaClass)
 
-        val targetFieldName: String =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) "private final java.lang.String android.location.util.identity.CallerIdentity.mPackageName"
-            else "public final java.lang.String com.android.server.location.CallerIdentity.packageName"
+        lateinit var targetFieldName: String
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> targetFieldName = "private final java.lang.String android.location.util.identity.CallerIdentity.mPackageName"
+            Build.VERSION.SDK_INT == Build.VERSION_CODES.R -> targetFieldName = "public final java.lang.String com.android.server.location.CallerIdentity.packageName"
+            Build.VERSION.SDK_INT == Build.VERSION_CODES.Q -> targetFieldName = "public final java.lang.String com.android.server.location.CallerIdentity.mPackageName"
+            Build.VERSION.SDK_INT == Build.VERSION_CODES.P -> targetFieldName = "final java.lang.String com.android.server.LocationManagerService.Identity.mPackageName"
+        }
 
         for (field in fields) {
             if (field.toString() == targetFieldName) {
@@ -345,7 +349,7 @@ class ConfigGateway private constructor() {
             }
         }
 
-        // Workaround for Android 11
+        // Workaround for pure string
         if (callerIdentity is String) return callerIdentity
 
         throw IllegalArgumentException("FL: Invalid CallerIdentity! This should never happen, please report to developer. $callerIdentity")
