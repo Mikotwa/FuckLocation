@@ -338,7 +338,6 @@ class ConfigGateway private constructor() {
             else "public final java.lang.String com.android.server.location.CallerIdentity.packageName"
 
         for (field in fields) {
-            Log.d("FL: [debug Q!!] $field")
             if (field.toString() == targetFieldName) {
                 val targetField = field as Field
                 targetField.isAccessible = true

@@ -197,5 +197,23 @@ class LocationHookerAfterS {
                 return@hookBefore
             }
         }
+
+        // TODO: Kick any fused location provider out
+        findAllMethods(clazz) {
+            name == "addLocationProviderManager" && isPrivate
+        }.hookBefore { param ->
+            val providerManager = param.args[0]
+
+            val mName = findField(providerManager.javaClass, true) {
+                name == "mName"
+            }.get(providerManager)
+
+            XposedBridge.log("FL: Adding location provider named: $mName")
+            if (mName == "fused") {
+                XposedBridge.log("FL: Fused location provider detected! Kick out!")
+                param.result = null
+                return@hookBefore
+            }
+        }
     }
 }
