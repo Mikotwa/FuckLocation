@@ -17,7 +17,8 @@ class LocationHookerR {
     @SuppressLint("PrivateApi")
     @ExperimentalStdlibApi
     fun hookLastLocation(lpparam: XC_LoadPackage.LoadPackageParam) {
-        val clazz: Class<*> = lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
+        val clazz: Class<*> =
+            lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
 
         findAllMethods(clazz) {
             name == "getLastLocation" && isPublic
@@ -55,7 +56,12 @@ class LocationHookerR {
                     location.speedAccuracyMetersPerSecond = 0F
 
                     try {
-                        HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
+                        HiddenApiBypass.invoke(
+                            location.javaClass,
+                            location,
+                            "setIsFromMockProvider",
+                            false
+                        )
                     } catch (e: Exception) {
                         XposedBridge.log("FL: Not possible to mock (R)! $e")
                     }
@@ -113,12 +119,15 @@ class LocationHookerR {
                             name == "mCallerIdentity"
                         }.get(mReceiver)
 
-                        val packageName = ConfigGateway.get().callerIdentityToPackageName(mCallerIdentity)
+                        val packageName =
+                            ConfigGateway.get().callerIdentityToPackageName(mCallerIdentity)
 
                         if (!ConfigGateway.get().inWhitelist(packageName)) {
                             newValue.add(record)
                         } else {
-                            val originLocation = (param.args[1] as Location).takeIf { param.args[1] != null } ?: Location(LocationManager.GPS_PROVIDER)
+                            val originLocation =
+                                (param.args[1] as Location).takeIf { param.args[1] != null }
+                                    ?: Location(LocationManager.GPS_PROVIDER)
                             val fakeLocation = ConfigGateway.get().readFakeLocation()
 
                             val location = Location(originLocation.provider)
@@ -137,7 +146,12 @@ class LocationHookerR {
                             location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
 
                             try {
-                                HiddenApiBypass.invoke(location.javaClass, location, "setIsFromMockProvider", false)
+                                HiddenApiBypass.invoke(
+                                    location.javaClass,
+                                    location,
+                                    "setIsFromMockProvider",
+                                    false
+                                )
                             } catch (e: Exception) {
                                 XposedBridge.log("FL: Not possible to mock (R)! $e")
                             }
@@ -168,6 +182,24 @@ class LocationHookerR {
                 param.result = null
                 return@hookBefore
             }
+        }
+
+    }
+
+    @SuppressLint("PrivateApi")
+    fun hookDLC(lpparam: XC_LoadPackage.LoadPackageParam) {
+        val clazz = lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
+
+        findAllMethods(clazz) {
+            name == "initializeProvidersLocked" && isPrivate
+        }.hookAfter { param ->
+            val locationProviderManager = findMethod(clazz) {
+                name == "getLocationProviderManager"
+            }.invoke(param.thisObject, "fused")
+
+            findMethod(locationProviderManager.javaClass) {
+                name == "setRealProvider"
+            }.invoke(locationProviderManager, null)
         }
     }
 }

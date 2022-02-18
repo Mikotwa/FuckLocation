@@ -73,6 +73,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             }
                             Build.VERSION_CODES.R -> {  // Android 11
                                 LocationHookerR().hookLastLocation(lpparam)
+                                LocationHookerR().hookDLC(lpparam)
 
                                 GnssManagerServiceHookerR().hookAddGnssBatchingCallback(lpparam)
                             }
