@@ -210,9 +210,9 @@ class LocationHookerAfterS {
 
             XposedBridge.log("FL: Adding location provider named: $mName")
             if (mName == "fused") {
-                XposedBridge.log("FL: Fused location provider detected! Kick out!")
-                param.result = null
-                return@hookBefore
+                XposedBridge.log("FL: Fused location provider detected! Return null provider...")
+
+                param.args[1] = null
             }
         }
     }
