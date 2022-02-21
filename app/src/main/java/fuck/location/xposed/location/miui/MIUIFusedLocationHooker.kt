@@ -12,30 +12,18 @@ class MIUIFusedLocationHooker {
 
         XposedBridge.log("FL: [MIUI] Finding method in FusedLocationService")
 
-        findAllMethods(clazz) {
-            name == "onBind" && isPublic
-        }.hookAfter { param ->
-            val fusedLocationProvider = findField(clazz) {
-                name == "a" && isPrivate
-            }.get(param.thisObject)
+        val fusedLocationProvider = findField(clazz) {
+            name == "a" && isPrivate
+        }.get(clazz)
 
-            findMethod(fusedLocationProvider.javaClass) {
-                name == "reportLocation"
-            }.hookBefore { param ->
-                XposedBridge.log("FL: [MIUI] Demo: Stop reporting fused location")
-                param.result = null
-                return@hookBefore
-            }
+        val locationProviderManager = findField(fusedLocationProvider.javaClass) {
+            name == "mManager"
+        }.get(fusedLocationProvider)
 
-            val locationProviderManager = findField(fusedLocationProvider.javaClass) {
-                name == "mManager"
-            }.get(fusedLocationProvider)
-
-            findAllMethods(locationProviderManager.javaClass) {
-                true
-            }.forEach { method ->
-                XposedBridge.log("FL: [MIUI] Demo: ${method.name}")
-            }
+        findAllMethods(locationProviderManager.javaClass) {
+            true
+        }.forEach { method ->
+            XposedBridge.log("FL: [MIUI] Demo: ${method.name}")
         }
     }
 }
