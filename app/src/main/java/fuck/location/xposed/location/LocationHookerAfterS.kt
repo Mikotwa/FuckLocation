@@ -199,7 +199,7 @@ class LocationHookerAfterS {
         }
 
         // TODO: Kick any fused location provider out
-        findAllMethods(clazz) {
+        /*findAllMethods(clazz) {
             name == "addLocationProviderManager" && isPrivate
         }.hookBefore { param ->
             val providerManager = param.args[0]
@@ -214,6 +214,6 @@ class LocationHookerAfterS {
 
                 param.args[1] = null
             }
-        }
+        }*/
     }
 }
