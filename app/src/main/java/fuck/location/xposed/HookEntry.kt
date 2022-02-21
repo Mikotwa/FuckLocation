@@ -20,7 +20,7 @@ import fuck.location.xposed.location.WLANHooker
 import fuck.location.xposed.location.gnss.GnssHookerPreQ
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerR
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerS
-import fuck.location.xposed.location.miui.FusedLocationHooker
+import fuck.location.xposed.location.miui.MIUIFusedLocationHooker
 import java.lang.Exception
 
 @ExperimentalStdlibApi
@@ -101,7 +101,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
 
                 "com.xiaomi.location.fused" -> {
                     try {
-                        FusedLocationHooker().hookFusedLocationService(lpparam)
+                        MIUIFusedLocationHooker().hookFusedLocationService(lpparam)
                     } catch (e: Exception) {
                         XposedBridge.log("FL: fuck with exceptions (miui): $e")
                     }
