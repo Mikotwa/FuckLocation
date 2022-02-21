@@ -3,6 +3,5 @@
     <string-array name="xposed_scope">
         <item>android</item>
         <item>com.android.phone</item>
-        <item>com.xiaomi.location.fused</item>
     </string-array>
 </resources>

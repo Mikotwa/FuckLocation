@@ -98,14 +98,6 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                         XposedBridge.log("FL: fuck with exceptions (cellar): $e")
                     }
                 }
-
-                "com.xiaomi.location.fused" -> {
-                    try {
-                        MIUIFusedLocationHooker().hookFusedLocationService(lpparam)
-                    } catch (e: Exception) {
-                        XposedBridge.log("FL: fuck with exceptions (miui): $e")
-                    }
-                }
             }
         }
 
