@@ -2,7 +2,6 @@ package fuck.location.xposed.location
 
 import android.annotation.SuppressLint
 import android.location.*
-import android.os.Binder
 import android.os.Build
 import android.util.ArrayMap
 import androidx.annotation.RequiresApi
@@ -51,7 +50,7 @@ class LocationHookerAfterS {
                             location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
                         }
 
-                        location.latitude = fakeLocation?.x!!
+                        location.latitude = fakeLocation.x
                         location.longitude = fakeLocation.y
                         location.altitude = 0.0
                         location.isMock = false
@@ -87,7 +86,6 @@ class LocationHookerAfterS {
         }.hookMethod {
             before { param ->
                 hookOnReportLocation(clazz, param)
-                return@before
             }
         }
     }
@@ -152,9 +150,8 @@ class LocationHookerAfterS {
                 findMethod(providerManager.javaClass) {
                     name == "onReportLocation"
                 }.hookBefore { innerParam ->
-                    XposedBridge.log("FL: in onReportLocation (fused)! Throwing all request for testing purpose")
+                    XposedBridge.log("FL: in onReportLocation (fused)! Redirect request to hooker...")
                     hookOnReportLocation(clazz, innerParam)
-                    return@hookBefore
                 }
             }
         }
@@ -199,7 +196,7 @@ class LocationHookerAfterS {
 
                 val location = Location(originLocation.provider)
 
-                location.latitude = fakeLocation?.x!!
+                location.latitude = fakeLocation.x
                 location.longitude = fakeLocation.y
                 location.isMock = false
                 location.altitude = 0.0
