@@ -218,10 +218,6 @@ class LocationHookerAfterS {
                     innerParam.result = null
                     return@hookBefore
                 }
-            } else if (mName == "network") {
-                XposedBridge.log("FL: [MIUI !!] Network provider detected! Do not register...")
-                param.result = null
-                return@hookBefore
             }
         }
     }

@@ -50,7 +50,8 @@ class Nr {
                 cellIdentityNr.mncString,
                 ConfigGateway.get().readFakeLocation()!!.eci.toLong(),
                 cellIdentityNr.operatorAlphaLong,
-                cellIdentityNr.operatorAlphaShort
+                cellIdentityNr.operatorAlphaShort,
+                cellIdentityNr.additionalPlmns
             )
         } else {
             constructor.newInstance(
