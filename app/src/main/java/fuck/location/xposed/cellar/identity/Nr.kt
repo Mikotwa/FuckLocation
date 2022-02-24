@@ -42,25 +42,25 @@ class Nr {
 
         val customResult = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             constructor.newInstance(
-                ConfigGateway.get().readFakeLocation()!!.pci,
-                ConfigGateway.get().readFakeLocation()!!.tac,
-                ConfigGateway.get().readFakeLocation()!!.earfcn,
+                ConfigGateway.get().readFakeLocation().pci,
+                ConfigGateway.get().readFakeLocation().tac,
+                ConfigGateway.get().readFakeLocation().earfcn,
                 cellIdentityNr.bands,
                 cellIdentityNr.mccString,
                 cellIdentityNr.mncString,
-                ConfigGateway.get().readFakeLocation()!!.eci.toLong(),
+                ConfigGateway.get().readFakeLocation().eci.toLong(),
                 cellIdentityNr.operatorAlphaLong,
                 cellIdentityNr.operatorAlphaShort,
                 cellIdentityNr.additionalPlmns
             )
         } else {
             constructor.newInstance(
-                ConfigGateway.get().readFakeLocation()!!.pci,
-                ConfigGateway.get().readFakeLocation()!!.tac,
-                ConfigGateway.get().readFakeLocation()!!.earfcn,
+                ConfigGateway.get().readFakeLocation().pci,
+                ConfigGateway.get().readFakeLocation().tac,
+                ConfigGateway.get().readFakeLocation().earfcn,
                 cellIdentityNr.mccString,
                 cellIdentityNr.mncString,
-                ConfigGateway.get().readFakeLocation()!!.eci.toLong(),
+                ConfigGateway.get().readFakeLocation().eci.toLong(),
                 cellIdentityNr.operatorAlphaLong,
                 cellIdentityNr.operatorAlphaShort
             )

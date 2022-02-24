@@ -144,8 +144,18 @@ class LocationHookerAfterS {
             }.get(providerManager)
 
             XposedBridge.log("FL: Adding location provider named: $mName")
+            
             if (mName == "fused") {
                 XposedBridge.log("FL: Fused location provider detected! Trying to hook...")
+
+                findMethod(providerManager.javaClass) {
+                    name == "onReportLocation"
+                }.hookBefore { innerParam ->
+                    XposedBridge.log("FL: in onReportLocation (fused)! Redirect request to hooker...")
+                    hookOnReportLocation(clazz, innerParam)
+                }
+            } else if (mName == "network") {
+                XposedBridge.log("FL: Network location provider detected! Trying to hook...")
 
                 findMethod(providerManager.javaClass) {
                     name == "onReportLocation"
