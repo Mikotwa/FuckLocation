@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.ArrayMap
 import androidx.annotation.RequiresApi
 import com.github.kyuubiran.ezxhelper.utils.*
+import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import fuck.location.xposed.helpers.ConfigGateway
@@ -85,76 +86,13 @@ class LocationHookerAfterS {
             name == "onReportLocation"
         }.hookMethod {
             before { param ->
-                XposedBridge.log("FL: in onReportLocation!")
-
-                val mRegistrations = findField(clazz, true) {
-                    name == "mRegistrations"
-                }
-
-                mRegistrations.isAccessible = true
-
-                val registrations = mRegistrations.get(param.thisObject) as ArrayMap<*, *>
-                val newRegistrations = ArrayMap<Any, Any>()
-
-                registrations.forEach { registration ->
-                    val callerIdentity = findField(registration.value.javaClass, true) {
-                        name == "mIdentity"
-                    }.get(registration.value)
-
-                    val packageName = ConfigGateway.get().callerIdentityToPackageName(callerIdentity)
-
-                    if (!ConfigGateway.get().inWhitelist(packageName)) {
-                        newRegistrations[registration.key] = registration.value
-                    } else {
-                        val value = registration.value
-                        val locationResult = param.args[0]
-
-                        val mLocationsField = findField(locationResult.javaClass, true) {
-                            name == "mLocations" && isPrivate
-                        }
-
-                        mLocationsField.isAccessible = true
-                        val mLocations = mLocationsField.get(locationResult) as ArrayList<*>
-
-                        val originLocation = (mLocations[0] as Location).takeIf { mLocations.isNotEmpty() } ?: Location(LocationManager.GPS_PROVIDER)
-                        val fakeLocation = ConfigGateway.get().readFakeLocation()
-
-                        val location = Location(originLocation.provider)
-
-                        location.latitude = fakeLocation?.x!!
-                        location.longitude = fakeLocation.y
-                        location.isMock = false
-                        location.altitude = 0.0
-                        location.speed = 0F
-                        location.speedAccuracyMetersPerSecond = 0F
-
-                        location.time = originLocation.time
-                        location.accuracy = originLocation.accuracy
-                        location.bearing = originLocation.bearing
-                        location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
-                        location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
-                        location.elapsedRealtimeUncertaintyNanos = originLocation.elapsedRealtimeUncertaintyNanos
-                        location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
-
-                        mLocationsField.set(locationResult, arrayListOf(location))
-
-                        val method = findMethod(value.javaClass, true) {
-                            name == "acceptLocationChange"
-                        }
-
-                        val operation = method.invoke(value, locationResult)
-
-                        findMethod(value.javaClass, true) {
-                            name == "executeOperation"
-                        }.invoke(value, operation)
-                    }
-                }
-
-                mRegistrations.set(param.thisObject, newRegistrations)
+                hookOnReportLocation(clazz, param)
+                return@before
             }
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     @SuppressLint("PrivateApi")
     fun hookDLC(lpparam: XC_LoadPackage.LoadPackageParam) {
         val clazz = lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
@@ -215,10 +153,81 @@ class LocationHookerAfterS {
                     name == "onReportLocation"
                 }.hookBefore { innerParam ->
                     XposedBridge.log("FL: in onReportLocation (fused)! Throwing all request for testing purpose")
-                    innerParam.result = null
+                    hookOnReportLocation(clazz, innerParam)
                     return@hookBefore
                 }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun hookOnReportLocation(clazz: Class<*>, param: XC_MethodHook.MethodHookParam) {
+        XposedBridge.log("FL: in onReportLocation!")
+
+        val mRegistrations = findField(clazz, true) {
+            name == "mRegistrations"
+        }
+
+        mRegistrations.isAccessible = true
+
+        val registrations = mRegistrations.get(param.thisObject) as ArrayMap<*, *>
+        val newRegistrations = ArrayMap<Any, Any>()
+
+        registrations.forEach { registration ->
+            val callerIdentity = findField(registration.value.javaClass, true) {
+                name == "mIdentity"
+            }.get(registration.value)
+
+            val packageName = ConfigGateway.get().callerIdentityToPackageName(callerIdentity)
+
+            if (!ConfigGateway.get().inWhitelist(packageName)) {
+                newRegistrations[registration.key] = registration.value
+            } else {
+                val value = registration.value
+                val locationResult = param.args[0]
+
+                val mLocationsField = findField(locationResult.javaClass, true) {
+                    name == "mLocations" && isPrivate
+                }
+
+                mLocationsField.isAccessible = true
+                val mLocations = mLocationsField.get(locationResult) as ArrayList<*>
+
+                val originLocation = (mLocations[0] as Location).takeIf { mLocations.isNotEmpty() } ?: Location(LocationManager.GPS_PROVIDER)
+                val fakeLocation = ConfigGateway.get().readFakeLocation()
+
+                val location = Location(originLocation.provider)
+
+                location.latitude = fakeLocation?.x!!
+                location.longitude = fakeLocation.y
+                location.isMock = false
+                location.altitude = 0.0
+                location.speed = 0F
+                location.speedAccuracyMetersPerSecond = 0F
+
+                location.time = originLocation.time
+                location.accuracy = originLocation.accuracy
+                location.bearing = originLocation.bearing
+                location.bearingAccuracyDegrees = originLocation.bearingAccuracyDegrees
+                location.elapsedRealtimeNanos = originLocation.elapsedRealtimeNanos
+                location.elapsedRealtimeUncertaintyNanos = originLocation.elapsedRealtimeUncertaintyNanos
+                location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
+
+                mLocationsField.set(locationResult, arrayListOf(location))
+
+                val method = findMethod(value.javaClass, true) {
+                    name == "acceptLocationChange"
+                }
+
+                val operation = method.invoke(value, locationResult)
+
+                findMethod(value.javaClass, true) {
+                    name == "executeOperation"
+                }.invoke(value, operation)
+            }
+        }
+
+        mRegistrations.set(param.thisObject, newRegistrations)
     }
 }
