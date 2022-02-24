@@ -144,7 +144,7 @@ class LocationHookerAfterS {
             }.get(providerManager)
 
             XposedBridge.log("FL: Adding location provider named: $mName")
-            
+
             if (mName == "fused") {
                 XposedBridge.log("FL: Fused location provider detected! Trying to hook...")
 
