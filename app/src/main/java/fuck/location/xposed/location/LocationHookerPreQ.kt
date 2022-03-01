@@ -46,7 +46,7 @@ class LocationHookerPreQ {
                         location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
                     }
 
-                    location.latitude = fakeLocation?.x!!
+                    location.latitude = fakeLocation.x
                     location.longitude = fakeLocation.y
                     location.altitude = 0.0
                     location.speed = 0F
@@ -92,7 +92,7 @@ class LocationHookerPreQ {
                             name == "mCallerIdentity"
                         }.get(mReceiver)
 
-                        val packageName = ConfigGateway.get().callerIdentityToPackageName(mCallerIdentity)
+                        val packageName = ConfigGateway.get().callerIdentityToPackageName(mCallerIdentity!!)
 
                         if (!ConfigGateway.get().inWhitelist(packageName)) {
                             newValue.add(record)
@@ -102,7 +102,7 @@ class LocationHookerPreQ {
 
                             val location = Location(originLocation.provider)
 
-                            location.latitude = fakeLocation?.x!!
+                            location.latitude = fakeLocation.x
                             location.longitude = fakeLocation.y
                             location.altitude = 0.0
                             location.speed = 0F
@@ -124,7 +124,7 @@ class LocationHookerPreQ {
                             // TODO: this is a unsafe call that bypass the validation of system
                             findMethod(mReceiver.javaClass, false) {
                                 name == "callLocationChangedLocked" && isPublic
-                            }.invoke(location)
+                            }.invoke(mReceiver, location)
                         }
                     }
 

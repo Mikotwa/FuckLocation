@@ -49,7 +49,7 @@ class LocationHookerR {
                         location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
                     }
 
-                    location.latitude = fakeLocation?.x!!
+                    location.latitude = fakeLocation.x
                     location.longitude = fakeLocation.y
                     location.altitude = 0.0
                     location.speed = 0F
@@ -120,7 +120,7 @@ class LocationHookerR {
                         }.get(mReceiver)
 
                         val packageName =
-                            ConfigGateway.get().callerIdentityToPackageName(mCallerIdentity)
+                            ConfigGateway.get().callerIdentityToPackageName(mCallerIdentity!!)
 
                         if (!ConfigGateway.get().inWhitelist(packageName)) {
                             newValue.add(record)
@@ -132,7 +132,7 @@ class LocationHookerR {
 
                             val location = Location(originLocation.provider)
 
-                            location.latitude = fakeLocation?.x!!
+                            location.latitude = fakeLocation.x
                             location.longitude = fakeLocation.y
                             location.altitude = 0.0
                             location.speed = 0F
