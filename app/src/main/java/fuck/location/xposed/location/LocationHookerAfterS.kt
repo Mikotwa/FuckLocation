@@ -186,7 +186,7 @@ class LocationHookerAfterS {
                 name == "mIdentity"
             }.get(registration.value)
 
-            val packageName = ConfigGateway.get().callerIdentityToPackageName(callerIdentity)
+            val packageName = ConfigGateway.get().callerIdentityToPackageName(callerIdentity!!)
 
             if (!ConfigGateway.get().inWhitelist(packageName)) {
                 newRegistrations[registration.key] = registration.value
