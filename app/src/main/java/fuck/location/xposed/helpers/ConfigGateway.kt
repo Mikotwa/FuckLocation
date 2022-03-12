@@ -333,12 +333,12 @@ class ConfigGateway private constructor() {
     fun callerIdentityToPackageName(callerIdentity: Any): String {
         val fields = HiddenApiBypass.getInstanceFields(callerIdentity.javaClass)
 
-        lateinit var targetFieldName: String
-        when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> targetFieldName = "private final java.lang.String android.location.util.identity.CallerIdentity.mPackageName"
-            Build.VERSION.SDK_INT == Build.VERSION_CODES.R -> targetFieldName = "public final java.lang.String com.android.server.location.CallerIdentity.packageName"
-            Build.VERSION.SDK_INT == Build.VERSION_CODES.Q -> targetFieldName = "public final java.lang.String com.android.server.location.CallerIdentity.mPackageName"
-            Build.VERSION.SDK_INT == Build.VERSION_CODES.P -> targetFieldName = "final java.lang.String com.android.server.LocationManagerService.Identity.mPackageName"
+        val targetFieldName = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> "private final java.lang.String android.location.util.identity.CallerIdentity.mPackageName"
+            Build.VERSION.SDK_INT == Build.VERSION_CODES.R -> "public final java.lang.String com.android.server.location.CallerIdentity.packageName"
+            Build.VERSION.SDK_INT == Build.VERSION_CODES.Q -> "public final java.lang.String com.android.server.location.CallerIdentity.mPackageName"
+            Build.VERSION.SDK_INT == Build.VERSION_CODES.P -> "final java.lang.String com.android.server.LocationManagerService.Identity.mPackageName"
+            else -> ""
         }
 
         for (field in fields) {
