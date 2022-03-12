@@ -1,5 +1,6 @@
 package fuck.location.xposed.location.miui
 
+import android.annotation.SuppressLint
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
@@ -19,12 +20,28 @@ import fuck.location.xposed.helpers.ConfigGateway
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.lang.Exception
 
-class MiuiBlurLocationManagerR {
+class MiuiBlurLocationManagerHookerAfterR {
+    @SuppressLint("PrivateApi")
     @RequiresApi(Build.VERSION_CODES.Q)
     @OptIn(ExperimentalStdlibApi::class)
     fun hookGetBlurryLocation(lpparam: XC_LoadPackage.LoadPackageParam) {
-        val clazz: Class<*> =
-            lpparam.classLoader.loadClass("com.android.server.location.MiuiBlurLocationManager")
+        lateinit var clazz: Class<*>
+        when (Build.VERSION.SDK_INT) {
+            Build.VERSION_CODES.S -> {
+                clazz =
+                    lpparam.classLoader.loadClass("com.android.server.location.MiuiBlurLocationManagerStub")
+            }
+
+            Build.VERSION_CODES.R -> {
+                clazz =
+                    lpparam.classLoader.loadClass("com.android.server.location.MiuiBlurLocationManager")
+            }
+
+            else -> {
+                XposedBridge.log("FL: [Shaomi R] This is an unsupported version of MIUI! You may want to report this with detailed information. ${Build.VERSION.SDK_INT}")
+                return
+            }
+        }
 
         findAllMethods(clazz) {
             name == "getBlurryLocation" && isPublic

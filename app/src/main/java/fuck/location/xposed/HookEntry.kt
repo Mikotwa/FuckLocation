@@ -21,7 +21,7 @@ import fuck.location.xposed.location.WLANHooker
 import fuck.location.xposed.location.gnss.GnssHookerPreQ
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerR
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerS
-import fuck.location.xposed.location.miui.MiuiBlurLocationManagerR
+import fuck.location.xposed.location.miui.MiuiBlurLocationManagerHookerAfterR
 import java.lang.Exception
 
 @ExperimentalStdlibApi
@@ -65,17 +65,21 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
 
                         TelephonyRegistryHooker().hookListen(lpparam)
 
-                        // For Android 12, run this hook
+                        // For Android 12 and MIUI, run this hook
                         when (Build.VERSION.SDK_INT) {
                             Build.VERSION_CODES.S -> {
-                                LocationHookerAfterS().hookLastLocation(lpparam)
-                                LocationHookerAfterS().hookDLC(lpparam)
-
-                                GnssManagerServiceHookerS().hookRegisterGnssNmeaCallback(lpparam)
-                            }
-                            Build.VERSION_CODES.R -> {  // Android 11 and 💩 MIUI
                                 if (Miui().isMIUI()) {
-                                    MiuiBlurLocationManagerR().hookGetBlurryLocation(lpparam)
+                                    MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)
+                                } else {
+                                    LocationHookerAfterS().hookLastLocation(lpparam)
+                                    LocationHookerAfterS().hookDLC(lpparam)
+
+                                    GnssManagerServiceHookerS().hookRegisterGnssNmeaCallback(lpparam)
+                                }
+                            }
+                            Build.VERSION_CODES.R -> {  // Android 11 and MIUI
+                                if (Miui().isMIUI()) {
+                                    MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)
                                 } else {
                                     LocationHookerR().hookLastLocation(lpparam)
                                     LocationHookerR().hookDLC(lpparam)
