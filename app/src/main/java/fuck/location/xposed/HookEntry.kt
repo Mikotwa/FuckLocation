@@ -13,6 +13,7 @@ import fuck.location.BuildConfig
 import fuck.location.xposed.cellar.PhoneInterfaceManagerHooker
 import fuck.location.xposed.cellar.TelephonyRegistryHooker
 import fuck.location.xposed.helpers.ConfigGateway
+import fuck.location.xposed.helpers.workround.Miui
 import fuck.location.xposed.location.LocationHookerAfterS
 import fuck.location.xposed.location.LocationHookerPreQ
 import fuck.location.xposed.location.LocationHookerR
@@ -20,6 +21,7 @@ import fuck.location.xposed.location.WLANHooker
 import fuck.location.xposed.location.gnss.GnssHookerPreQ
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerR
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerS
+import fuck.location.xposed.location.miui.MiuiBlurLocationManager
 import java.lang.Exception
 
 @ExperimentalStdlibApi
@@ -71,11 +73,15 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
 
                                 GnssManagerServiceHookerS().hookRegisterGnssNmeaCallback(lpparam)
                             }
-                            Build.VERSION_CODES.R -> {  // Android 11
-                                LocationHookerR().hookLastLocation(lpparam)
-                                LocationHookerR().hookDLC(lpparam)
+                            Build.VERSION_CODES.R -> {  // Android 11 and 💩 MIUI
+                                if (Miui().isMIUI()) {
+                                    MiuiBlurLocationManager().hookGetBlurryLocation(lpparam)
+                                } else {
+                                    LocationHookerR().hookLastLocation(lpparam)
+                                    LocationHookerR().hookDLC(lpparam)
 
-                                GnssManagerServiceHookerR().hookAddGnssBatchingCallback(lpparam)
+                                    GnssManagerServiceHookerR().hookAddGnssBatchingCallback(lpparam)
+                                }
                             }
                             else -> {    // For Android 10 and earlier, run this fallback version
                                 LocationHookerPreQ().hookLastLocation(lpparam)

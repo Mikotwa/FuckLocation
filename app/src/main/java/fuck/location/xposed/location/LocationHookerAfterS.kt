@@ -160,7 +160,7 @@ class LocationHookerAfterS {
                 findMethod(providerManager.javaClass) {
                     name == "onReportLocation"
                 }.hookBefore { innerParam ->
-                    XposedBridge.log("FL: in onReportLocation (fused)! Redirect request to hooker...")
+                    XposedBridge.log("FL: in onReportLocation (network)! Redirect request to hooker...")
                     hookOnReportLocation(clazz, innerParam)
                 }
             }
