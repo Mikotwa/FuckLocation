@@ -137,7 +137,7 @@ class LocationHookerAfterS {
         findAllMethods(clazz) {
             name == "addLocationProviderManager" && isPrivate
         }.hookBefore { param ->
-            val providerManager = param.args[0]
+            /*val providerManager = param.args[0]
 
             val mName = findField(providerManager.javaClass, true) {
                 name == "mName"
@@ -163,7 +163,7 @@ class LocationHookerAfterS {
                     XposedBridge.log("FL: in onReportLocation (network)! Redirect request to hooker...")
                     hookOnReportLocation(clazz, innerParam)
                 }
-            }
+            }*/
         }
     }
 
