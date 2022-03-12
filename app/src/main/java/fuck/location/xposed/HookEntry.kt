@@ -70,16 +70,18 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             Build.VERSION_CODES.S -> {
                                 if (Miui().isMIUI()) {
                                     MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)
-                                } else {
-                                    LocationHookerAfterS().hookLastLocation(lpparam)
-                                    LocationHookerAfterS().hookDLC(lpparam)
-
-                                    GnssManagerServiceHookerS().hookRegisterGnssNmeaCallback(lpparam)
                                 }
+
+                                LocationHookerAfterS().hookLastLocation(lpparam)
+                                LocationHookerAfterS().hookDLC(lpparam)
+
+                                GnssManagerServiceHookerS().hookRegisterGnssNmeaCallback(lpparam)
                             }
                             Build.VERSION_CODES.R -> {  // Android 11 and MIUI
                                 if (Miui().isMIUI()) {
                                     MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)
+
+                                    GnssManagerServiceHookerR().hookAddGnssBatchingCallback(lpparam)
                                 } else {
                                     LocationHookerR().hookLastLocation(lpparam)
                                     LocationHookerR().hookDLC(lpparam)
