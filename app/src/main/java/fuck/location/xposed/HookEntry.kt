@@ -21,7 +21,7 @@ import fuck.location.xposed.location.WLANHooker
 import fuck.location.xposed.location.gnss.GnssHookerPreQ
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerR
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerS
-import fuck.location.xposed.location.miui.MiuiBlurLocationManager
+import fuck.location.xposed.location.miui.MiuiBlurLocationManagerR
 import java.lang.Exception
 
 @ExperimentalStdlibApi
@@ -75,7 +75,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             }
                             Build.VERSION_CODES.R -> {  // Android 11 and 💩 MIUI
                                 if (Miui().isMIUI()) {
-                                    MiuiBlurLocationManager().hookGetBlurryLocation(lpparam)
+                                    MiuiBlurLocationManagerR().hookGetBlurryLocation(lpparam)
                                 } else {
                                     LocationHookerR().hookLastLocation(lpparam)
                                     LocationHookerR().hookDLC(lpparam)
