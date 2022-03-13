@@ -14,6 +14,7 @@ import fuck.location.xposed.cellar.PhoneInterfaceManagerHooker
 import fuck.location.xposed.cellar.TelephonyRegistryHooker
 import fuck.location.xposed.helpers.ConfigGateway
 import fuck.location.xposed.helpers.workround.Miui
+import fuck.location.xposed.helpers.workround.Oplus
 import fuck.location.xposed.location.LocationHookerAfterS
 import fuck.location.xposed.location.LocationHookerPreQ
 import fuck.location.xposed.location.LocationHookerR
@@ -22,6 +23,7 @@ import fuck.location.xposed.location.gnss.GnssHookerPreQ
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerR
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerS
 import fuck.location.xposed.location.miui.MiuiBlurLocationManagerHookerAfterR
+import fuck.location.xposed.location.oplus.NlpDLCS
 import java.lang.Exception
 
 @ExperimentalStdlibApi
@@ -69,7 +71,9 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                         when (Build.VERSION.SDK_INT) {
                             Build.VERSION_CODES.S -> {
                                 if (Miui().isMIUI()) {
-                                    MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)
+                                    MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)    // It is only a stub :(
+                                } else if (Oplus().isOplus()) {
+                                    NlpDLCS().hookColorOS(lpparam)
                                 }
 
                                 LocationHookerAfterS().hookLastLocation(lpparam)

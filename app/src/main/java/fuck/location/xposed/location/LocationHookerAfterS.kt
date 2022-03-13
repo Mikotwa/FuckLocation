@@ -20,6 +20,21 @@ class LocationHookerAfterS {
         val clazz = lpparam.classLoader.loadClass("com.android.server.location.provider.LocationProviderManager")
 
         findAllMethods(clazz) {
+            name == "onReportLocation"
+        }.hookMethod {
+            before { param ->
+                hookOnReportLocation(clazz, param)
+            }
+        }
+    }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    @RequiresApi(Build.VERSION_CODES.S)
+    @SuppressLint("PrivateApi")
+    fun hookDLC(lpparam: XC_LoadPackage.LoadPackageParam) {
+        val clazz = lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
+
+        findAllMethods(clazz) {
             name == "getLastLocation" && isPublic
         }.hookMethod {
             after {
@@ -82,20 +97,6 @@ class LocationHookerAfterS {
         }
 
         findAllMethods(clazz) {
-            name == "onReportLocation"
-        }.hookMethod {
-            before { param ->
-                hookOnReportLocation(clazz, param)
-            }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.S)
-    @SuppressLint("PrivateApi")
-    fun hookDLC(lpparam: XC_LoadPackage.LoadPackageParam) {
-        val clazz = lpparam.classLoader.loadClass("com.android.server.location.LocationManagerService")
-
-        findAllMethods(clazz) {
             name == "registerGnssStatusCallback" && isPublic
         }.hookBefore { param ->
             val packageName = param.args[1] as String
@@ -132,38 +133,6 @@ class LocationHookerAfterS {
                 param.result = null
                 return@hookBefore
             }
-        }
-
-        findAllMethods(clazz) {
-            name == "addLocationProviderManager" && isPrivate
-        }.hookBefore { param ->
-            /*val providerManager = param.args[0]
-
-            val mName = findField(providerManager.javaClass, true) {
-                name == "mName"
-            }.get(providerManager)
-
-            XposedBridge.log("FL: Adding location provider named: $mName")
-
-            if (mName == "fused") {
-                XposedBridge.log("FL: Fused location provider detected! Trying to hook...")
-
-                findMethod(providerManager.javaClass) {
-                    name == "onReportLocation"
-                }.hookBefore { innerParam ->
-                    XposedBridge.log("FL: in onReportLocation (fused)! Redirect request to hooker...")
-                    hookOnReportLocation(clazz, innerParam)
-                }
-            } else if (mName == "network") {
-                XposedBridge.log("FL: Network location provider detected! Trying to hook...")
-
-                findMethod(providerManager.javaClass) {
-                    name == "onReportLocation"
-                }.hookBefore { innerParam ->
-                    XposedBridge.log("FL: in onReportLocation (network)! Redirect request to hooker...")
-                    hookOnReportLocation(clazz, innerParam)
-                }
-            }*/
         }
     }
 
