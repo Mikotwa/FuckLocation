@@ -27,21 +27,21 @@ body:
     attributes:
       label: Expected behaviour / 预期行为
       placeholder: Tell us what should happen / 正常情况下应该发生什么
-    validations:
-      required: true
+      validations:
+        required: true
 
   - type: textarea
     attributes:
       label: Actual behaviour / 实际行为
       placeholder: Tell us what happens instead / 实际上发生了什么
-    validations:
-      required: true
+      validations:
+        required: true
 
   - type: input
     attributes:
       label: Android version / Android 版本
-    validations:
-      required: true
+      validations:
+        required: true
 
   - type: input
     attributes:
@@ -53,8 +53,8 @@ body:
       label: Logs / 日志
       description: For usage issues, please provide the log zip saved from manager; for activation issues, please provide [bugreport](https://developer.android.com/studio/debug/bug-report). Without log, the issue will be closed / 使用问题请提供从管理器保存的日志压缩包；激活问题请提供 [bugreport](https://developer.android.google.cn/studio/debug/bug-report?hl=zh-cn) 日志。无日志提交会被关闭
       placeholder: Upload logs by clicking the bar on the bottom / 点击文本框底栏上传日志文件
-    validations:
-      required: true
+      validations:
+        required: true
 
   - type: checkboxes
     attributes:
