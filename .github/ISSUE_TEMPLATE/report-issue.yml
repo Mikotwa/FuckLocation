@@ -46,7 +46,10 @@ body:
   - type: input
     attributes:
       label: OEM Information / OEM 信息
-      description: If you are using heavy customed os (like MIUI, ColorOS), fill its version here. Leave it empty if not / 如果你在使用高度定制的系统（如 MIUI，ColorOS 等），请在这里填写它们的版本信息。如果不是，请留空
+      description: |
+        If you are using heavy customed os (like MIUI, ColorOS), fill its version here. Leave it empty if not
+
+        如果你在使用高度定制的系统（如 MIUI，ColorOS 等），请在这里填写它们的版本信息。如果不是，请留空
 
   - type: textarea
     attributes:
