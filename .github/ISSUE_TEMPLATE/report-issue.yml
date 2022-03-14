@@ -1,0 +1,64 @@
+name: Report Issue / 反馈问题[Report Issue]
+description: Please use this template to report your issue. / 请使用该模板反馈你遇到的问题
+labels: Report Issue / 反馈问题[Report Issue]
+title: "Report Issue / 反馈问题[Report Issue]"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting issues of Fuck Location!
+        Before reporting any issues, please fill the following information to make sure
+        your report will be handled asap.
+
+        感谢您向 Fuck Location 回报问题！
+        在反馈任何问题前，请完善下面的内容，以保证你的反馈能被及时处理。
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce / 复现步骤
+      placeholder: |
+        1.
+        2.
+        3.
+      validations:
+        required: true
+
+  - type: textarea
+    attributes:
+      label: Expected behaviour / 预期行为
+      placeholder: Tell us what should happen / 正常情况下应该发生什么
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Actual behaviour / 实际行为
+      placeholder: Tell us what happens instead / 实际上发生了什么
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Android version / Android 版本
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: OEM Information / OEM 信息
+      description: If you are using heavy customed os (like MIUI, ColorOS), fill its version here. Leave it empty if not / 如果你在使用高度定制的系统（如 MIUI，ColorOS 等），请在这里填写它们的版本信息。如果不是，请留空
+
+  - type: textarea
+    attributes:
+      label: Logs / 日志
+      description: For usage issues, please provide the log zip saved from manager; for activation issues, please provide [bugreport](https://developer.android.com/studio/debug/bug-report). Without log, the issue will be closed / 使用问题请提供从管理器保存的日志压缩包；激活问题请提供 [bugreport](https://developer.android.google.cn/studio/debug/bug-report?hl=zh-cn) 日志。无日志提交会被关闭
+      placeholder: Upload logs by clicking the bar on the bottom / 点击文本框底栏上传日志文件
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Final checklist / 发布前检查清单
+      options:
+        - label: I have read the Q&A and I am sure my issue is not related to them / 我已经阅读过常见问题解答，且确定我的问题与它们无关
+        - label: I am using the latest debug CI version of Fuck Location and enabled verbose log / 我正在使用最新的 CI 调试版本，并且启用了详细日志
