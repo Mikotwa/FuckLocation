@@ -1,7 +1,7 @@
-name: Report Issue / 反馈问题[Report Issue]
+name: Report Issue / 反馈问题
 description: Please use this template to report your issue. / 请使用该模板反馈你遇到的问题
-labels: Report Issue / 反馈问题[Report Issue]
-title: "Report Issue / 反馈问题[Report Issue]"
+labels: Report Issue / 反馈问题
+title: "Report Issue / 反馈问题"
 body:
   - type: markdown
     attributes:
