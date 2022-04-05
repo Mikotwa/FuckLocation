@@ -71,7 +71,11 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                         when (Build.VERSION.SDK_INT) {
                             Build.VERSION_CODES.S -> {
                                 if (Miui().isMIUI()) {
-                                    MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)    // It is only a stub :(
+                                    try {
+                                        MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)    // TODO: Where is the true logic?
+                                    } catch (e: Exception) {
+                                        XposedBridge.log("FL: Exception in BlurLocation (S)! Maybe not a miui: $e")
+                                    }
                                 } else if (Oplus().isOplus()) {
                                     NlpDLCS().hookColorOS(lpparam)
                                 }
@@ -83,7 +87,11 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             }
                             Build.VERSION_CODES.R -> {  // Android 11 and MIUI
                                 if (Miui().isMIUI()) {
-                                    MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)
+                                    try {
+                                        MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)
+                                    } catch (e: Exception) {
+                                        XposedBridge.log("FL: Exception in BlurLocation (R)! Maybe not a miui: $e")
+                                    }
 
                                     GnssManagerServiceHookerR().hookAddGnssBatchingCallback(lpparam)
                                 } else {
