@@ -92,14 +92,12 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                                     } catch (e: Exception) {
                                         XposedBridge.log("FL: Exception in BlurLocation (R)! Maybe not a miui: $e")
                                     }
-
-                                    GnssManagerServiceHookerR().hookAddGnssBatchingCallback(lpparam)
-                                } else {
-                                    LocationHookerR().hookLastLocation(lpparam)
-                                    LocationHookerR().hookDLC(lpparam)
-
-                                    GnssManagerServiceHookerR().hookAddGnssBatchingCallback(lpparam)
                                 }
+
+                                LocationHookerR().hookLastLocation(lpparam)
+                                LocationHookerR().hookDLC(lpparam)
+
+                                GnssManagerServiceHookerR().hookAddGnssBatchingCallback(lpparam)
                             }
                             else -> {    // For Android 10 and earlier, run this fallback version
                                 LocationHookerPreQ().hookLastLocation(lpparam)
