@@ -66,7 +66,8 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                         ConfigGateway.get().hookWillChangeBeEnabled(lpparam)
                         ConfigGateway.get().hookGetTagForIntentSender(lpparam)
 
-                        TelephonyRegistryHooker().hookListen(lpparam)
+                        // Manually workaround as the incapable changes
+                        if (!Miui().isMIUI()) TelephonyRegistryHooker().hookListen(lpparam)
 
                         // For Android 12 and MIUI, run this hook
                         when (Build.VERSION.SDK_INT) {

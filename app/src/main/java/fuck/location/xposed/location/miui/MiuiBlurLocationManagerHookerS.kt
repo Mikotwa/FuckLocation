@@ -102,10 +102,10 @@ class MiuiBlurLocationManagerHookerS {
         }
 
         findAllMethods(clazz) {
-            name == "getBlurryCellLocation" && isPublic && parameterCount == 1
+            name == "getBlurryCellLocation" && isPublic && parameterCount == 3
         }.hookAfter { param ->
             try {
-                val packageName = ConfigGateway.get().callerIdentityToPackageName(param.args[0])
+                val packageName = param.args[2] as String
                 XposedBridge.log("FL: [Shaomi S] in getBlurryCellLocation! Caller packageName: $packageName")
 
                 if (ConfigGateway.get().inWhitelist(packageName)) {
