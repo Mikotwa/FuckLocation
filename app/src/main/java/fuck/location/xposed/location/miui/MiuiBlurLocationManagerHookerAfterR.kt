@@ -29,7 +29,7 @@ class MiuiBlurLocationManagerHookerAfterR {
         when (Build.VERSION.SDK_INT) {
             Build.VERSION_CODES.S -> {
                 clazz =
-                    lpparam.classLoader.loadClass("com.android.server.location.MiuiBlurLocationManagerStub")
+                    lpparam.classLoader.loadClass("com.android.server.location.MiuiBlurLocationManagerImpl")
             }
 
             Build.VERSION_CODES.R -> {
