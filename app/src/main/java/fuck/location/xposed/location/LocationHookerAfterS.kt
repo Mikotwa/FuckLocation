@@ -39,7 +39,11 @@ class LocationHookerAfterS {
         }.hookMethod {
             after {
                 try {
-                    val packageName = ConfigGateway.get().callerIdentityToPackageName(it.args[1])
+                    // Workaround for MIUI. F**k!
+                    val targetParam: Any = if (it.args[0] is String) it.args[2]
+                    else it.args[1]
+
+                    val packageName = ConfigGateway.get().callerIdentityToPackageName(targetParam)
                     XposedBridge.log("FL: in getLastLocation! Caller package name: $packageName")
 
                     if (ConfigGateway.get().inWhitelist(packageName)) {
@@ -86,7 +90,12 @@ class LocationHookerAfterS {
             name == "getCurrentLocation" && isPublic
         }.hookMethod {
             after { param ->
-                val packageName = ConfigGateway.get().callerIdentityToPackageName(param.args[1])
+                // Workaround for MIUI. F**k!
+                val targetParam: Any = if (param.args[0] is String) param.args[0]
+                else param.args[1]
+
+                val packageName = ConfigGateway.get().callerIdentityToPackageName(targetParam)
+
                 XposedBridge.log("FL: in getCurrentLocation! Caller package name: $packageName")
 
                 if (ConfigGateway.get().inWhitelist(packageName)) {

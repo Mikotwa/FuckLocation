@@ -22,7 +22,8 @@ import fuck.location.xposed.location.WLANHooker
 import fuck.location.xposed.location.gnss.GnssHookerPreQ
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerR
 import fuck.location.xposed.location.gnss.GnssManagerServiceHookerS
-import fuck.location.xposed.location.miui.MiuiBlurLocationManagerHookerAfterR
+import fuck.location.xposed.location.miui.MiuiBlurLocationManagerHookerR
+import fuck.location.xposed.location.miui.MiuiBlurLocationManagerHookerS
 import fuck.location.xposed.location.oplus.NlpDLCS
 import java.lang.Exception
 
@@ -71,15 +72,10 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                         when (Build.VERSION.SDK_INT) {
                             Build.VERSION_CODES.S -> {
                                 if (Miui().isMIUI()) {
-                                    try {
-                                        MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)    // TODO: Where is the true logic?
-                                    } catch (e: Exception) {
-                                        XposedBridge.log("FL: Exception in BlurLocation (S)! Maybe not a miui: $e")
-                                    }
+                                    MiuiBlurLocationManagerHookerS().hookGetBlurryLocationS(lpparam)
                                 } else if (Oplus().isOplus()) {
                                     NlpDLCS().hookColorOS(lpparam)
                                 }
-
                                 LocationHookerAfterS().hookLastLocation(lpparam)
                                 LocationHookerAfterS().hookDLC(lpparam)
 
@@ -87,11 +83,7 @@ class HookEntry : IXposedHookZygoteInit, IXposedHookLoadPackage {
                             }
                             Build.VERSION_CODES.R -> {  // Android 11 and MIUI
                                 if (Miui().isMIUI()) {
-                                    try {
-                                        MiuiBlurLocationManagerHookerAfterR().hookGetBlurryLocation(lpparam)
-                                    } catch (e: Exception) {
-                                        XposedBridge.log("FL: Exception in BlurLocation (R)! Maybe not a miui: $e")
-                                    }
+                                    MiuiBlurLocationManagerHookerR().hookGetBlurryLocation(lpparam)
                                 }
 
                                 LocationHookerR().hookLastLocation(lpparam)

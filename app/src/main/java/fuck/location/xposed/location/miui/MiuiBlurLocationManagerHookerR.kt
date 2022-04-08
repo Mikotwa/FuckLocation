@@ -20,7 +20,7 @@ import fuck.location.xposed.helpers.ConfigGateway
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.lang.Exception
 
-class MiuiBlurLocationManagerHookerAfterR {
+class MiuiBlurLocationManagerHookerR {
     @SuppressLint("PrivateApi")
     @RequiresApi(Build.VERSION_CODES.Q)
     @OptIn(ExperimentalStdlibApi::class)
