@@ -106,7 +106,7 @@ class MiuiBlurLocationManagerHookerS {
         }.hookAfter { param ->
             try {
                 val packageName = param.args[2] as String
-                XposedBridge.log("FL: [Shaomi S] in getBlurryCellLocation! Caller packageName: $packageName")
+                XposedBridge.log("FL: [Shaomi S] in getBlurryCellLocation (3)! Caller packageName: $packageName")
 
                 if (ConfigGateway.get().inWhitelist(packageName)) {
                     when (param.result) {
@@ -131,7 +131,36 @@ class MiuiBlurLocationManagerHookerS {
         }
 
         findAllMethods(clazz) {
-            name == "getBlurryCellInfos" && isPublic && parameterCount == 3
+            name == "getBlurryCellLocation" && isPublic && parameterCount == 1
+        }.hookAfter { param ->
+            try {
+                val packageName = ConfigGateway.get().callerIdentityToPackageName(param.args[0])
+                XposedBridge.log("FL: [Shaomi S] in getBlurryCellLocation (1)! Caller packageName: $packageName")
+
+                if (ConfigGateway.get().inWhitelist(packageName)) {
+                    when (param.result) {
+                        is CellIdentityLte -> {
+                            XposedBridge.log("FL: [Shaomi S] Using LTE Network...")
+                            param.result = Lte().alterCellIdentity(param.result as CellIdentityLte)
+                        }
+                        is CellIdentityNr -> {
+                            XposedBridge.log("FL: [Shaomi S] Using Nr Network...")
+                            param.result = Nr().alterCellIdentity(param.result as CellIdentityNr)
+                        }
+                        else -> {
+                            XposedBridge.log("FL: [Shaomi S] Unsupported network type. Return null as fallback")
+                            param.result = null
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                XposedBridge.log("FL: [Shaomi S] Wtf?! $e")
+                e.printStackTrace()
+            }
+        }
+
+        findAllMethods(clazz) {
+            name == "getBlurryCellInfos" && isPublic
         }.hookAfter { param ->
             val packageName = param.args[2] as String
             XposedBridge.log("FL: [Shaomi S] in getBlurryCellInfos! Caller packageName: $packageName")
