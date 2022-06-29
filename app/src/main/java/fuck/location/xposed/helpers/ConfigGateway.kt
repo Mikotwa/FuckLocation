@@ -295,6 +295,7 @@ class ConfigGateway private constructor() {
             val modernFakeLocation = FakeLocation(
                 oldJsonAdapterResult!!.x,
                 oldJsonAdapterResult.y,
+                0.0,
                 0,
                 0,
                 0,
@@ -317,8 +318,8 @@ class ConfigGateway private constructor() {
     }
 
     @ExperimentalStdlibApi
-    fun writeFakeLocation(x: Double, y: Double, eci: Int, pci: Int, tac: Int, earfcn: Int, bandwidth: Int) {
-        val newFakeLocation = FakeLocation(x, y, eci, pci, tac, earfcn, bandwidth)
+    fun writeFakeLocation(x: Double, y: Double, offset: Double, eci: Int, pci: Int, tac: Int, earfcn: Int, bandwidth: Int) {
+        val newFakeLocation = FakeLocation(x, y, offset, eci, pci, tac, earfcn, bandwidth)
         val jsonAdapter: JsonAdapter<FakeLocation> = moshi.adapter()
 
         val json: String = jsonAdapter.toJson(newFakeLocation)
