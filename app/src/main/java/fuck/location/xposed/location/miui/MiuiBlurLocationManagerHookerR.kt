@@ -71,8 +71,8 @@ class MiuiBlurLocationManagerHookerR {
                     location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
                 }
 
-                location.latitude = fakeLocation.x
-                location.longitude = fakeLocation.y
+                location.latitude = fakeLocation.x + (Math.random() * fakeLocation.offset - fakeLocation.offset / 2)
+                location.longitude = fakeLocation.y + (Math.random() * fakeLocation.offset - fakeLocation.offset / 2)
                 location.altitude = 0.0
                 location.speed = 0F
                 location.speedAccuracyMetersPerSecond = 0F
@@ -162,8 +162,8 @@ class MiuiBlurLocationManagerHookerR {
                     location.verticalAccuracyMeters = originLocation.verticalAccuracyMeters
                 }
 
-                location.latitude = fakeLocation.x
-                location.longitude = fakeLocation.y
+                location.latitude = fakeLocation.x + (Math.random() * fakeLocation.offset - fakeLocation.offset / 2)
+                location.longitude = fakeLocation.y + (Math.random() * fakeLocation.offset - fakeLocation.offset / 2)
                 location.altitude = 0.0
                 location.speed = 0F
                 location.speedAccuracyMetersPerSecond = 0F
