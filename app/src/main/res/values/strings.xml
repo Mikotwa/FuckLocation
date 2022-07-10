@@ -25,6 +25,7 @@
 
     <string name="custom_view_textview_x">Latitude</string>
     <string name="custom_view_textview_y">Longitude</string>
+    <string name="custom_view_textview_offset">Offset</string>
     <string name="custom_view_textview_ci" translatable="false">ECI / NCI</string>
     <string name="custom_view_textview_pci" translatable="false">Pci</string>
     <string name="custom_view_textview_tac" translatable="false">Tac</string>

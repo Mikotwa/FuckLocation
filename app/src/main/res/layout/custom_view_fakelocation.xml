@@ -53,6 +53,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
+        android:text="@string/custom_view_textview_offset"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"
+        />
+
+    <EditText
+        android:id="@+id/custom_view_fl_offset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:inputType="numberDecimal|numberSigned"
+        android:text="0.0"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="18sp"
+        tools:ignore="Autofill,HardcodedText,LabelFor"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:text="@string/custom_view_textview_ci"
         android:textColor="?android:textColorSecondary"
         android:textSize="14sp"

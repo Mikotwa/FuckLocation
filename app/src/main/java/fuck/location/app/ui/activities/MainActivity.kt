@@ -18,6 +18,7 @@ import fuck.location.R
 import fuck.location.databinding.ActivityMainBinding
 
 import fuck.location.xposed.helpers.ConfigGateway
+import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityMainBinding
@@ -70,16 +71,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             customView(R.layout.custom_view_fakelocation, scrollable = true, horizontalPadding = true)
 
             ConfigGateway.get().setCustomContext(applicationContext)
-            val previousYInput = ConfigGateway.get().readFakeLocation()?.y
-            val previousXInput = ConfigGateway.get().readFakeLocation()?.x
-            val previousECIInput = ConfigGateway.get().readFakeLocation()?.eci
-            val previousPCIInput = ConfigGateway.get().readFakeLocation()?.pci
-            val previousTACInput = ConfigGateway.get().readFakeLocation()?.tac
-            val previousEarfCNInput = ConfigGateway.get().readFakeLocation()?.earfcn
-            val previousBandwidthInput = ConfigGateway.get().readFakeLocation()?.bandwidth
+            val previousFakeLocation = ConfigGateway.get().readFakeLocation()
 
-            findViewById<EditText>(R.id.custom_view_fl_x).setText(previousXInput.toString())
-            findViewById<EditText>(R.id.custom_view_fl_y).setText(previousYInput.toString())
+            val previousYInput = previousFakeLocation?.y
+            val previousXInput = previousFakeLocation?.x
+            val previousOffsetInput = previousFakeLocation?.offset
+            val previousECIInput = previousFakeLocation?.eci
+            val previousPCIInput = previousFakeLocation?.pci
+            val previousTACInput = previousFakeLocation?.tac
+            val previousEarfCNInput = previousFakeLocation?.earfcn
+            val previousBandwidthInput = previousFakeLocation?.bandwidth
+
+            val numberFormat = NumberFormat.getNumberInstance()
+            numberFormat.isGroupingUsed = false
+            numberFormat.maximumFractionDigits = 20
+            findViewById<EditText>(R.id.custom_view_fl_x).setText(numberFormat.format(previousXInput))
+            findViewById<EditText>(R.id.custom_view_fl_y).setText(numberFormat.format(previousYInput))
+            findViewById<EditText>(R.id.custom_view_fl_offset).setText(numberFormat.format(previousOffsetInput))
+
             findViewById<EditText>(R.id.custom_view_fl_eci).setText(previousECIInput.toString())
             findViewById<EditText>(R.id.custom_view_fl_pci).setText(previousPCIInput.toString())
             findViewById<EditText>(R.id.custom_view_fl_tac).setText(previousTACInput.toString())
@@ -91,6 +100,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     .findViewById(R.id.custom_view_fl_y)
                 val xInput: EditText = dialog.getCustomView()
                     .findViewById(R.id.custom_view_fl_x)
+                val offsetInput: EditText = dialog.getCustomView()
+                    .findViewById(R.id.custom_view_fl_offset)
                 val eciInput: EditText = dialog.getCustomView()
                     .findViewById(R.id.custom_view_fl_eci)
                 val pciInput: EditText = dialog.getCustomView()
@@ -104,6 +115,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                 xInput.setText(xInput.text.takeIf { xInput.text.isNotEmpty() } ?: "0.0")
                 yInput.setText(yInput.text.takeIf { yInput.text.isNotEmpty() } ?: "0.0")
+                offsetInput.setText(offsetInput.text.takeIf { offsetInput.text.isNotEmpty() } ?: "0.0")
                 eciInput.setText(eciInput.text.takeIf { eciInput.text.isNotEmpty() } ?: "0")
                 pciInput.setText(pciInput.text.takeIf { pciInput.text.isNotEmpty() } ?: "0")
                 tacInput.setText(tacInput.text.takeIf { tacInput.text.isNotEmpty() } ?: "0")
@@ -113,6 +125,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 ConfigGateway.get().writeFakeLocation(
                     xInput.text.toString().toDouble(),
                     yInput.text.toString().toDouble(),
+                    offsetInput.text.toString().toDouble(),
                     eciInput.text.toString().toInt(),
                     pciInput.text.toString().toInt(),
                     tacInput.text.toString().toInt(),

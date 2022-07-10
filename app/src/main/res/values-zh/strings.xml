@@ -24,6 +24,7 @@
 
     <string name="custom_view_textview_x">纬度</string>
     <string name="custom_view_textview_y">经度</string>
+    <string name="custom_view_textview_offset">偏移范围</string>
     <string name="custom_view_textview_bandwidth">Bandwidth</string>
 
     <string name="about_slogan">关于该模块</string>

@@ -3,6 +3,7 @@ package fuck.location.app.ui.models
 class FakeLocation(
     val x: Double,
     val y: Double,
+    val offset:Double,
 
     val eci: Int,
     val pci: Int,
