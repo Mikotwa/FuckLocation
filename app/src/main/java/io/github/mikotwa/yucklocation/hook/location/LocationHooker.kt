@@ -18,6 +18,7 @@ import io.github.mikotwa.yucklocation.hook.utils.ConfigHelper
 import io.github.mikotwa.yucklocation.hook.utils.LocationHelper
 import io.github.mikotwa.yucklocation.hook.utils.PackageNameHelper
 import io.github.mikotwa.yucklocation.hook.utils.RegistrationCallbackHelper
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class LocationHooker : YukiBaseHooker() {
     private val LocationProvider = VariousClass(
@@ -69,6 +70,10 @@ class LocationHooker : YukiBaseHooker() {
         
         val ILocationListenerClass = VariousClass(
             "android.location.ILocationListener"
+        )
+        
+        val LocationResultClass = VariousClass(
+            "android.location.LocationResult"
         )
 
         LocationProvider.hook {
@@ -126,26 +131,6 @@ class LocationHooker : YukiBaseHooker() {
                         loggerD(msg = "$packageName is in scope! Return custom location")
 
                         result = LocationHelper().generateMockedLocation(result)
-                    }
-                }
-            }
-        }
-
-        LocationManagerService.hook {
-            injectMember {
-                method {
-                    name = "getCurrentLocation"
-                    param(StringType, LocationRequestClass, ILocationCallbackClass, StringType, StringType)
-                }
-                afterHook {
-                    val packageName = args[3] as String
-
-                    loggerD(msg = "in getCurrentLocation (LocationManagerService)! Caller package name: $packageName")
-
-                    if (ConfigHelper.get().isPackageInScope(packageName)) {
-                        loggerD(msg = "$packageName is in scope! Return null")
-
-                        result = null
                     }
                 }
             }
@@ -223,14 +208,29 @@ class LocationHooker : YukiBaseHooker() {
                         loggerD(msg = "in the scope! Now register this to our custom implement...")
 
                         val fakeRegistration = FakeLocationListenerRegistration(args[0] as LocationRequest, packageName,
-                            args[2] as LocationListener,
-                            args[3] as Int
+                            args[2] as Int,
+                            args[3]!!
                         )
 
                         RegistrationCallbackHelper.get().registerListener(fakeRegistration)
                     }
 
                     result = null
+                }
+            }
+        }
+
+        // 在系统触发定位会调时，触发我们自己的函数，让名单里的
+        // 应用也能顺利拿到定位
+        LocationProvider.hook {
+            injectMember {
+                method {
+                    name = "onReportLocation"
+                    param(LocationResultClass)
+                }
+                afterHook {
+                    loggerD(msg = "Pushing location report to our app...")
+                    RegistrationCallbackHelper.get().updateLocation()
                 }
             }
         }

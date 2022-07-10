@@ -12,7 +12,7 @@ android {
         applicationId "io.github.mikotwa.yucklocation"
         minSdk 28
         targetSdk 32
-        versionCode 4
+        versionCode 15
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

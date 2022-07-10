@@ -6,8 +6,8 @@ import android.location.LocationRequest
 class FakeLocationListenerRegistration(
     var request: LocationRequest,
     var packageName: String,
-    var locationListener: LocationListener,
-    permissionLevel: Int
+    permissionLevel: Int,
+    var locationListener: Any,
 ) {
 
 }

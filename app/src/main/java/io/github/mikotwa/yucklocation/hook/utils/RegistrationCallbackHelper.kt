@@ -1,6 +1,8 @@
 package io.github.mikotwa.yucklocation.hook.utils
 
+import com.highcapable.yukihookapi.hook.log.loggerD
 import io.github.mikotwa.yucklocation.hook.data.FakeLocationListenerRegistration
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class RegistrationCallbackHelper private constructor(){
     private val mRegistrations = mutableListOf<FakeLocationListenerRegistration>()
@@ -25,7 +27,7 @@ class RegistrationCallbackHelper private constructor(){
 
     fun updateLocation() {
         mRegistrations.forEach { register ->
-            register.locationListener.onLocationChanged(LocationHelper().generateMockedLocation(null))
+            HiddenApiBypass.invoke(register.locationListener.javaClass, register.locationListener, "onLocationChanged", listOf(LocationHelper().generateMockedLocation(null)), null)
         }
     }
 }
