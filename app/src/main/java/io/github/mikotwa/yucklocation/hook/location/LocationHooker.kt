@@ -1,18 +1,15 @@
 package io.github.mikotwa.yucklocation.hook.location
 
-import android.location.Location
-import android.location.LocationManager
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.bean.VariousClass
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.loggerD
 import com.highcapable.yukihookapi.hook.type.java.IntType
+import io.github.mikotwa.yucklocation.hook.utils.ConfigHelper
 import io.github.mikotwa.yucklocation.hook.utils.LocationHelper
 import io.github.mikotwa.yucklocation.hook.utils.PackageNameHelper
 
 class LocationHooker : YukiBaseHooker() {
-    private val demoName = "com.borneq.heregpslocation"  // 目前，我们在 demo 里硬编码这个作用域，来测试代码效果
-
     private val LocationProvider = VariousClass(
         "com.android.server.location.provider.LocationProviderManager"
     )
@@ -46,8 +43,8 @@ class LocationHooker : YukiBaseHooker() {
 
                     loggerD(msg = "in getLastLocation! Caller package name: $packageName")
 
-                    if (true) {
-                        loggerD(msg = "$packageName is in scoop! Return custom location")
+                    if (ConfigHelper.get().isPackageInScope(packageName)) {
+                        loggerD(msg = "$packageName is in scope! Return custom location")
 
                         result = LocationHelper().generateMockedLocation(result)
                     }
@@ -66,8 +63,8 @@ class LocationHooker : YukiBaseHooker() {
 
                     loggerD(msg = "in getCurrentLocation! Caller package name: $packageName")
 
-                    if (true) {
-                        loggerD(msg = "$packageName is in scoop! Return null")
+                    if (ConfigHelper.get().isPackageInScope(packageName)) {
+                        loggerD(msg = "$packageName is in scope! Return null")
 
                         result = null
                     }
