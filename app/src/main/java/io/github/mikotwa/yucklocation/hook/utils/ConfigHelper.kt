@@ -93,6 +93,13 @@ class ConfigHelper private constructor(){
         if (!jsonFile.exists()) {
             val jsonFileDirectory = File("$dataDir/")
             jsonFileDirectory.mkdirs()
+
+            try {
+                jsonFile.createNewFile()
+                jsonFile.writeText("[]")
+            } catch (e: Exception) {
+                loggerE(msg = "Cannot create config file! Please check: $e")
+            }
         }
 
         return jsonFile
