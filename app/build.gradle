@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "io.github.mikotwa.yucklocation"
-        minSdk 27
+        minSdk 28
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -62,6 +62,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.2'
     implementation 'com.highcapable.yukihookapi:api:1.0.92'
     compileOnly 'de.robv.android.xposed:api:82'
     ksp 'com.highcapable.yukihookapi:ksp-xposed:1.0.92'
