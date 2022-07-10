@@ -7,6 +7,7 @@ import java.lang.reflect.Field
 
 class PackageNameHelper {
     // 这里的判定是假设参数不为空的。使用前需检查！
+    // todo: 这个判定挺傻的，有时间改一下
     fun callerIdentityToPackageName(callerIdentity: Any?): String {
         val fields = HiddenApiBypass.getInstanceFields(callerIdentity!!.javaClass)
 
