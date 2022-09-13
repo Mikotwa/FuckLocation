@@ -19,6 +19,9 @@ buildscript {
         // https://developer.android.com/jetpack/androidx/releases/compose-material3
         material3 = '1.0.0-beta02'
 
+        // https://github.com/square/moshi
+        moshi = '1.14.0'
+
         // https://developer.android.com/jetpack/compose/navigation
         navigation = '2.5.2'
 

@@ -79,9 +79,12 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
     ksp "com.highcapable.yukihookapi:ksp-xposed:$yukihook"
 
-    implementation 'com.squareup.moshi:moshi:1.13.0'
-    implementation 'com.squareup.moshi:moshi-kotlin:1.13.0'
+    // https://github.com/square/moshi
+    implementation "com.squareup.moshi:moshi:$moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi"
 
+    // https://github.com/LSPosed/AndroidHiddenApiBypass
+    // TODO: Remove this dependency due to new refine plugin already cover this use case
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.2'
 
     // https://github.com/RikkaApps/HiddenApiRefinePlugin
