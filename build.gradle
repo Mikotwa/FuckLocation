@@ -1,13 +1,26 @@
 buildscript {
     ext {
+        // https://google.github.io/accompanist/systemuicontroller/
+        accompanist = '0.26.3-beta'
+
         // https://developer.android.com/jetpack/androidx/releases/compose-ui
         compose = '1.3.0-beta02'
 
         // https://developer.android.com/jetpack/androidx/releases/compose-compiler
         compose_complier = '1.3.0'
 
+        foundation = '1.3.0-beta01'
+
+        hidden = '3.2.0'
+
+        // https://github.com/RikkaApps/HiddenApiRefinePlugin
+        refine = '3.1.1'
+
         // https://developer.android.com/jetpack/androidx/releases/compose-material3
         material3 = '1.0.0-beta02'
+
+        // https://developer.android.com/jetpack/compose/navigation
+        navigation = '2.5.2'
 
         // https://github.com/google/ksp
         ksp = '1.7.10-1.0.6'
@@ -20,6 +33,8 @@ plugins {
     id 'com.android.application' version '7.2.2' apply false
     id 'com.android.library' version '7.2.2' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
+
+    id "dev.rikka.tools.refine" version "$refine"
 }
 
 task clean(type: Delete) {

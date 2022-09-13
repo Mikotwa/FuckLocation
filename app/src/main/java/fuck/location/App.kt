@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.navigation.compose.rememberNavController
+import fuck.location.ui.component.screen.ScreenNavigationSetup
 import fuck.location.ui.theme.FuckLocationTheme
 
-class MainActivity : ComponentActivity() {
+class App : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,7 +27,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    val screenNavController = rememberNavController()
+                    ScreenNavigationSetup(navController = screenNavController)
                 }
             }
         }
