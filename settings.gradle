@@ -1,0 +1,23 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+
+        // https://github.com/fankes/YukiHookAPI
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+
+        // https://github.com/fankes/YukiHookAPI
+        maven { url "https://api.xposed.info" }
+        maven { url "https://s01.oss.sonatype.org/content/repositories/releases" }
+    }
+}
+rootProject.name = "FuckLocation"
+include ':app'
