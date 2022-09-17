@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Language">
+        <rikka.preference.SimpleMenuPreference
+            android:defaultValue="SYSTEM"
+            android:key="language"
+            android:summary="%s"
+            android:title="Language"
+            />
+
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -14,10 +14,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import fuck.location.Greeting
+
 import fuck.location.R
 import fuck.location.data.model.main.MainNavItem
 import fuck.location.ui.component.home.Home
@@ -26,7 +27,7 @@ import fuck.location.ui.component.settings.Settings
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainNavigationSetup(navController: NavHostController) {
+fun MainNavigationSetup(navController: NavHostController, fragmentManager: FragmentManager) {
     // TODO: Reuse duplicate codebase.
     NavHost(navController, startDestination = MainNavItem.Home.route) {
         composable(MainNavItem.Home.route) {
@@ -41,12 +42,11 @@ fun MainNavigationSetup(navController: NavHostController) {
                         modifier = Modifier
                             .fillMaxWidth()
                     )
-                    Greeting(name = stringResource(id = R.string.nav_profile_title))
                 }
             }
         }
         composable(MainNavItem.Setting.route) {
-            Settings()
+            Settings(fragmentManager)
         }
     }
 }

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.FuckLocation" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.FuckLocation" parent="Theme.Material3.DynamicColors.Light.Rikka">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Rikka.Material3</item>
+        <item name="android:windowActionBar">false</item>
         <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>

@@ -25,6 +25,9 @@ buildscript {
         // https://developer.android.com/jetpack/compose/navigation
         navigation = '2.5.2'
 
+        // https://developer.android.google.cn/jetpack/androidx/
+        preference = "1.2.0"
+
         // https://github.com/google/ksp
         ksp = '1.7.10-1.0.6'
 
@@ -39,8 +42,5 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
 
     id "dev.rikka.tools.refine" version "$refine"
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10' apply false
 }
